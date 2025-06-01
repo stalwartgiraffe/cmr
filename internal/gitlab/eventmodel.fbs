@@ -1,0 +1,5 @@
+namespace gitlab
+
+table Monster {
+	ID:int64
+}

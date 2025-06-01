@@ -1,0 +1,14 @@
+---
+projects:
+- name: default
+  linters:
+  - name: staticcheck
+    args: './...'
+  - name: errcheck 
+    args: '-ignoretests ./...'
+  - name: golangci-lint 
+    args: '-lint run -n --enable "${GO_LINTERS}"  --max-same-issues 0'
+- name: deals-web-api 
+
+
+

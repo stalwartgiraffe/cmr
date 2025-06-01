@@ -1,0 +1,28 @@
+package cmd
+
+import (
+	"log"
+	"time"
+
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
+	sdk "go.opentelemetry.io/otel/sdk/metric"
+)
+
+func setupMetrics() {
+	// Create console exporter
+	exporter, err := stdoutmetric.New(
+		stdoutmetric.WithPrettyPrint(), // Makes output readable
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create meter provider
+	provider := sdk.NewMeterProvider(
+		sdk.WithReader(sdk.NewPeriodicReader(exporter,
+			sdk.WithInterval(10*time.Second))), // Export every 10 seconds
+	)
+
+	otel.SetMeterProvider(provider)
+}
