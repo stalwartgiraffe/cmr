@@ -73,7 +73,7 @@ func (m EventMap) WriteToYamlFile(filepath string) error {
 }
 
 func (m EventMap) LastDate() string {
-	if m == nil || len(m) < 1 {
+	if len(m) < 1 {
 		return ""
 	}
 	last := Time{}

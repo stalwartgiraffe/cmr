@@ -1,0 +1,22 @@
+
+cd $HOME/cmr/repos/platform-dev/AS && git pull
+cd $HOME/cmr/repos/exchange-node/machine-learning/inference && git pull
+cd $HOME/cmr/repos/exchange-node/supply && git pull
+cd $HOME/cmr/repos/exchange-node/billing && git pull
+cd $HOME/cmr/repos/exchange-node/billing/test/integration-test && git pull
+cd $HOME/cmr/repos/exchange-node/rules-lib && git pull
+cd $HOME/cmr/repos/exchange-node/usersync && git pull
+cd $HOME/cmr/repos/exchange-node/demand && git pull
+cd $HOME/cmr/repos/exchange-node/impression && git pull
+cd $HOME/cmr/repos/tools/rules && git pull
+cd $HOME/cmr/repos/tools/rules && git pull
+cd $HOME/cmr/repos/exchange-node/rules/creative-errors-poc && git pull
+cd $HOME/cmr/repos/exchange-node/rules-updater && git pull
+cd $HOME/cmr/repos/exchange-node/rules/creative-events && git pull
+cd $HOME/cmr/repos/exchange-node/rules/buyer && git pull
+cd $HOME/cmr/repos/exchange-node/billing && git pull
+cd $HOME/cmr/repos/exchange-node/rules/contextual-categories && git pull
+cd $HOME/cmr/repos/exchange-node/supply && git pull
+cd $HOME/cmr/repos/exchange-node/buyer-traffic-optimizer-lib && git pull
+cd $HOME/cmr/repos/exchange-node/demand && git pull
+cd $HOME/cmr/repos/exchange-node/segment && git pull

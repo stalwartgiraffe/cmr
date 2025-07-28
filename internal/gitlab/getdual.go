@@ -16,6 +16,7 @@ func GatherPageCallsDual[RespT any](
 	client *Client,
 	logger AppLog,
 	initialQueries <-chan UrlQuery,
+	totalPagesLimit int,
 ) (
 	<-chan CallNoError[RespT],
 	<-chan error,
@@ -25,10 +26,11 @@ func GatherPageCallsDual[RespT any](
 		client,
 		logger,
 		initialQueries,
-		5, // callCap int,
-		5, // queryCap int,
-		5, // workersCap int,
-		1, // errorCap int,
+		5,               // callCap int,
+		5,               // queryCap int,
+		5,               // workersCap int,
+		1,               // errorCap int,
+		totalPagesLimit, // 0 means no limit
 	)
 }
 
@@ -41,6 +43,7 @@ func GatherPageCallsWithDual[RespT any](
 	queryCap int,
 	workersCap int,
 	errorCap int,
+	totalPagesLimit int, // 0 means no limit
 ) (
 	<-chan CallNoError[RespT],
 	<-chan error,
@@ -56,6 +59,7 @@ func GatherPageCallsWithDual[RespT any](
 		callCap,
 		queryCap,
 		errorCap,
+		totalPagesLimit,
 	)
 	calls[1], errors[1] = tailPageCallsDual[RespT](
 		ctx,
@@ -71,11 +75,12 @@ func GatherPageCallsWithDual[RespT any](
 func headPageQueriesDual[RespT any](
 	ctx context.Context,
 	client *Client,
-	logger AppLog,
+	_ AppLog,
 	firstQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
 	errorCap int,
+	totalPagesLimit int,
 ) (
 	<-chan CallNoError[RespT],
 	<-chan UrlQuery,
@@ -115,6 +120,9 @@ func headPageQueriesDual[RespT any](
 			}
 			p := *cursor.page + 1
 			n := *cursor.totalPages
+			if totalPagesLimit > 0 && n > totalPagesLimit {
+				n = totalPagesLimit
+			}
 			for ; p <= n; p++ {
 				next := *firstQuery.Clone()
 				next.Params["page"] = p
@@ -128,7 +136,7 @@ func headPageQueriesDual[RespT any](
 func tailPageCallsDual[RespT any](
 	ctx context.Context,
 	client *Client,
-	logger AppLog,
+	_ AppLog,
 	queries <-chan UrlQuery,
 	workersCap int,
 	errorsCap int,

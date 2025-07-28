@@ -49,6 +49,7 @@ func makeGetPages[RespT any](
 	firstQueries chan UrlQuery,
 	haveResponses responseMap,
 	haveErr error,
+	totalPageLimit int,
 ) (
 	<-chan CallNoError[RespT],
 	<-chan UrlQuery,
@@ -68,6 +69,7 @@ func makeGetPages[RespT any](
 		callCap,
 		queryCap,
 		errorCap,
+		totalPageLimit,
 	)
 	Expect(calls).ToNot(BeNil())
 	Expect(queries).ToNot(BeNil())
@@ -128,13 +130,14 @@ var _ = Describe("client test of get page queries kam", func() {
 
 		channelCapacity := 5
 		var haveErr error
+		const totalPageLimit = 5
 		It("one responses", func(ctx SpecContext) {
 			p := "groups"
 			firstQueries := make(chan UrlQuery)
 			haveResponses := map[string]*resty.Response{
 				"api/" + p: makePagedResponse("api/"+p, group01txt),
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 			firstQueries <- UrlQuery{
 				Path: p,
 			}
@@ -174,6 +177,7 @@ var _ = Describe("client test of get page queries RespT", func() {
 
 		channelCapacity := 5
 		var haveErr error
+		const totalPageLimit = 5
 		It("one responses", func(ctx SpecContext) {
 			p := "groups"
 			firstQueries := make(chan UrlQuery)
@@ -181,7 +185,7 @@ var _ = Describe("client test of get page queries RespT", func() {
 				"api/" + p: makePagedResponse("api/"+p, group01txt),
 			}
 
-			calls, queries, errors := makeGetPages[[]GroupModel](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[[]GroupModel](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 			firstQueries <- UrlQuery{
 				Path: p,
 			}
@@ -271,6 +275,7 @@ func makeGatherAllCalls[RespT any](
 	firstQueries chan UrlQuery,
 	haveResponses responseMap,
 	haveErr error,
+	totalPagesLimit int,
 ) (<-chan CallNoError[RespT],
 	<-chan error) {
 
@@ -290,6 +295,7 @@ func makeGatherAllCalls[RespT any](
 		queryCap,
 		workersCap,
 		errorCap,
+		totalPagesLimit, // 0 means no limit
 	)
 
 	Expect(calls).ToNot(BeNil())
@@ -300,7 +306,8 @@ func makeGatherAllCalls[RespT any](
 // go test -v --ginkgo.focus "gather all calls"
 var _ = Describe("test gather all calls RespT", func() {
 	var _ = Describe("ok response", func() {
-		channelCapacity := 3
+		const channelCapacity = 3
+		const totalPagesLimit = 5
 		It("two responses", func(ctx SpecContext) {
 			firstQueries := make(chan UrlQuery)
 			logger := &elog.NoopLogger{}
@@ -312,6 +319,7 @@ var _ = Describe("test gather all calls RespT", func() {
 				firstQueries,
 				makeDataResponses(),
 				haveErr,
+				totalPagesLimit,
 			)
 
 			Expect(errors).ToNot(BeNil())

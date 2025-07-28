@@ -9,6 +9,7 @@ import (
 	"github.com/mailru/easyjson/jlexer"
 	"github.com/rivo/tview"
 	"github.com/spf13/cobra"
+
 	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
@@ -46,7 +47,6 @@ func NewEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command 
 
 			filepath := "ignore/my_recent_events.yaml"
 			route := "events/"
-			// start := time.Now()
 			accessToken, err := loadGitlabAccessToken()
 
 			fmt.Println("we got accessToken")
@@ -87,7 +87,6 @@ func getEvents(
 	var err error
 	// start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
-
 	if err != nil {
 		return nil, err
 	}
@@ -208,10 +207,9 @@ func (ec *EventClient) getEvents(
 	close(firstQueries)
 
 	eventsMap := gitlab.EventMap{}
-	var err error
 	for s := range eventCalls {
 		if s.Error != nil {
-			return nil, err
+			return nil, s.Error
 		}
 		for _, m := range s.Val {
 			eventsMap[m.ID] = m

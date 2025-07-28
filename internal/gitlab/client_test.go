@@ -52,12 +52,13 @@ var _ = Describe("client test of get page queries", func() {
 			Eventually(cfg, errors).Should(Not(BeNil()))
 			Eventually(cfg, errors).Should(BeClosed())
 		}
-		channelCapacity := 5
+		const totalPageLimit = 5
+		const channelCapacity = 5
 		var haveErr error
 		It("no responses", func(ctx SpecContext) {
 			firstQueries := make(chan UrlQuery)
 			haveResponses := map[string]*resty.Response{}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 
 			firstQueries <- UrlQuery{
 				Path: "noresp",
@@ -72,7 +73,7 @@ var _ = Describe("client test of get page queries", func() {
 			haveResponses := map[string]*resty.Response{
 				"api/" + p: &resty.Response{},
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 
 			firstQueries <- UrlQuery{
 				Path: p,
@@ -98,7 +99,7 @@ var _ = Describe("client test of get page queries", func() {
 					},
 				},
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 
 			firstQueries <- UrlQuery{
 				Path: p,
@@ -123,7 +124,7 @@ var _ = Describe("client test of get page queries", func() {
 					},
 				},
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 
 			firstQueries <- UrlQuery{
 				Path: p,
@@ -152,7 +153,7 @@ var _ = Describe("client test of get page queries", func() {
 					return r
 				}(),
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 
 			firstQueries <- UrlQuery{
 				Path: p,
@@ -172,7 +173,7 @@ var _ = Describe("client test of get page queries", func() {
 			haveResponses := map[string]*resty.Response{
 				"api/" + p: makePagedResponse("api/"+p, "{}"),
 			}
-			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr)
+			calls, queries, errors := makeGetPages[kam.JSONValue](ctx, channelCapacity, firstQueries, haveResponses, haveErr, totalPageLimit)
 			firstQueries <- UrlQuery{
 				Path: p,
 			}

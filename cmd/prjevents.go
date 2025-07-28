@@ -87,9 +87,9 @@ func NewPrjEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Comma
 				go func() {
 					defer wg.Done()
 
-					ids := []int{}
+					//ids := []int{}
 					for id := range pendingIDs {
-						ids = append(ids, id)
+						//ids = append(ids, id)
 
 						filepath := fmt.Sprintf("ignore/project_%d_events.yaml", id)
 						route := fmt.Sprintf("projects/%d/events", id)

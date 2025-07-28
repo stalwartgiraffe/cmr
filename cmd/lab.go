@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	//"atomic"
 	"context"
 	"fmt"
 	"os"
@@ -59,11 +60,13 @@ func Run(cmd *cobra.Command) {
 	logger := elog.New()
 
 	firstQueries := make(chan gitlab.UrlQuery)
+	totalPagesLimit := 1
 	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDual[[]gitlab.ProjectModel](
 		cmd.Context(),
 		client,
 		logger,
 		firstQueries,
+		totalPagesLimit,
 	)
 	errorsFan := []<-chan error{}
 	errorsFan = append(errorsFan, gatherProjectErrs)
@@ -74,6 +77,7 @@ func Run(cmd *cobra.Command) {
 	)
 	close(firstQueries)
 	transformCap := 5
+	//var count atomic.Int64 // <-- added atomic counter
 	projectResults := gitlab.TransformToOne(
 		projectCalls,
 		transformCap,
@@ -132,7 +136,10 @@ func Run(cmd *cobra.Command) {
 
 	// fmt.Println("num groups", len(groups))
 	fmt.Println("num projects", len(projectsMap))
-	utils.WriteToYamlFile("ignore/projects.yaml", utils.ToSortedSlice(projectsMap))
+	if err := utils.WriteToYamlFile("ignore/projects.yaml", utils.ToSortedSlice(projectsMap)); err != nil {
+		utils.Redln(err)
+		return
+	}
 	fmt.Println("done reading")
 }
 
@@ -160,11 +167,13 @@ func oldRun(cmd *cobra.Command) {
 	logger := elog.New()
 
 	firstQueries := make(chan gitlab.UrlQuery)
+	totalPagesLimit := 1
 	groupsCalls, gatherGroupErrs := gitlab.GatherPageCallsDual[[]gitlab.GroupModel](
 		cmd.Context(),
 		client,
 		logger,
 		firstQueries,
+		totalPagesLimit,
 	)
 	errorsFan := []<-chan error{}
 	errorsFan = append(errorsFan, gatherGroupErrs)
@@ -197,6 +206,7 @@ func oldRun(cmd *cobra.Command) {
 		client,
 		logger,
 		projectQueries,
+		totalPagesLimit,
 	)
 
 	errorsFan = append(errorsFan, projectErrs)
@@ -250,7 +260,7 @@ func dumproute(
 			"order_by":               "id",
 			"owned":                  false,
 			"page":                   1,
-			"per_page":               20,
+			"per_page":               200,
 			"sort":                   "asc",
 			"statistics":             false,
 			"with_custom_attributes": false,

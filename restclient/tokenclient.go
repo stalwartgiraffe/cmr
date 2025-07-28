@@ -71,7 +71,10 @@ func (c *TokenClient) WithAPI(api string) *TokenClient {
 }
 
 func (c *TokenClient) BaseApiPath() string {
-	s, _ := url.JoinPath(c.Client.GetBaseURL(), c.Api)
+	s, err := url.JoinPath(c.Client.GetBaseURL(), c.Api)
+	if err != nil {
+		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.Api, err))
+	}
 	return s
 }
 
@@ -264,10 +267,8 @@ func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *Toke
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
 		if tokenClient.IsDebug {
 			cookies := resp.Cookies()
-			if cookies != nil {
-				for _, c := range cookies {
-					fmt.Println(color.Ize(rstClr, fmt.Sprintf("%+v", *c)))
-				}
+			for _, c := range cookies {
+				fmt.Println(color.Ize(rstClr, fmt.Sprintf("%+v", *c)))
 			}
 		}
 	}
@@ -313,10 +314,8 @@ func PostReturnCookies[BodyT any, RespT any](ctx context.Context, tokenClient *T
 
 		fmt.Println(color.Ize(color.Cyan, SprintRequestQuiet(resp)))
 		cookies := resp.Cookies()
-		if cookies != nil {
-			for _, c := range cookies {
-				fmt.Println(color.Ize(rstClr, fmt.Sprintf("%+v", *c)))
-			}
+		for _, c := range cookies {
+			fmt.Println(color.Ize(rstClr, fmt.Sprintf("%+v", *c)))
 		}
 	}
 	tt, err := Unmarshal[RespT](resp)

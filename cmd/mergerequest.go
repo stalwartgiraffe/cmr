@@ -119,11 +119,8 @@ func (mrc *MergeRequestClient) updateRecentMergeRequest(
 		return nil, err
 	}
 	requests.Insert(recentRequests)
-	if err != nil {
-		return nil, err
-	}
 	err = requests.WriteToYamlFile(filepath)
-	return requests, nil
+	return requests, err
 }
 
 func (mrc *MergeRequestClient) getMergeRequests(

@@ -71,7 +71,7 @@ func (c *Client) GetPathParams(ctx context.Context, path string, params kam.Map)
 		return kam.JSONValue{}, nil, err
 	}
 	if v == nil {
-		return kam.JSONValue{}, nil, fmt.Errorf("No JSONValue value was returned")
+		return kam.JSONValue{}, nil, fmt.Errorf("no JSONValue value was returned")
 	}
 	return *v, header, nil
 }
@@ -128,7 +128,7 @@ func NewPageQuery(path string, page int) *UrlQuery {
 }
 
 func NewPageParams(page int) kam.Map {
-	const per_page = 20
+	const per_page = 200
 	return kam.Map{
 		"order_by":               "id",
 		"owned":                  false,
