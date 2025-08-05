@@ -10,6 +10,8 @@ import (
 
 	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
@@ -17,8 +19,8 @@ import (
 	"github.com/stalwartgiraffe/cmr/kam"
 )
 
-// initCmd represents the init command
-func NewLabCommand(cfg *CmdConfig) *cobra.Command {
+// NewLabCommand initalizes the command.
+func NewLabCommand(app App, cfg *CmdConfig) *cobra.Command {
 	return &cobra.Command{
 		Use:   "lab",
 		Short: "run lab",
@@ -31,12 +33,19 @@ func NewLabCommand(cfg *CmdConfig) *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			Run(cmd)
+			RunLab(app, cmd)
 		},
 	}
 }
 
-func Run(cmd *cobra.Command) {
+func RunLab(app App, cmd *cobra.Command) {
+	ctx := cmd.Context()
+	if app != nil {
+		var span trace.Span
+		ctx, span = app.StartSpan(ctx, "RunLab")
+		defer span.End()
+	}
+
 	var err error
 	//start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
@@ -61,8 +70,9 @@ func Run(cmd *cobra.Command) {
 
 	firstQueries := make(chan gitlab.UrlQuery)
 	totalPagesLimit := 1
-	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDual[[]gitlab.ProjectModel](
-		cmd.Context(),
+	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDualApp[[]gitlab.ProjectModel](
+		ctx,
+		app,
 		client,
 		logger,
 		firstQueries,
@@ -144,6 +154,7 @@ func Run(cmd *cobra.Command) {
 }
 
 func oldRun(cmd *cobra.Command) {
+	ctx := cmd.Context()
 	var err error
 	start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
@@ -169,7 +180,7 @@ func oldRun(cmd *cobra.Command) {
 	firstQueries := make(chan gitlab.UrlQuery)
 	totalPagesLimit := 1
 	groupsCalls, gatherGroupErrs := gitlab.GatherPageCallsDual[[]gitlab.GroupModel](
-		cmd.Context(),
+		ctx,
 		client,
 		logger,
 		firstQueries,
@@ -202,7 +213,7 @@ func oldRun(cmd *cobra.Command) {
 		})
 
 	projectCalls, projectErrs := gitlab.GatherPageCallsDual[[]gitlab.ProjectModel](
-		cmd.Context(),
+		ctx,
 		client,
 		logger,
 		projectQueries,

@@ -1,3 +1,4 @@
+// cmd package groups the cli cmd handlers
 package cmd
 
 import (
@@ -6,11 +7,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+
 	"github.com/stalwartgiraffe/cmr/internal/config"
-	//"go.opentelemetry.io/otel"
-	//"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
-	//"go.opentelemetry.io/otel/metric"
-	//sdk "go.opentelemetry.io/otel/sdk/metric"
 )
 
 type CmdConfig struct {
@@ -59,13 +57,13 @@ FIXME - write examples here.`,
 	return rootCmd
 }
 
-func AddRootCommand(cancel context.CancelFunc) *cobra.Command {
+func AddRootCommand(cancel context.CancelFunc, app App) *cobra.Command {
 	cfg := &CmdConfig{}
 
 	rootCmd := NewRootCmd(cfg)
 
 	addInitCommand(cfg, rootCmd)
-	rootCmd.AddCommand(NewLabCommand(cfg))
+	rootCmd.AddCommand(NewLabCommand(app, cfg))
 	rootCmd.AddCommand(NewViewProjectsCommand(cancel, cfg))
 	rootCmd.AddCommand(NewEventsCommand(cancel, cfg))
 	rootCmd.AddCommand(NewMergeRequestCommand(cancel, cfg))

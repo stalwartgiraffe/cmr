@@ -77,7 +77,18 @@ func (c *Client) GetPathParams(ctx context.Context, path string, params kam.Map)
 }
 
 func GetWithHeader[RespT any](ctx context.Context, c *Client, path string, params kam.Map) (*RespT, http.Header, error) {
-	return restclient.GetWithHeader[RespT](ctx, c.TokenClient, path, params.ToQueryParams())
+	return restclient.GetWithHeaderWithApp[RespT](ctx, nil, c.TokenClient, path, params.ToQueryParams())
+}
+
+func GetWithHeaderWithApp[RespT any](
+	ctx context.Context,
+	app App,
+	c *Client,
+	path string,
+	params kam.Map) (
+	*RespT,
+	http.Header, error) {
+	return restclient.GetWithHeaderWithApp[RespT](ctx, app, c.TokenClient, path, params.ToQueryParams())
 }
 
 func GetWithUnmarshal[RespT any](

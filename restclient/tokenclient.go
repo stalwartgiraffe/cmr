@@ -6,15 +6,32 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"strings"
 
 	"github.com/TwiN/go-color"
 	"github.com/go-resty/resty/v2"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
+
 	"github.com/stalwartgiraffe/cmr/withstack"
 )
 
 var (
 	rstClr = color.Purple
 )
+
+type App interface {
+	Tracer
+}
+
+type Tracer interface {
+	StartSpan(
+		ctx context.Context,
+		spanName string,
+		opts ...trace.SpanStartOption) (
+		context.Context,
+		trace.Span)
+}
 
 type TokenClient struct {
 	Client      Client
@@ -88,26 +105,57 @@ func GetResponse(
 	*resty.Response,
 	error,
 ) {
-	return GetResponseWithAccept(ctx, tokenClient, path, query, "application/json")
+	// just accept json from the web server for now
+	return GetResponseWithAccept(ctx, nil, tokenClient, path, query, "application/json")
+}
+
+// Generic member functions are not natively support in Go1.19
+// see https://github.com/golang/go/issues/49085
+func GetResponseWithApp(
+	ctx context.Context,
+	app App,
+	tokenClient *TokenClient,
+	path string,
+	query string) (
+	*resty.Response,
+	error,
+) {
+	// just accept json from the web server for now
+	return GetResponseWithAccept(ctx, app, tokenClient, path, query, "application/json")
 }
 
 func GetResponseWithAccept(
 	ctx context.Context,
+	app App,
 	tokenClient *TokenClient,
 	path string,
-	query string,
+	queries string,
 	accept string) (
 	*resty.Response,
 	error,
 ) {
+	if app != nil {
+		var span trace.Span
+		ctx, span = app.StartSpan(ctx, "GetResponseWithAccept")
+		defer span.End()
+
+		attributes := []attribute.KeyValue{
+			attribute.String("path", path),
+		}
+		if queries != "" {
+			attributes = append(attributes, queryAsKV(queries)...)
+		}
+		span.SetAttributes(attributes...)
+	}
+
 	r := tokenClient.Client.Request()
 	r.SetContext(ctx).
 		SetHeader("Accept", accept)
 	if tokenClient.AccessToken != "" {
 		r = r.SetAuthToken(tokenClient.AccessToken)
 	}
-	if query != "" {
-		r = r.SetQueryString(query)
+	if queries != "" {
+		r = r.SetQueryString(queries)
 	}
 
 	// TODO safely join the paths here
@@ -117,6 +165,20 @@ func GetResponseWithAccept(
 		return resp, withstack.Errorf("Path error:%w", err)
 	}
 	return resp, nil
+}
+
+func queryAsKV(queries string) []attribute.KeyValue {
+	attributes := []attribute.KeyValue{}
+	for _, query := range strings.Split(queries, "&") {
+		kv := strings.Split(query, "=")
+		if len(kv) == 2 {
+
+			attributes = append(attributes,
+				attribute.String(kv[0], kv[1]),
+			)
+		}
+	}
+	return attributes
 }
 
 func GetString(
@@ -178,11 +240,28 @@ func Get[RespT any](ctx context.Context,
 func GetWithHeader[RespT any](ctx context.Context,
 	tokenClient *TokenClient,
 	path string,
+	queries string) (
+	*RespT, http.Header,
+	error,
+) {
+	return GetWithHeaderWithApp[RespT](
+		ctx,
+		nil,
+		tokenClient,
+		path,
+		queries)
+}
+
+func GetWithHeaderWithApp[RespT any](
+	ctx context.Context,
+	app App,
+	tokenClient *TokenClient,
+	path string,
 	query string) (
 	*RespT, http.Header,
 	error,
 ) {
-	resp, err := GetResponse(ctx, tokenClient, path, query)
+	resp, err := GetResponseWithApp(ctx, app, tokenClient, path, query)
 	if err != nil {
 		return nil, nil, err
 	}
