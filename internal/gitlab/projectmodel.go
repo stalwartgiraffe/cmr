@@ -64,9 +64,6 @@ func RepoFilePath(home string, root string, project ProjectModel) string {
 		start = filepath.Join(home, root)
 	}
 	dir := project.PathWithNamespace
-	//if strings.HasSuffix(dir, project.Path) {
-	//dir = dir[:len(dir)-len(project.Path)]
-	//}
 	return filepath.Join(start, "repos", dir)
 }
 

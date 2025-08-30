@@ -57,22 +57,31 @@ FIXME - write examples here.`,
 	return rootCmd
 }
 
-func AddRootCommand(cancel context.CancelFunc, app App) *cobra.Command {
+func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 	cfg := &CmdConfig{}
 
 	rootCmd := NewRootCmd(cfg)
 
 	addInitCommand(cfg, rootCmd)
+
+	// fetch the list of all projects from gitlab
 	rootCmd.AddCommand(NewLabCommand(app, cfg))
-	rootCmd.AddCommand(NewViewProjectsCommand(cancel, cfg))
-	rootCmd.AddCommand(NewEventsCommand(cancel, cfg))
-	rootCmd.AddCommand(NewMergeRequestCommand(cancel, cfg))
-	rootCmd.AddCommand(NewPrjEventsCommand(cancel, cfg))
+
+	// print the number of projects we have in the projects file
+	rootCmd.AddCommand(NewViewProjectsCommand(cfg, cancel))
+
+	rootCmd.AddCommand(NewEventsCommand(app, cfg, cancel))
+
+	// get events for each project in the projects file
+	rootCmd.AddCommand(NewPrjEventsCommand(app, cfg, cancel))
+
+	rootCmd.AddCommand(NewMergeRequestCommand(cfg, cancel))
 	rootCmd.AddCommand(NewCloneCommand(cfg))
 	rootCmd.AddCommand(NewPullCommand(cfg))
 	rootCmd.AddCommand(NewLintCommand(cfg))
 	rootCmd.AddCommand(NewGacCommand(cfg, nil))
 	rootCmd.AddCommand(NewPushCommand(cfg, nil))
+
 	rootCmd.AddCommand(NewSecretToolCommand(cfg))
 	return rootCmd
 }

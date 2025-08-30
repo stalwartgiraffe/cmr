@@ -26,7 +26,7 @@ type AppLog interface {
 	Flush()
 }
 
-func NewEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command {
+func NewEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "events",
 		Short: "run events",
@@ -60,7 +60,7 @@ func NewEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command 
 			ctx := cmd.Context()
 			logger := elog.New()
 			fmt.Println("start updating recentEvents")
-			events, err := ec.updateRecentEvents(ctx, logger, cancel, filepath, route)
+			events, err := ec.updateRecentEvents(ctx, app, logger, cancel, filepath, route)
 			fmt.Printf("we got events %d", len(events))
 			_ = events
 			if err != nil {
@@ -76,6 +76,7 @@ func NewEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command 
 
 func getEvents(
 	ctx context.Context,
+	app App,
 	logger AppLog,
 	cancel context.CancelFunc,
 	route string,
@@ -91,7 +92,7 @@ func getEvents(
 		return nil, err
 	}
 	ec := NewEventClient(accessToken)
-	return ec.getEvents(ctx, logger, cancel, route, afterThisDate)
+	return ec.getEvents(ctx, app, logger, cancel, route, afterThisDate)
 }
 
 type EventClient struct {
@@ -113,6 +114,7 @@ func NewEventClient(accessToken string) *EventClient {
 
 func (ec *EventClient) updateRecentEvents(
 	ctx context.Context,
+	app App,
 	logger AppLog,
 	cancel context.CancelFunc,
 	filepath string,
@@ -123,7 +125,7 @@ func (ec *EventClient) updateRecentEvents(
 		return nil, err
 	}
 
-	recentEvents, err := ec.getEvents(ctx, logger, cancel, route, events.LastDate())
+	recentEvents, err := ec.getEvents(ctx, app, logger, cancel, route, events.LastDate())
 	if err != nil {
 		return nil, err
 	}
@@ -172,6 +174,7 @@ func veryifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 
 func (ec *EventClient) getEvents(
 	ctx context.Context,
+	app App,
 	logger AppLog,
 	_ context.CancelFunc,
 	route string,
@@ -183,6 +186,7 @@ func (ec *EventClient) getEvents(
 	firstQueries := make(chan gitlab.UrlQuery)
 	eventCalls := gitlab.GatherPageCallsUM[[]gitlab.EventModel](
 		ctx,
+		app,
 		ec.client,
 		logger,
 		firstQueries,
@@ -191,7 +195,7 @@ func (ec *EventClient) getEvents(
 
 	// see https://docs.gitlab.com/ee/api/events.html
 	const startPage = 1
-	const per_page = 200
+	const per_page = 200 // nolint
 	firstQueries <- gitlab.UrlQuery{
 		Path: route,
 		Params: kam.Map{

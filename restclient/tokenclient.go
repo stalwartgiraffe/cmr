@@ -276,6 +276,7 @@ func GetWithHeaderWithApp[RespT any](
 }
 
 func GetWithUnmarshal[RespT any](ctx context.Context,
+	app App,
 	tokenClient *TokenClient,
 	path string,
 	query string,
@@ -284,7 +285,7 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	*RespT, http.Header,
 	error,
 ) {
-	resp, err := GetResponse(ctx, tokenClient, path, query)
+	resp, err := GetResponseWithApp(ctx, app, tokenClient, path, query)
 	if err != nil {
 		return nil, nil, err
 	}

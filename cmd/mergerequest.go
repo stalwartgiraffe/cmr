@@ -14,7 +14,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/restclient"
 )
 
-func NewMergeRequestCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command {
+func NewMergeRequestCommand(cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "mergerequests",
 		Short: "run mergerequests",
@@ -133,10 +133,14 @@ func (mrc *MergeRequestClient) getMergeRequests(
 	gitlab.MergeRequestMap,
 	error,
 ) {
+
+	var app App // FIXME
+
 	//logger.Println("getEvents")
 	firstQueries := make(chan gitlab.UrlQuery)
 	mrCalls := gitlab.GatherPageCallsUM[[]gitlab.MergeRequestModel](
 		ctx,
+		app,
 		mrc.client,
 		logger,
 		firstQueries,

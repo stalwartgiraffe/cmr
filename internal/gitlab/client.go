@@ -93,6 +93,7 @@ func GetWithHeaderWithApp[RespT any](
 
 func GetWithUnmarshal[RespT any](
 	ctx context.Context,
+	app App,
 	c *Client,
 	path string,
 	params kam.Map,
@@ -100,6 +101,7 @@ func GetWithUnmarshal[RespT any](
 ) (*RespT, http.Header, error) {
 	return restclient.GetWithUnmarshal[RespT](
 		ctx,
+		app,
 		c.TokenClient,
 		path,
 		params.ToQueryParams(),

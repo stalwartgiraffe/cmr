@@ -9,7 +9,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
-func NewViewProjectsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command {
+func NewViewProjectsCommand(cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "viewprojects",
 		Short: "view projects",

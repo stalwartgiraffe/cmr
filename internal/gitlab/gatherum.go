@@ -9,6 +9,7 @@ import (
 
 func GatherPageCallsUM[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
 	logger AppLog,
 	initialQueries <-chan UrlQuery,
@@ -16,6 +17,7 @@ func GatherPageCallsUM[RespT any](
 ) <-chan Call[RespT] {
 	return GatherPageCallsWithUM[RespT](
 		ctx,
+		app,
 		client,
 		logger,
 		initialQueries,
@@ -28,6 +30,7 @@ func GatherPageCallsUM[RespT any](
 }
 func GatherPageCallsWithUM[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
 	logger AppLog,
 	initialQueries <-chan UrlQuery,
@@ -41,6 +44,7 @@ func GatherPageCallsWithUM[RespT any](
 	var queries <-chan UrlQuery
 	calls[0], queries = headPageQueriesUM[RespT](
 		ctx,
+		app,
 		client,
 		logger,
 		initialQueries,
@@ -51,6 +55,7 @@ func GatherPageCallsWithUM[RespT any](
 	)
 	calls[1] = tailPageCallsUM[RespT](
 		ctx,
+		app,
 		client,
 		logger,
 		queries,
@@ -63,6 +68,7 @@ func GatherPageCallsWithUM[RespT any](
 
 func headPageQueriesUM[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
 	logger AppLog,
 	firstQueries <-chan UrlQuery,
@@ -83,6 +89,7 @@ func headPageQueriesUM[RespT any](
 			//logger.Println("head page GET", firstQuery.Path, firstQuery.Params)
 			firstVal, firstHeader, err := GetWithUnmarshal[RespT](
 				ctx,
+				app,
 				client,
 				firstQuery.Path,
 				firstQuery.Params,
@@ -127,6 +134,7 @@ func headPageQueriesUM[RespT any](
 
 func tailPageCallsUM[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
 	logger AppLog,
 	queries <-chan UrlQuery,
@@ -146,6 +154,7 @@ func tailPageCallsUM[RespT any](
 					//logger.Println("tail page GET", q.Path, q.Params)
 					v, h, err := GetWithUnmarshal[RespT](
 						ctx,
+						app,
 						client,
 						q.Path,
 						q.Params,

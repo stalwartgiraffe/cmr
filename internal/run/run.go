@@ -51,7 +51,7 @@ func makeCtx() (context.Context, context.CancelFunc) {
 
 type makeAppFn func(context.Context) app.AppErr
 
-// makeApp initializes application singletons such as 
+// makeApp initializes application singletons such as
 // otel metrics, traces and logs exports
 func makeApp(ctx context.Context) app.AppErr {
 	const otelSchema = "cmr_cli"
@@ -75,7 +75,7 @@ type runCmdFn func(ctx context.Context, ctxCancel context.CancelFunc, app *app.A
 
 // runCmd crates and runs the cmd
 func runCmd(ctx context.Context, ctxCancel context.CancelFunc, app *app.App) error {
-	rootCmd := cmd.AddRootCommand(ctxCancel, app)
+	rootCmd := cmd.AddRootCommand(app, ctxCancel)
 	return rootCmd.ExecuteContext(ctx)
 }
 

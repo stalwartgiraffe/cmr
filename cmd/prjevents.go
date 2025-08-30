@@ -10,7 +10,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
-func NewPrjEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Command {
+func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "prjevents",
 		Short: "run prjevents",
@@ -39,22 +39,6 @@ func NewPrjEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Comma
 			*/
 
 			cmdCtx := cmd.Context()
-			/*
-				// Start tracing
-				traceFile, err := os.Create("trace.out")
-				if err != nil {
-					panic(err)
-				}
-				defer traceFile.Close()
-
-				if err := trace.Start(traceFile); err != nil {
-					panic(err)
-				}
-				defer trace.Stop()
-
-				traceCtx, cmdTask := trace.NewTask(cmdCtx, "prjEvents")
-				defer cmdTask.End()
-			*/
 
 			// start := time.Now()
 			accessToken, err := loadGitlabAccessToken()
@@ -68,7 +52,7 @@ func NewPrjEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Comma
 			route := "events/"
 			var logger AppLog
 			logger = elog.New()
-			myEvents, err := ec.updateRecentEvents(cmdCtx, logger, cancel, filepath, route)
+			myEvents, err := ec.updateRecentEvents(cmdCtx, app, logger, cancel, filepath, route)
 			if err != nil {
 				utils.Redln(err)
 				return
@@ -82,19 +66,16 @@ func NewPrjEventsCommand(cancel context.CancelFunc, cfg *CmdConfig) *cobra.Comma
 
 			var wg sync.WaitGroup
 			wg.Add(numWorkers)
-			for worker := 0; worker < numWorkers; worker++ {
+			for range numWorkers {
 				// if we capture worker, rember to alias
 				go func() {
 					defer wg.Done()
 
-					//ids := []int{}
 					for id := range pendingIDs {
-						//ids = append(ids, id)
 
 						filepath := fmt.Sprintf("ignore/project_%d_events.yaml", id)
 						route := fmt.Sprintf("projects/%d/events", id)
-						// fmt.Println("worker", worker, "get ", id)
-						_, err := ec.updateRecentEvents(cmdCtx, logger, cancel, filepath, route)
+						_, err := ec.updateRecentEvents(cmdCtx, app, logger, cancel, filepath, route)
 						if err != nil {
 							utils.Redln(err)
 							return
