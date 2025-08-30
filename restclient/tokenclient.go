@@ -280,11 +280,14 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	tokenClient *TokenClient,
 	path string,
 	query string,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, App, *resty.Response) (*RespT, error),
 ) (
 	*RespT, http.Header,
 	error,
 ) {
+	ctx, span := app.StartSpan(ctx, "GetWithUnmarshal")
+	defer span.End()
+
 	resp, err := GetResponseWithApp(ctx, app, tokenClient, path, query)
 	if err != nil {
 		return nil, nil, err
@@ -292,8 +295,7 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	if tokenClient.IsVerbose {
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
 	}
-	//r, err := Unmarshal[RespT](resp)
-	r, err := unmarshal(resp)
+	r, err := unmarshal(ctx, app, resp)
 	if err != nil {
 		return nil, nil, err
 	}

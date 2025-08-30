@@ -6,7 +6,7 @@ import (
 	"sync"
 
 	"github.com/spf13/cobra"
-	"github.com/stalwartgiraffe/cmr/internal/elog"
+
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
@@ -50,9 +50,7 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 			ec := NewEventClient(accessToken)
 			filepath := "ignore/my_recent_events.yaml"
 			route := "events/"
-			var logger AppLog
-			logger = elog.New()
-			myEvents, err := ec.updateRecentEvents(cmdCtx, app, logger, cancel, filepath, route)
+			myEvents, err := ec.updateRecentEvents(cmdCtx, app, cancel, filepath, route)
 			if err != nil {
 				utils.Redln(err)
 				return
@@ -61,8 +59,6 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 
 			numWorkers := 200
 			pendingIDs := make(chan int, numWorkers)
-
-			logger = &elog.NoopLogger{}
 
 			var wg sync.WaitGroup
 			wg.Add(numWorkers)
@@ -75,7 +71,7 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 
 						filepath := fmt.Sprintf("ignore/project_%d_events.yaml", id)
 						route := fmt.Sprintf("projects/%d/events", id)
-						_, err := ec.updateRecentEvents(cmdCtx, app, logger, cancel, filepath, route)
+						_, err := ec.updateRecentEvents(cmdCtx, app, cancel, filepath, route)
 						if err != nil {
 							utils.Redln(err)
 							return

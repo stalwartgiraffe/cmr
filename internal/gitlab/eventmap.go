@@ -1,20 +1,25 @@
 package gitlab
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
 	"sort"
 
 	"github.com/TwiN/go-color"
+	"golang.org/x/exp/maps"
+
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/withstack"
-	"golang.org/x/exp/maps"
 )
 
 type EventMap map[int]EventModel
 
-func NewEventMapFromYaml(filepath string) (EventMap, error) {
+func NewEventMapFromYaml(ctx context.Context, app App, filepath string) (EventMap, error) {
+	ctx, span := app.StartSpan(ctx, "updateRecentEvents")
+	defer span.End()
+
 	var oldEvents []EventModel
 
 	if err := utils.ReadFromYamlFile(filepath, &oldEvents); err != nil {

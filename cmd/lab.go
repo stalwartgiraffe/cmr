@@ -9,7 +9,6 @@ import (
 
 	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
-	"go.opentelemetry.io/otel/trace"
 
 	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
@@ -39,11 +38,8 @@ func NewLabCommand(app App, cfg *CmdConfig) *cobra.Command {
 
 func RunLab(app App, cmd *cobra.Command) {
 	ctx := cmd.Context()
-	if app != nil {
-		var span trace.Span
-		ctx, span = app.StartSpan(ctx, "RunLab")
-		defer span.End()
-	}
+	ctx, span := app.StartSpan(ctx, "RunLab")
+	defer span.End()
 
 	var err error
 	accessToken, err := loadGitlabAccessToken()

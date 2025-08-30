@@ -14,7 +14,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/restclient"
 )
 
-func NewMergeRequestCommand(cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
+func NewMergeRequestCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "mergerequests",
 		Short: "run mergerequests",
@@ -44,7 +44,7 @@ func NewMergeRequestCommand(cfg *CmdConfig, cancel context.CancelFunc) *cobra.Co
 			ctx := cmd.Context()
 			logger := elog.New()
 			fmt.Println("start updating recentEvents")
-			requests, err := mrc.updateRecentMergeRequest(ctx, logger, cancel, filepath, route)
+			requests, err := mrc.updateRecentMergeRequest(ctx, app, logger, cancel, filepath, route)
 			fmt.Printf("we got events %d", len(requests))
 			if err != nil {
 				utils.Redln(err)
@@ -101,6 +101,7 @@ func NewMergeRequestClient(accessToken string) *MergeRequestClient {
 
 func (mrc *MergeRequestClient) updateRecentMergeRequest(
 	ctx context.Context,
+	app App,
 	logger AppLog,
 	cancel context.CancelFunc,
 	filepath string,
@@ -114,7 +115,7 @@ func (mrc *MergeRequestClient) updateRecentMergeRequest(
 		return nil, err
 	}
 
-	recentRequests, err := mrc.getMergeRequests(ctx, logger, cancel, route, requests.LastCreatedDate())
+	recentRequests, err := mrc.getMergeRequests(ctx, app, logger, cancel, route, requests.LastCreatedDate())
 	if err != nil {
 		return nil, err
 	}
@@ -125,6 +126,7 @@ func (mrc *MergeRequestClient) updateRecentMergeRequest(
 
 func (mrc *MergeRequestClient) getMergeRequests(
 	ctx context.Context,
+	app App,
 	logger AppLog,
 	cancel context.CancelFunc,
 	route string,
@@ -134,15 +136,11 @@ func (mrc *MergeRequestClient) getMergeRequests(
 	error,
 ) {
 
-	var app App // FIXME
-
-	//logger.Println("getEvents")
 	firstQueries := make(chan gitlab.UrlQuery)
 	mrCalls := gitlab.GatherPageCallsUM[[]gitlab.MergeRequestModel](
 		ctx,
 		app,
 		mrc.client,
-		logger,
 		firstQueries,
 		unmarshalMergeRequestModel,
 	)
@@ -166,7 +164,6 @@ func (mrc *MergeRequestClient) getMergeRequests(
 	}
 
 	close(firstQueries)
-	//logger.Println("done sending query")
 
 	requestsMap := gitlab.MergeRequestMap{}
 	for s := range mrCalls {
@@ -177,11 +174,17 @@ func (mrc *MergeRequestClient) getMergeRequests(
 			requestsMap[m.ID] = m
 		}
 	}
-	//logger.Println("merge calls into map")
 	return requestsMap, nil
 }
 
-func unmarshalMergeRequestModel(resp *resty.Response) (*[]gitlab.MergeRequestModel, error) {
+func unmarshalMergeRequestModel(
+	ctx context.Context,
+	app restclient.App,
+	resp *resty.Response,
+) (*[]gitlab.MergeRequestModel, error) {
+_, span := app.StartSpan(ctx, "unmarshalMergeRequestModel")
+	defer span.End()
+
 	if resp == nil {
 		return nil, restclient.NewFailureResponse("Response object was nil", resp)
 	}

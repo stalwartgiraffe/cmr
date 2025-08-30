@@ -5,21 +5,21 @@ import (
 	"sync"
 
 	"github.com/go-resty/resty/v2"
+
+	"github.com/stalwartgiraffe/cmr/restclient"
 )
 
 func GatherPageCallsUM[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) <-chan Call[RespT] {
 	return GatherPageCallsWithUM[RespT](
 		ctx,
 		app,
 		client,
-		logger,
 		initialQueries,
 		5, // callCap int,
 		5, // queryCap int,
@@ -32,21 +32,22 @@ func GatherPageCallsWithUM[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
 	workersCap int,
 	errorCap int,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) <-chan Call[RespT] {
+	ctx, span := app.StartSpan(ctx, " GatherPageCallsWithUM")
+	defer span.End()
+
 	calls := make([]<-chan Call[RespT], 2)
 	var queries <-chan UrlQuery
 	calls[0], queries = headPageQueriesUM[RespT](
 		ctx,
 		app,
 		client,
-		logger,
 		initialQueries,
 		callCap,
 		queryCap,
@@ -57,7 +58,6 @@ func GatherPageCallsWithUM[RespT any](
 		ctx,
 		app,
 		client,
-		logger,
 		queries,
 		workersCap,
 		errorCap,
@@ -70,23 +70,24 @@ func headPageQueriesUM[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	firstQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
 	errorCap int,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) (
 	<-chan Call[RespT],
 	<-chan UrlQuery,
 ) {
+	ctx, span := app.StartSpan(ctx, "headPageQueriesUM")
+	defer span.End()
+
 	calls := make(chan Call[RespT], callCap)
 	queries := make(chan UrlQuery, callCap)
 	go func() {
 		defer close(calls)
 		defer close(queries)
 		for firstQuery := range firstQueries {
-			//logger.Println("head page GET", firstQuery.Path, firstQuery.Params)
 			firstVal, firstHeader, err := GetWithUnmarshal[RespT](
 				ctx,
 				app,
@@ -136,22 +137,28 @@ func tailPageCallsUM[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	queries <-chan UrlQuery,
 	workersCap int,
 	errorsCap int,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) <-chan Call[RespT] {
+	ctx, span := app.StartSpan(ctx, "tailPageQueriesUM")
+	defer span.End()
+
 	calls := make(chan Call[RespT], workersCap)
 	go func() {
+		ctx, span := app.StartSpan(ctx, "go_tailPageQueriesUM")
+		defer span.End()
 		defer close(calls)
 		var workersWg sync.WaitGroup
 		workersWg.Add(workersCap)
 		for i := 0; i < workersCap; i++ {
 			go func() {
+				ctx, span := app.StartSpan(ctx, "go_go_tailPageQueriesUM")
+				defer span.End()
+
 				defer workersWg.Done()
 				for q := range queries {
-					//logger.Println("tail page GET", q.Path, q.Params)
 					v, h, err := GetWithUnmarshal[RespT](
 						ctx,
 						app,

@@ -97,7 +97,7 @@ func GetWithUnmarshal[RespT any](
 	c *Client,
 	path string,
 	params kam.Map,
-	unmarshal func(*resty.Response) (*RespT, error),
+	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) (*RespT, http.Header, error) {
 	return restclient.GetWithUnmarshal[RespT](
 		ctx,

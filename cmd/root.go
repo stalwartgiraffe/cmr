@@ -62,6 +62,8 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 
 	rootCmd := NewRootCmd(cfg)
 
+	// init one of several things
+	// init branch  - init a new branch
 	addInitCommand(cfg, rootCmd)
 
 	// fetch the list of all projects from gitlab
@@ -75,7 +77,8 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 	// get events for each project in the projects file
 	rootCmd.AddCommand(NewPrjEventsCommand(app, cfg, cancel))
 
-	rootCmd.AddCommand(NewMergeRequestCommand(cfg, cancel))
+	// fetch merge requests from gitlab
+	rootCmd.AddCommand(NewMergeRequestCommand(app, cfg, cancel))
 	rootCmd.AddCommand(NewCloneCommand(cfg))
 	rootCmd.AddCommand(NewPullCommand(cfg))
 	rootCmd.AddCommand(NewLintCommand(cfg))

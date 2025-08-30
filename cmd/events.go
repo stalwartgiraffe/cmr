@@ -10,7 +10,6 @@ import (
 	"github.com/rivo/tview"
 	"github.com/spf13/cobra"
 
-	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
@@ -39,39 +38,42 @@ func NewEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			projects, err := gitlab.ReadProjects()
-			if err != nil {
-				utils.Redln(err)
-				return
-			}
-
-			filepath := "ignore/my_recent_events.yaml"
-			route := "events/"
-			accessToken, err := loadGitlabAccessToken()
-
-			fmt.Println("we got accessToken")
-
-			if err != nil {
-				utils.Redln(err)
-				return
-			}
-
-			ec := NewEventClient(accessToken)
-			ctx := cmd.Context()
-			logger := elog.New()
-			fmt.Println("start updating recentEvents")
-			events, err := ec.updateRecentEvents(ctx, app, logger, cancel, filepath, route)
-			fmt.Printf("we got events %d", len(events))
-			_ = events
-			if err != nil {
-				utils.Redln(err)
-				return
-			}
-
-			content := tviewwrapper.NewEventsContent(events, projects)
-			appTableRun(content, cancel)
+			RunEventsCmd(app, cancel, cmd)
 		},
 	}
+}
+
+func RunEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
+	ctx := cmd.Context()
+	ctx, span := app.StartSpan(ctx, "RunEvents")
+	defer span.End()
+
+	projects, err := gitlab.ReadProjects()
+	if err != nil {
+		utils.Redln(err)
+		return
+	}
+
+	filepath := "ignore/my_recent_events.yaml"
+	route := "events/"
+	accessToken, err := loadGitlabAccessToken()
+	if err != nil {
+		utils.Redln(err)
+		return
+	}
+
+	ec := NewEventClient(accessToken)
+	app.Println("start updating recentEvents")
+	events, err := ec.updateRecentEvents(ctx, app, cancel, filepath, route)
+	if err != nil {
+		utils.Redln(err)
+		return
+	}
+	app.Printf("we got events %d", len(events))
+	_ = events
+
+	content := tviewwrapper.NewEventsContent(events, projects)
+	appTableRun(content, cancel)
 }
 
 func getEvents(
@@ -86,13 +88,12 @@ func getEvents(
 	error,
 ) {
 	var err error
-	// start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
 	if err != nil {
 		return nil, err
 	}
 	ec := NewEventClient(accessToken)
-	return ec.getEvents(ctx, app, logger, cancel, route, afterThisDate)
+	return ec.getEvents(ctx, app, cancel, route, afterThisDate)
 }
 
 type EventClient struct {
@@ -115,17 +116,19 @@ func NewEventClient(accessToken string) *EventClient {
 func (ec *EventClient) updateRecentEvents(
 	ctx context.Context,
 	app App,
-	logger AppLog,
 	cancel context.CancelFunc,
 	filepath string,
 	route string,
 ) (gitlab.EventMap, error) {
-	events, err := gitlab.NewEventMapFromYaml(filepath)
+	ctx, span := app.StartSpan(ctx, "updateRecentEvents")
+	defer span.End()
+
+	events, err := gitlab.NewEventMapFromYaml(ctx, app, filepath)
 	if err != nil {
 		return nil, err
 	}
 
-	recentEvents, err := ec.getEvents(ctx, app, logger, cancel, route, events.LastDate())
+	recentEvents, err := ec.getEvents(ctx, app, cancel, route, events.LastDate())
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +137,14 @@ func (ec *EventClient) updateRecentEvents(
 	return events, err
 }
 
-func unmarshalEventModel(resp *resty.Response) (*[]gitlab.EventModel, error) {
+func unmarshalEventModel(
+	ctx context.Context,
+	app restclient.App,
+	resp *resty.Response,
+) (*[]gitlab.EventModel, error) {
+	_, span := app.StartSpan(ctx, "unmarshalEventModel")
+	defer span.End()
+
 	if resp == nil {
 		return nil, restclient.NewFailureResponse("Response object was nil", resp)
 	}
@@ -155,8 +165,8 @@ func unmarshalEventModel(resp *resty.Response) (*[]gitlab.EventModel, error) {
 	return &ss, nil
 }
 
-// veryifyAllFieldsExpected returns an error if a field is not expected
-func veryifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
+// verifyAllFieldsExpected returns an error if a field is not expected
+func verifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 	kvs := []map[string]any{}
 	if err := json.Unmarshal(data, &kvs); err != nil {
 		return withstack.Errorf("Unmarshal error:%w", err)
@@ -165,7 +175,7 @@ func veryifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 	for _, kv := range kvs {
 		for k, v := range kv {
 			if _, ok := names[k]; !ok {
-				return fmt.Errorf("unexpectd field name %s %v %d", k, v, data)
+				return fmt.Errorf("unexpected field name %s %v %d", k, v, data)
 			}
 		}
 	}
@@ -175,7 +185,6 @@ func veryifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 func (ec *EventClient) getEvents(
 	ctx context.Context,
 	app App,
-	logger AppLog,
 	_ context.CancelFunc,
 	route string,
 	afterThisDate string,
@@ -183,12 +192,14 @@ func (ec *EventClient) getEvents(
 	gitlab.EventMap,
 	error,
 ) {
+	ctx, span := app.StartSpan(ctx, "getEvents")
+	defer span.End()
+
 	firstQueries := make(chan gitlab.UrlQuery)
 	eventCalls := gitlab.GatherPageCallsUM[[]gitlab.EventModel](
 		ctx,
 		app,
 		ec.client,
-		logger,
 		firstQueries,
 		unmarshalEventModel,
 	)
@@ -207,7 +218,6 @@ func (ec *EventClient) getEvents(
 			"per_page": per_page,
 		},
 	}
-
 	close(firstQueries)
 
 	eventsMap := gitlab.EventMap{}
