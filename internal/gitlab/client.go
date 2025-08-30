@@ -61,12 +61,12 @@ func NewClientWithRest(
 	}
 }
 
-func (c *Client) Get(ctx context.Context, q UrlQuery) (kam.JSONValue, http.Header, error) {
-	return c.GetPathParams(ctx, q.Path, q.Params)
+func (c *Client) Get(ctx context.Context, app App, q UrlQuery) (kam.JSONValue, http.Header, error) {
+	return c.GetPathParams(ctx, app, q.Path, q.Params)
 }
 
-func (c *Client) GetPathParams(ctx context.Context, path string, params kam.Map) (kam.JSONValue, http.Header, error) {
-	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, c.TokenClient, path, params.ToQueryParams())
+func (c *Client) GetPathParams(ctx context.Context, app App, path string, params kam.Map) (kam.JSONValue, http.Header, error) {
+	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, app, c.TokenClient, path, params.ToQueryParams())
 	if err != nil {
 		return kam.JSONValue{}, nil, err
 	}
@@ -76,11 +76,7 @@ func (c *Client) GetPathParams(ctx context.Context, path string, params kam.Map)
 	return *v, header, nil
 }
 
-func GetWithHeader[RespT any](ctx context.Context, c *Client, path string, params kam.Map) (*RespT, http.Header, error) {
-	return restclient.GetWithHeaderWithApp[RespT](ctx, nil, c.TokenClient, path, params.ToQueryParams())
-}
-
-func GetWithHeaderWithApp[RespT any](
+func GetWithHeader[RespT any](
 	ctx context.Context,
 	app App,
 	c *Client,
@@ -88,7 +84,7 @@ func GetWithHeaderWithApp[RespT any](
 	params kam.Map) (
 	*RespT,
 	http.Header, error) {
-	return restclient.GetWithHeaderWithApp[RespT](ctx, app, c.TokenClient, path, params.ToQueryParams())
+	return restclient.GetWithHeader[RespT](ctx, app, c.TokenClient, path, params.ToQueryParams())
 }
 
 func GetWithUnmarshal[RespT any](
@@ -107,14 +103,6 @@ func GetWithUnmarshal[RespT any](
 		params.ToQueryParams(),
 		unmarshal,
 	)
-}
-
-func (c *Client) GetString(ctx context.Context, path string, params string) (string, error) {
-	str, err := restclient.GetString(ctx, c.TokenClient, path, params)
-	if err != nil {
-		return "", err
-	}
-	return str, nil
 }
 
 type UrlQuery struct {

@@ -2,7 +2,6 @@ package restclient
 
 import (
 	"encoding/json"
-	"net/http/httputil"
 
 	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v3"
@@ -17,11 +16,7 @@ func Unmarshal[T any](resp *resty.Response) (*T, error) {
 	}
 	if resp.IsError() {
 		const includeBody = true
-		dump, err := httputil.DumpResponse(resp.RawResponse, includeBody)
-		if err != nil {
-			return nil, NewFailureResponse("could not dump err: raw ResponseBody="+string(resp.Body()), resp)
-		}
-		return nil, NewFailureResponse(string(dump), resp)
+		return nil, NewFailureResponse(SprintResponse(resp), resp)
 	}
 	if !resp.IsSuccess() {
 		return nil, NewFailureResponse("Response object had failure status", resp)

@@ -177,7 +177,7 @@ func headPageQueriesDual[RespT any](
 		defer close(queries)
 		defer close(errors)
 		for firstQuery := range firstQueries {
-			firstVal, firstHeader, err := GetWithHeaderWithApp[RespT](
+			firstVal, firstHeader, err := GetWithHeader[RespT](
 				ctx,
 				app,
 				client,
@@ -246,7 +246,7 @@ func tailPageCallsDual[RespT any](
 
 				defer workersWg.Done()
 				for q := range queries {
-					v, h, err := GetWithHeaderWithApp[RespT](
+					v, h, err := GetWithHeader[RespT](
 						ctx,
 						app,
 						client,

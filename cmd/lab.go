@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	//"atomic"
-	"context"
 	"fmt"
 	"os"
 	"sync"
@@ -14,7 +12,6 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/internal/xr"
-	"github.com/stalwartgiraffe/cmr/kam"
 )
 
 // NewLabCommand initializes the command.
@@ -112,35 +109,6 @@ func RunLab(app App, cmd *cobra.Command) {
 		return
 	}
 	fmt.Println("done reading")
-}
-
-func dumproute(
-	ctx context.Context,
-	client *gitlab.Client) {
-	q := gitlab.UrlQuery{
-		Path: "groups/45/descendant_groups",
-
-		Params: kam.Map{
-			"order_by":               "id",
-			"owned":                  false,
-			"page":                   1,
-			"per_page":               200,
-			"sort":                   "asc",
-			"statistics":             false,
-			"with_custom_attributes": false,
-		},
-	}
-	v, m, e := client.Get(ctx, q)
-	if e != nil {
-		fmt.Println("ERROR:", e)
-	} else {
-		_ = m
-		fmt.Println("- descix ------------------------------------------")
-		fmt.Println(utils.YamlString(v))
-
-		_ = e
-	}
-
 }
 
 func loadGitlabAccessToken() (string, error) {

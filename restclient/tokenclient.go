@@ -97,56 +97,28 @@ func (c *TokenClient) BaseApiPath() string {
 
 // Generic member functions are not natively support in Go1.19
 // see https://github.com/golang/go/issues/49085
-func GetResponse(
-	ctx context.Context,
-	tokenClient *TokenClient,
-	path string,
-	query string) (
-	*resty.Response,
-	error,
-) {
-	// just accept json from the web server for now
-	return GetResponseWithAccept(ctx, nil, tokenClient, path, query, "application/json")
-}
-
-// Generic member functions are not natively support in Go1.19
-// see https://github.com/golang/go/issues/49085
-func GetResponseWithApp(
+func getResponse(
 	ctx context.Context,
 	app App,
 	tokenClient *TokenClient,
 	path string,
-	query string) (
+	queries string) (
 	*resty.Response,
 	error,
 ) {
 	// just accept json from the web server for now
-	return GetResponseWithAccept(ctx, app, tokenClient, path, query, "application/json")
-}
+	const accept = "application/json"
+	var span trace.Span
+	ctx, span = app.StartSpan(ctx, "GetResponseWithAccept")
+	defer span.End()
 
-func GetResponseWithAccept(
-	ctx context.Context,
-	app App,
-	tokenClient *TokenClient,
-	path string,
-	queries string,
-	accept string) (
-	*resty.Response,
-	error,
-) {
-	if app != nil {
-		var span trace.Span
-		ctx, span = app.StartSpan(ctx, "GetResponseWithAccept")
-		defer span.End()
-
-		attributes := []attribute.KeyValue{
-			attribute.String("path", path),
-		}
-		if queries != "" {
-			attributes = append(attributes, queryAsKV(queries)...)
-		}
-		span.SetAttributes(attributes...)
+	attributes := []attribute.KeyValue{
+		attribute.String("path", path),
 	}
+	if queries != "" {
+		attributes = append(attributes, queryAsKV(queries)...)
+	}
+	span.SetAttributes(attributes...)
 
 	r := tokenClient.Client.Request()
 	r.SetContext(ctx).
@@ -181,22 +153,6 @@ func queryAsKV(queries string) []attribute.KeyValue {
 	return attributes
 }
 
-func GetString(
-	ctx context.Context,
-	tokenClient *TokenClient,
-	path string,
-	query string) (
-	string, error) {
-	resp, err := GetResponse(ctx, tokenClient, path, query)
-	if err != nil {
-		return "", err
-	}
-	if tokenClient.IsVerbose {
-		fmt.Println("GET string on", color.Ize(rstClr, resp.Request.URL))
-	}
-	return string(resp.Body()), nil
-}
-
 // SprintRequestQuiet dumps the raw request that generated this response.
 // Quietly hide headers Authorization and Cookie because they are usually too noisy.
 func SprintRequestQuiet(resp *resty.Response) string {
@@ -212,7 +168,8 @@ func SprintRequestQuiet(resp *resty.Response) string {
 	}
 }
 func SprintResponse(resp *resty.Response) string {
-	bb, err := httputil.DumpResponse(resp.RawResponse, true)
+	const includeBody = true
+	bb, err := httputil.DumpResponse(resp.RawResponse, includeBody)
 	if err == nil {
 		return string(bb)
 	} else {
@@ -221,12 +178,13 @@ func SprintResponse(resp *resty.Response) string {
 }
 
 func Get[RespT any](ctx context.Context,
+	app App,
 	tokenClient *TokenClient,
 	path string,
 	query string) (
 	*RespT, error,
 ) {
-	resp, err := GetResponse(ctx, tokenClient, path, query)
+	resp, err := getResponse(ctx, app, tokenClient, path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -237,31 +195,19 @@ func Get[RespT any](ctx context.Context,
 	return Unmarshal[RespT](resp)
 }
 
-func GetWithHeader[RespT any](ctx context.Context,
+func GetWithHeader[RespT any](
+	ctx context.Context,
+	app App,
 	tokenClient *TokenClient,
 	path string,
 	queries string) (
 	*RespT, http.Header,
 	error,
 ) {
-	return GetWithHeaderWithApp[RespT](
-		ctx,
-		nil,
-		tokenClient,
-		path,
-		queries)
-}
+	ctx, span := app.StartSpan(ctx, "GetWithHeader")
+	defer span.End()
 
-func GetWithHeaderWithApp[RespT any](
-	ctx context.Context,
-	app App,
-	tokenClient *TokenClient,
-	path string,
-	query string) (
-	*RespT, http.Header,
-	error,
-) {
-	resp, err := GetResponseWithApp(ctx, app, tokenClient, path, query)
+	resp, err := getResponse(ctx, app, tokenClient, path, queries)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -279,7 +225,7 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	app App,
 	tokenClient *TokenClient,
 	path string,
-	query string,
+	queries string,
 	unmarshal func(context.Context, App, *resty.Response) (*RespT, error),
 ) (
 	*RespT, http.Header,
@@ -288,7 +234,7 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	ctx, span := app.StartSpan(ctx, "GetWithUnmarshal")
 	defer span.End()
 
-	resp, err := GetResponseWithApp(ctx, app, tokenClient, path, query)
+	resp, err := getResponse(ctx, app, tokenClient, path, queries)
 	if err != nil {
 		return nil, nil, err
 	}
