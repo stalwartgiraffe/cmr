@@ -69,7 +69,8 @@ func RunLab(app App, cmd *cobra.Command) {
 	logger := elog.New()
 
 	firstQueries := make(chan gitlab.UrlQuery)
-	totalPagesLimit := 1
+	totalPagesLimit := 1000
+	//totalPagesLimit := 1
 	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDualApp[[]gitlab.ProjectModel](
 		ctx,
 		app,
