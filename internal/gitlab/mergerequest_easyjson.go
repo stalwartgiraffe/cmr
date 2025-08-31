@@ -1150,3 +1150,1025 @@ func easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab6(out *jwrit
 	}
 	out.RawByte('}')
 }
+func easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab7(in *jlexer.Lexer, out *BadMergeRequestModelSlice) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		in.Skip()
+		*out = nil
+	} else {
+		in.Delim('[')
+		if *out == nil {
+			if !in.IsDelim(']') {
+				*out = make(BadMergeRequestModelSlice, 0, 0)
+			} else {
+				*out = BadMergeRequestModelSlice{}
+			}
+		} else {
+			*out = (*out)[:0]
+		}
+		for !in.IsDelim(']') {
+			var v13 BadMergeRequestModel
+			(v13).UnmarshalEasyJSON(in)
+			*out = append(*out, v13)
+			in.WantComma()
+		}
+		in.Delim(']')
+	}
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab7(out *jwriter.Writer, in BadMergeRequestModelSlice) {
+	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+		out.RawString("null")
+	} else {
+		out.RawByte('[')
+		for v14, v15 := range in {
+			if v14 > 0 {
+				out.RawByte(',')
+			}
+			(v15).MarshalEasyJSON(out)
+		}
+		out.RawByte(']')
+	}
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v BadMergeRequestModelSlice) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab7(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v BadMergeRequestModelSlice) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab7(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *BadMergeRequestModelSlice) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab7(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *BadMergeRequestModelSlice) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab7(l, v)
+}
+func easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab8(in *jlexer.Lexer, out *BadMergeRequestModel) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "id":
+			out.ID = int(in.Int())
+		case "iid":
+			out.Iid = int(in.Int())
+		case "project_id":
+			out.ProjectID = int(in.Int())
+		case "title":
+			out.Title = string(in.String())
+		case "description":
+			out.Description = string(in.String())
+		case "state":
+			out.State = string(in.String())
+		case "created_at":
+			out.CreatedAt = string(in.String())
+		case "updated_at":
+			out.UpdatedAt = string(in.String())
+		case "merged_by":
+			if m, ok := out.MergedBy.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.MergedBy.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.MergedBy = in.Interface()
+			}
+		case "merge_user":
+			if m, ok := out.MergeUser.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.MergeUser.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.MergeUser = in.Interface()
+			}
+		case "merged_at":
+			if m, ok := out.MergedAt.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.MergedAt.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.MergedAt = in.Interface()
+			}
+		case "closed_by":
+			if m, ok := out.ClosedBy.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.ClosedBy.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.ClosedBy = in.Interface()
+			}
+		case "closed_at":
+			if m, ok := out.ClosedAt.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.ClosedAt.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.ClosedAt = in.Interface()
+			}
+		case "target_branch":
+			out.TargetBranch = string(in.String())
+		case "source_branch":
+			out.SourceBranch = string(in.String())
+		case "user_notes_count":
+			out.UserNotesCount = int(in.Int())
+		case "upvotes":
+			out.Upvotes = int(in.Int())
+		case "downvotes":
+			out.Downvotes = int(in.Int())
+		case "author":
+			easyjson5af0c543Decode(in, &out.Author)
+		case "assignees":
+			if in.IsNull() {
+				in.Skip()
+				out.Assignees = nil
+			} else {
+				in.Delim('[')
+				if out.Assignees == nil {
+					if !in.IsDelim(']') {
+						out.Assignees = make([]struct {
+							ID        int    `json:"id"`
+							Username  string `json:"username"`
+							Name      string `json:"name"`
+							State     string `json:"state"`
+							AvatarURL string `json:"avatar_url"`
+							WebURL    string `json:"web_url"`
+						}, 0, 0)
+					} else {
+						out.Assignees = []struct {
+							ID        int    `json:"id"`
+							Username  string `json:"username"`
+							Name      string `json:"name"`
+							State     string `json:"state"`
+							AvatarURL string `json:"avatar_url"`
+							WebURL    string `json:"web_url"`
+						}{}
+					}
+				} else {
+					out.Assignees = (out.Assignees)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v16 struct {
+						ID        int    `json:"id"`
+						Username  string `json:"username"`
+						Name      string `json:"name"`
+						State     string `json:"state"`
+						AvatarURL string `json:"avatar_url"`
+						WebURL    string `json:"web_url"`
+					}
+					easyjson5af0c543Decode(in, &v16)
+					out.Assignees = append(out.Assignees, v16)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "assignee":
+			easyjson5af0c543Decode(in, &out.Assignee)
+		case "reviewers":
+			if in.IsNull() {
+				in.Skip()
+				out.Reviewers = nil
+			} else {
+				in.Delim('[')
+				if out.Reviewers == nil {
+					if !in.IsDelim(']') {
+						out.Reviewers = make([]interface{}, 0, 4)
+					} else {
+						out.Reviewers = []interface{}{}
+					}
+				} else {
+					out.Reviewers = (out.Reviewers)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v17 interface{}
+					if m, ok := v17.(easyjson.Unmarshaler); ok {
+						m.UnmarshalEasyJSON(in)
+					} else if m, ok := v17.(json.Unmarshaler); ok {
+						_ = m.UnmarshalJSON(in.Raw())
+					} else {
+						v17 = in.Interface()
+					}
+					out.Reviewers = append(out.Reviewers, v17)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "source_project_id":
+			out.SourceProjectID = int(in.Int())
+		case "target_project_id":
+			out.TargetProjectID = int(in.Int())
+		case "labels":
+			if in.IsNull() {
+				in.Skip()
+				out.Labels = nil
+			} else {
+				in.Delim('[')
+				if out.Labels == nil {
+					if !in.IsDelim(']') {
+						out.Labels = make([]string, 0, 4)
+					} else {
+						out.Labels = []string{}
+					}
+				} else {
+					out.Labels = (out.Labels)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v18 string
+					v18 = string(in.String())
+					out.Labels = append(out.Labels, v18)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		case "draft":
+			out.Draft = bool(in.Bool())
+		case "work_in_progress":
+			out.WorkInProgress = bool(in.Bool())
+		case "milestone":
+			if m, ok := out.Milestone.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.Milestone.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.Milestone = in.Interface()
+			}
+		case "merge_when_pipeline_succeeds":
+			out.MergeWhenPipelineSucceeds = bool(in.Bool())
+		case "merge_status":
+			out.MergeStatus = string(in.String())
+		case "detailed_merge_status":
+			out.DetailedMergeStatus = string(in.String())
+		case "sha":
+			out.Sha = string(in.String())
+		case "merge_commit_sha":
+			if m, ok := out.MergeCommitSha.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.MergeCommitSha.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.MergeCommitSha = in.Interface()
+			}
+		case "squash_commit_sha":
+			if m, ok := out.SquashCommitSha.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.SquashCommitSha.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.SquashCommitSha = in.Interface()
+			}
+		case "discussion_locked":
+			if m, ok := out.DiscussionLocked.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.DiscussionLocked.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.DiscussionLocked = in.Interface()
+			}
+		case "should_remove_source_branch":
+			if m, ok := out.ShouldRemoveSourceBranch.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.ShouldRemoveSourceBranch.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.ShouldRemoveSourceBranch = in.Interface()
+			}
+		case "force_remove_source_branch":
+			out.ForceRemoveSourceBranch = bool(in.Bool())
+		case "reference":
+			out.Reference = string(in.String())
+		case "references":
+			easyjson5af0c543Decode1(in, &out.References)
+		case "web_url":
+			out.WebURL = string(in.String())
+		case "time_stats":
+			easyjson5af0c543Decode2(in, &out.TimeStats)
+		case "squash":
+			out.Squash = bool(in.Bool())
+		case "squash_on_merge":
+			out.SquashOnMerge = bool(in.Bool())
+		case "task_completion_status":
+			easyjson5af0c543Decode3(in, &out.TaskCompletionStatus)
+		case "has_conflicts":
+			out.HasConflicts = bool(in.Bool())
+		case "blocking_discussions_resolved":
+			out.BlockingDiscussionsResolved = bool(in.Bool())
+		case "approvals_before_merge":
+			if m, ok := out.ApprovalsBeforeMerge.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.ApprovalsBeforeMerge.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.ApprovalsBeforeMerge = in.Interface()
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab8(out *jwriter.Writer, in BadMergeRequestModel) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"id\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.ID))
+	}
+	{
+		const prefix string = ",\"iid\":"
+		out.RawString(prefix)
+		out.Int(int(in.Iid))
+	}
+	{
+		const prefix string = ",\"project_id\":"
+		out.RawString(prefix)
+		out.Int(int(in.ProjectID))
+	}
+	{
+		const prefix string = ",\"title\":"
+		out.RawString(prefix)
+		out.String(string(in.Title))
+	}
+	{
+		const prefix string = ",\"description\":"
+		out.RawString(prefix)
+		out.String(string(in.Description))
+	}
+	{
+		const prefix string = ",\"state\":"
+		out.RawString(prefix)
+		out.String(string(in.State))
+	}
+	{
+		const prefix string = ",\"created_at\":"
+		out.RawString(prefix)
+		out.String(string(in.CreatedAt))
+	}
+	{
+		const prefix string = ",\"updated_at\":"
+		out.RawString(prefix)
+		out.String(string(in.UpdatedAt))
+	}
+	{
+		const prefix string = ",\"merged_by\":"
+		out.RawString(prefix)
+		if m, ok := in.MergedBy.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.MergedBy.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.MergedBy))
+		}
+	}
+	{
+		const prefix string = ",\"merge_user\":"
+		out.RawString(prefix)
+		if m, ok := in.MergeUser.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.MergeUser.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.MergeUser))
+		}
+	}
+	{
+		const prefix string = ",\"merged_at\":"
+		out.RawString(prefix)
+		if m, ok := in.MergedAt.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.MergedAt.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.MergedAt))
+		}
+	}
+	{
+		const prefix string = ",\"closed_by\":"
+		out.RawString(prefix)
+		if m, ok := in.ClosedBy.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.ClosedBy.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.ClosedBy))
+		}
+	}
+	{
+		const prefix string = ",\"closed_at\":"
+		out.RawString(prefix)
+		if m, ok := in.ClosedAt.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.ClosedAt.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.ClosedAt))
+		}
+	}
+	{
+		const prefix string = ",\"target_branch\":"
+		out.RawString(prefix)
+		out.String(string(in.TargetBranch))
+	}
+	{
+		const prefix string = ",\"source_branch\":"
+		out.RawString(prefix)
+		out.String(string(in.SourceBranch))
+	}
+	{
+		const prefix string = ",\"user_notes_count\":"
+		out.RawString(prefix)
+		out.Int(int(in.UserNotesCount))
+	}
+	{
+		const prefix string = ",\"upvotes\":"
+		out.RawString(prefix)
+		out.Int(int(in.Upvotes))
+	}
+	{
+		const prefix string = ",\"downvotes\":"
+		out.RawString(prefix)
+		out.Int(int(in.Downvotes))
+	}
+	{
+		const prefix string = ",\"author\":"
+		out.RawString(prefix)
+		easyjson5af0c543Encode(out, in.Author)
+	}
+	{
+		const prefix string = ",\"assignees\":"
+		out.RawString(prefix)
+		if in.Assignees == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v19, v20 := range in.Assignees {
+				if v19 > 0 {
+					out.RawByte(',')
+				}
+				easyjson5af0c543Encode(out, v20)
+			}
+			out.RawByte(']')
+		}
+	}
+	{
+		const prefix string = ",\"assignee\":"
+		out.RawString(prefix)
+		easyjson5af0c543Encode(out, in.Assignee)
+	}
+	{
+		const prefix string = ",\"reviewers\":"
+		out.RawString(prefix)
+		if in.Reviewers == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v21, v22 := range in.Reviewers {
+				if v21 > 0 {
+					out.RawByte(',')
+				}
+				if m, ok := v22.(easyjson.Marshaler); ok {
+					m.MarshalEasyJSON(out)
+				} else if m, ok := v22.(json.Marshaler); ok {
+					out.Raw(m.MarshalJSON())
+				} else {
+					out.Raw(json.Marshal(v22))
+				}
+			}
+			out.RawByte(']')
+		}
+	}
+	{
+		const prefix string = ",\"source_project_id\":"
+		out.RawString(prefix)
+		out.Int(int(in.SourceProjectID))
+	}
+	{
+		const prefix string = ",\"target_project_id\":"
+		out.RawString(prefix)
+		out.Int(int(in.TargetProjectID))
+	}
+	{
+		const prefix string = ",\"labels\":"
+		out.RawString(prefix)
+		if in.Labels == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v23, v24 := range in.Labels {
+				if v23 > 0 {
+					out.RawByte(',')
+				}
+				out.String(string(v24))
+			}
+			out.RawByte(']')
+		}
+	}
+	{
+		const prefix string = ",\"draft\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.Draft))
+	}
+	{
+		const prefix string = ",\"work_in_progress\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.WorkInProgress))
+	}
+	{
+		const prefix string = ",\"milestone\":"
+		out.RawString(prefix)
+		if m, ok := in.Milestone.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.Milestone.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.Milestone))
+		}
+	}
+	{
+		const prefix string = ",\"merge_when_pipeline_succeeds\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.MergeWhenPipelineSucceeds))
+	}
+	{
+		const prefix string = ",\"merge_status\":"
+		out.RawString(prefix)
+		out.String(string(in.MergeStatus))
+	}
+	{
+		const prefix string = ",\"detailed_merge_status\":"
+		out.RawString(prefix)
+		out.String(string(in.DetailedMergeStatus))
+	}
+	{
+		const prefix string = ",\"sha\":"
+		out.RawString(prefix)
+		out.String(string(in.Sha))
+	}
+	{
+		const prefix string = ",\"merge_commit_sha\":"
+		out.RawString(prefix)
+		if m, ok := in.MergeCommitSha.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.MergeCommitSha.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.MergeCommitSha))
+		}
+	}
+	{
+		const prefix string = ",\"squash_commit_sha\":"
+		out.RawString(prefix)
+		if m, ok := in.SquashCommitSha.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.SquashCommitSha.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.SquashCommitSha))
+		}
+	}
+	{
+		const prefix string = ",\"discussion_locked\":"
+		out.RawString(prefix)
+		if m, ok := in.DiscussionLocked.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.DiscussionLocked.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.DiscussionLocked))
+		}
+	}
+	{
+		const prefix string = ",\"should_remove_source_branch\":"
+		out.RawString(prefix)
+		if m, ok := in.ShouldRemoveSourceBranch.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.ShouldRemoveSourceBranch.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.ShouldRemoveSourceBranch))
+		}
+	}
+	{
+		const prefix string = ",\"force_remove_source_branch\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.ForceRemoveSourceBranch))
+	}
+	{
+		const prefix string = ",\"reference\":"
+		out.RawString(prefix)
+		out.String(string(in.Reference))
+	}
+	{
+		const prefix string = ",\"references\":"
+		out.RawString(prefix)
+		easyjson5af0c543Encode1(out, in.References)
+	}
+	{
+		const prefix string = ",\"web_url\":"
+		out.RawString(prefix)
+		out.String(string(in.WebURL))
+	}
+	{
+		const prefix string = ",\"time_stats\":"
+		out.RawString(prefix)
+		easyjson5af0c543Encode2(out, in.TimeStats)
+	}
+	{
+		const prefix string = ",\"squash\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.Squash))
+	}
+	{
+		const prefix string = ",\"squash_on_merge\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.SquashOnMerge))
+	}
+	{
+		const prefix string = ",\"task_completion_status\":"
+		out.RawString(prefix)
+		easyjson5af0c543Encode3(out, in.TaskCompletionStatus)
+	}
+	{
+		const prefix string = ",\"has_conflicts\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.HasConflicts))
+	}
+	{
+		const prefix string = ",\"blocking_discussions_resolved\":"
+		out.RawString(prefix)
+		out.Bool(bool(in.BlockingDiscussionsResolved))
+	}
+	{
+		const prefix string = ",\"approvals_before_merge\":"
+		out.RawString(prefix)
+		if m, ok := in.ApprovalsBeforeMerge.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.ApprovalsBeforeMerge.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.ApprovalsBeforeMerge))
+		}
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v BadMergeRequestModel) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab8(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v BadMergeRequestModel) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson5af0c543EncodeGithubComStalwartgiraffeCmrInternalGitlab8(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *BadMergeRequestModel) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab8(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *BadMergeRequestModel) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson5af0c543DecodeGithubComStalwartgiraffeCmrInternalGitlab8(l, v)
+}
+func easyjson5af0c543Decode3(in *jlexer.Lexer, out *struct {
+	Count          int `json:"count"`
+	CompletedCount int `json:"completed_count"`
+}) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "count":
+			out.Count = int(in.Int())
+		case "completed_count":
+			out.CompletedCount = int(in.Int())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543Encode3(out *jwriter.Writer, in struct {
+	Count          int `json:"count"`
+	CompletedCount int `json:"completed_count"`
+}) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"count\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.Count))
+	}
+	{
+		const prefix string = ",\"completed_count\":"
+		out.RawString(prefix)
+		out.Int(int(in.CompletedCount))
+	}
+	out.RawByte('}')
+}
+func easyjson5af0c543Decode2(in *jlexer.Lexer, out *struct {
+	TimeEstimate        int         `json:"time_estimate"`
+	TotalTimeSpent      int         `json:"total_time_spent"`
+	HumanTimeEstimate   interface{} `json:"human_time_estimate"`
+	HumanTotalTimeSpent interface{} `json:"human_total_time_spent"`
+}) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "time_estimate":
+			out.TimeEstimate = int(in.Int())
+		case "total_time_spent":
+			out.TotalTimeSpent = int(in.Int())
+		case "human_time_estimate":
+			if m, ok := out.HumanTimeEstimate.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.HumanTimeEstimate.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.HumanTimeEstimate = in.Interface()
+			}
+		case "human_total_time_spent":
+			if m, ok := out.HumanTotalTimeSpent.(easyjson.Unmarshaler); ok {
+				m.UnmarshalEasyJSON(in)
+			} else if m, ok := out.HumanTotalTimeSpent.(json.Unmarshaler); ok {
+				_ = m.UnmarshalJSON(in.Raw())
+			} else {
+				out.HumanTotalTimeSpent = in.Interface()
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543Encode2(out *jwriter.Writer, in struct {
+	TimeEstimate        int         `json:"time_estimate"`
+	TotalTimeSpent      int         `json:"total_time_spent"`
+	HumanTimeEstimate   interface{} `json:"human_time_estimate"`
+	HumanTotalTimeSpent interface{} `json:"human_total_time_spent"`
+}) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"time_estimate\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.TimeEstimate))
+	}
+	{
+		const prefix string = ",\"total_time_spent\":"
+		out.RawString(prefix)
+		out.Int(int(in.TotalTimeSpent))
+	}
+	{
+		const prefix string = ",\"human_time_estimate\":"
+		out.RawString(prefix)
+		if m, ok := in.HumanTimeEstimate.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.HumanTimeEstimate.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.HumanTimeEstimate))
+		}
+	}
+	{
+		const prefix string = ",\"human_total_time_spent\":"
+		out.RawString(prefix)
+		if m, ok := in.HumanTotalTimeSpent.(easyjson.Marshaler); ok {
+			m.MarshalEasyJSON(out)
+		} else if m, ok := in.HumanTotalTimeSpent.(json.Marshaler); ok {
+			out.Raw(m.MarshalJSON())
+		} else {
+			out.Raw(json.Marshal(in.HumanTotalTimeSpent))
+		}
+	}
+	out.RawByte('}')
+}
+func easyjson5af0c543Decode1(in *jlexer.Lexer, out *struct {
+	Short    string `json:"short"`
+	Relative string `json:"relative"`
+	Full     string `json:"full"`
+}) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "short":
+			out.Short = string(in.String())
+		case "relative":
+			out.Relative = string(in.String())
+		case "full":
+			out.Full = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543Encode1(out *jwriter.Writer, in struct {
+	Short    string `json:"short"`
+	Relative string `json:"relative"`
+	Full     string `json:"full"`
+}) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"short\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.Short))
+	}
+	{
+		const prefix string = ",\"relative\":"
+		out.RawString(prefix)
+		out.String(string(in.Relative))
+	}
+	{
+		const prefix string = ",\"full\":"
+		out.RawString(prefix)
+		out.String(string(in.Full))
+	}
+	out.RawByte('}')
+}
+func easyjson5af0c543Decode(in *jlexer.Lexer, out *struct {
+	ID        int    `json:"id"`
+	Username  string `json:"username"`
+	Name      string `json:"name"`
+	State     string `json:"state"`
+	AvatarURL string `json:"avatar_url"`
+	WebURL    string `json:"web_url"`
+}) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "id":
+			out.ID = int(in.Int())
+		case "username":
+			out.Username = string(in.String())
+		case "name":
+			out.Name = string(in.String())
+		case "state":
+			out.State = string(in.String())
+		case "avatar_url":
+			out.AvatarURL = string(in.String())
+		case "web_url":
+			out.WebURL = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson5af0c543Encode(out *jwriter.Writer, in struct {
+	ID        int    `json:"id"`
+	Username  string `json:"username"`
+	Name      string `json:"name"`
+	State     string `json:"state"`
+	AvatarURL string `json:"avatar_url"`
+	WebURL    string `json:"web_url"`
+}) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"id\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.ID))
+	}
+	{
+		const prefix string = ",\"username\":"
+		out.RawString(prefix)
+		out.String(string(in.Username))
+	}
+	{
+		const prefix string = ",\"name\":"
+		out.RawString(prefix)
+		out.String(string(in.Name))
+	}
+	{
+		const prefix string = ",\"state\":"
+		out.RawString(prefix)
+		out.String(string(in.State))
+	}
+	{
+		const prefix string = ",\"avatar_url\":"
+		out.RawString(prefix)
+		out.String(string(in.AvatarURL))
+	}
+	{
+		const prefix string = ",\"web_url\":"
+		out.RawString(prefix)
+		out.String(string(in.WebURL))
+	}
+	out.RawByte('}')
+}

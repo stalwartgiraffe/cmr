@@ -7,6 +7,7 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/mailru/easyjson/jlexer"
 	"github.com/spf13/cobra"
+
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
@@ -173,16 +174,39 @@ func unmarshalMergeRequestModel(
 		return nil, restclient.NewFailureResponse("Response object had failure status", resp)
 	}
 
-	var em gitlab.MergeRequestModelSlice
 	body := resp.Body()
+
+	//err := os.WriteFile("body.txt", body, 0644)
+	//if err != nil {
+	//	panic(err)
+	//}
+
 	//lexer := jlexer.Lexer{Data: resp.Body()}
 	lexer := jlexer.Lexer{Data: body}
+	var em gitlab.MergeRequestModelSlice
 
 	em.UnmarshalEasyJSON(&lexer)
 	if lexer.Error() != nil {
 		//panic(lexer.Error())
 		app.Println(lexer.Error())
 		app.Println(string(body))
+		return nil, lexer.Error()
+	}
+	ss := []gitlab.MergeRequestModel(em)
+	return &ss, nil
+}
+
+func LoadModels(app App, jsonBlob []byte) (
+	*[]gitlab.MergeRequestModel,
+	error) {
+	lexer := jlexer.Lexer{Data: jsonBlob}
+	var em gitlab.MergeRequestModelSlice
+
+	em.UnmarshalEasyJSON(&lexer)
+	if lexer.Error() != nil {
+		//panic(lexer.Error())
+		app.Println(lexer.Error())
+		app.Println(string(jsonBlob))
 		return nil, lexer.Error()
 	}
 	ss := []gitlab.MergeRequestModel(em)

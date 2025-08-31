@@ -16,6 +16,8 @@ build/:
 	mkdir -p build
 
 
+# note assumes easyjson is installed
+# go install github.com/mailru/easyjson/easyjson@latest
 # run this on files with structs tagged with //easyjson:json
 # and this will generate json marshal code
 easyjson:

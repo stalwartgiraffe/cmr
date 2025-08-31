@@ -17,7 +17,115 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(in *jlexer.Lexer, out *EventModelSlice) {
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(in *jlexer.Lexer, out *PushDataModel) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeFieldName(false)
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "commit_count":
+			out.CommitCount = int(in.Int())
+		case "action":
+			out.Action = string(in.String())
+		case "ref_type":
+			out.RefType = string(in.String())
+		case "commit_from":
+			out.CommitFrom = string(in.String())
+		case "commit_to":
+			out.CommitTo = string(in.String())
+		case "ref":
+			out.Ref = string(in.String())
+		case "commit_title":
+			out.CommitTitle = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(out *jwriter.Writer, in PushDataModel) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"commit_count\":"
+		out.RawString(prefix[1:])
+		out.Int(int(in.CommitCount))
+	}
+	{
+		const prefix string = ",\"action\":"
+		out.RawString(prefix)
+		out.String(string(in.Action))
+	}
+	{
+		const prefix string = ",\"ref_type\":"
+		out.RawString(prefix)
+		out.String(string(in.RefType))
+	}
+	{
+		const prefix string = ",\"commit_from\":"
+		out.RawString(prefix)
+		out.String(string(in.CommitFrom))
+	}
+	{
+		const prefix string = ",\"commit_to\":"
+		out.RawString(prefix)
+		out.String(string(in.CommitTo))
+	}
+	{
+		const prefix string = ",\"ref\":"
+		out.RawString(prefix)
+		out.String(string(in.Ref))
+	}
+	{
+		const prefix string = ",\"commit_title\":"
+		out.RawString(prefix)
+		out.String(string(in.CommitTitle))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v PushDataModel) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v PushDataModel) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *PushDataModel) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *PushDataModel) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(l, v)
+}
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(in *jlexer.Lexer, out *EventModelSlice) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		in.Skip()
@@ -45,7 +153,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(in *jlexer.
 		in.Consumed()
 	}
 }
-func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(out *jwriter.Writer, in EventModelSlice) {
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(out *jwriter.Writer, in EventModelSlice) {
 	if in == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
 		out.RawString("null")
 	} else {
@@ -63,27 +171,27 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(out *jwrite
 // MarshalJSON supports json.Marshaler interface
 func (v EventModelSlice) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(&w, v)
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v EventModelSlice) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab(w, v)
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *EventModelSlice) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(&r, v)
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *EventModelSlice) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab(l, v)
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(l, v)
 }
-func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(in *jlexer.Lexer, out *EventModel) {
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in *jlexer.Lexer, out *EventModel) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -142,7 +250,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(in *jlexer
 				if out.Author == nil {
 					out.Author = new(AuthorModel)
 				}
-				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in, out.Author)
+				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in, out.Author)
 			}
 		case "note":
 			if in.IsNull() {
@@ -152,7 +260,19 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(in *jlexer
 				if out.Note == nil {
 					out.Note = new(Note)
 				}
-				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in, out.Note)
+				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab4(in, out.Note)
+			}
+		case "imported":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.Imported).UnmarshalJSON(data))
+			}
+		case "imported_from":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.ImportedFrom).UnmarshalJSON(data))
+			}
+		case "push_data":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.PushData).UnmarshalJSON(data))
 			}
 		default:
 			in.SkipRecursive()
@@ -164,7 +284,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(in *jlexer
 		in.Consumed()
 	}
 }
-func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(out *jwriter.Writer, in EventModel) {
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(out *jwriter.Writer, in EventModel) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -231,12 +351,27 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(out *jwrit
 	if in.Author != nil {
 		const prefix string = ",\"author\":"
 		out.RawString(prefix)
-		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(out, *in.Author)
+		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out, *in.Author)
 	}
 	if in.Note != nil {
 		const prefix string = ",\"note\":"
 		out.RawString(prefix)
-		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out, *in.Note)
+		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab4(out, *in.Note)
+	}
+	if true {
+		const prefix string = ",\"imported\":"
+		out.RawString(prefix)
+		out.Raw((in.Imported).MarshalJSON())
+	}
+	if true {
+		const prefix string = ",\"imported_from\":"
+		out.RawString(prefix)
+		out.Raw((in.ImportedFrom).MarshalJSON())
+	}
+	if true {
+		const prefix string = ",\"push_data\":"
+		out.RawString(prefix)
+		out.Raw((in.PushData).MarshalJSON())
 	}
 	out.RawByte('}')
 }
@@ -244,27 +379,27 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(out *jwrit
 // MarshalJSON supports json.Marshaler interface
 func (v EventModel) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(&w, v)
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v EventModel) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab1(w, v)
+	easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *EventModel) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(&r, v)
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *EventModel) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab1(l, v)
+	easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(l, v)
 }
-func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer.Lexer, out *Note) {
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab4(in *jlexer.Lexer, out *Note) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -331,7 +466,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer
 				if out.Author == nil {
 					out.Author = new(AuthorModel)
 				}
-				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in, out.Author)
+				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in, out.Author)
 			}
 		default:
 			in.SkipRecursive()
@@ -343,7 +478,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer
 		in.Consumed()
 	}
 }
-func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out *jwriter.Writer, in Note) {
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab4(out *jwriter.Writer, in Note) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -415,11 +550,11 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out *jwrit
 	if in.Author != nil {
 		const prefix string = ",\"author\":"
 		out.RawString(prefix)
-		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(out, *in.Author)
+		easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out, *in.Author)
 	}
 	out.RawByte('}')
 }
-func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in *jlexer.Lexer, out *AuthorModel) {
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer.Lexer, out *AuthorModel) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -472,7 +607,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in *jlexer
 		in.Consumed()
 	}
 }
-func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(out *jwriter.Writer, in AuthorModel) {
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out *jwriter.Writer, in AuthorModel) {
 	out.RawByte('{')
 	first := true
 	_ = first
