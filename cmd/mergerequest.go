@@ -7,7 +7,6 @@ import (
 	"github.com/go-resty/resty/v2"
 	"github.com/mailru/easyjson/jlexer"
 	"github.com/spf13/cobra"
-	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
@@ -27,58 +26,40 @@ func NewMergeRequestCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) 
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			filepath := "ignore/my_recent_merge_request.yaml"
-			route := "merge_requests/"
-			var err error
-			// start := time.Now()
-			accessToken, err := loadGitlabAccessToken()
-
-			fmt.Println("we got accessToken")
-
-			if err != nil {
-				utils.Redln(err)
-				return
-			}
-
-			mrc := NewMergeRequestClient(accessToken)
-			ctx := cmd.Context()
-			logger := elog.New()
-			fmt.Println("start updating recentEvents")
-			requests, err := mrc.updateRecentMergeRequest(ctx, app, logger, cancel, filepath, route)
-			fmt.Printf("we got events %d", len(requests))
-			if err != nil {
-				utils.Redln(err)
-				return
-			}
-
-			//content := newEventContent(events)
-			//promptTable(content, cancel)
+			runMergeRequestCmd(app, cancel, cmd)
 		},
 	}
 }
+func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
+	ctx := cmd.Context()
+	ctx, span := app.StartSpan(ctx, "runMergeRequestCmd")
+	defer span.End()
 
-/*
-func getEvents(
-	ctx context.Context,
-	logger AppLog,
-	cancel context.CancelFunc,
-	route string,
-	afterThisDate string,
-) (
-	gitlab.EventMap,
-	error,
-) {
+	filepath := "ignore/my_recent_merge_request.yaml"
+	route := "merge_requests/"
 	var err error
 	// start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
 
+	app.Println("we got accessToken")
+
 	if err != nil {
-		return nil, err
+		utils.Redln(err)
+		return
 	}
-	ec := NewEventClient(accessToken)
-	return ec.getEvents(ctx, logger, cancel, route, afterThisDate)
+
+	mrc := NewMergeRequestClient(accessToken)
+	app.Println("start updating recentEvents")
+	requests, err := mrc.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
+	app.Printf("we got events %d", len(requests))
+	if err != nil {
+		utils.Redln(err)
+		return
+	}
+
+	//content := newEventContent(events)
+	//promptTable(content, cancel)
 }
-*/
 
 type MergeRequestClient struct {
 	client *gitlab.Client
@@ -94,28 +75,25 @@ func NewMergeRequestClient(accessToken string) *MergeRequestClient {
 			"xlab",
 			isVerbose,
 		),
-
-		//logger: elog.New(),
 	}
 }
 
 func (mrc *MergeRequestClient) updateRecentMergeRequest(
 	ctx context.Context,
 	app App,
-	logger AppLog,
 	cancel context.CancelFunc,
 	filepath string,
 	route string,
 ) (gitlab.MergeRequestMap, error) {
-
-	//logger.Println("start", route)
+	ctx, span := app.StartSpan(ctx, "updateRecentMergeRequest")
+	defer span.End()
 
 	requests, err := gitlab.NewMergeRequestMapFromYaml(filepath)
 	if err != nil {
 		return nil, err
 	}
 
-	recentRequests, err := mrc.getMergeRequests(ctx, app, logger, cancel, route, requests.LastCreatedDate())
+	recentRequests, err := mrc.getMergeRequests(ctx, app, cancel, route, requests.LastCreatedDate())
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +105,6 @@ func (mrc *MergeRequestClient) updateRecentMergeRequest(
 func (mrc *MergeRequestClient) getMergeRequests(
 	ctx context.Context,
 	app App,
-	logger AppLog,
 	cancel context.CancelFunc,
 	route string,
 	afterThisDate string,
@@ -135,6 +112,8 @@ func (mrc *MergeRequestClient) getMergeRequests(
 	gitlab.MergeRequestMap,
 	error,
 ) {
+	ctx, span := app.StartSpan(ctx, "getMergeRequests")
+	defer span.End()
 
 	firstQueries := make(chan gitlab.UrlQuery)
 	mrCalls := gitlab.GatherPageCallsUM[[]gitlab.MergeRequestModel](
@@ -145,7 +124,6 @@ func (mrc *MergeRequestClient) getMergeRequests(
 		unmarshalMergeRequestModel,
 	)
 
-	//logger.Println("sending first query")
 	// see https://docs.gitlab.com/ee/api/events.html
 	const startPage = 1
 	const per_page = 200
@@ -182,7 +160,7 @@ func unmarshalMergeRequestModel(
 	app restclient.App,
 	resp *resty.Response,
 ) (*[]gitlab.MergeRequestModel, error) {
-_, span := app.StartSpan(ctx, "unmarshalMergeRequestModel")
+	_, span := app.StartSpan(ctx, "unmarshalMergeRequestModel")
 	defer span.End()
 
 	if resp == nil {
@@ -203,8 +181,8 @@ _, span := app.StartSpan(ctx, "unmarshalMergeRequestModel")
 	em.UnmarshalEasyJSON(&lexer)
 	if lexer.Error() != nil {
 		//panic(lexer.Error())
-		fmt.Println(lexer.Error())
-		fmt.Println(string(body))
+		app.Println(lexer.Error())
+		app.Println(string(body))
 		return nil, lexer.Error()
 	}
 	ss := []gitlab.MergeRequestModel(em)

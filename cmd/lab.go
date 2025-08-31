@@ -8,7 +8,6 @@ import (
 	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
 
-	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/internal/xr"
@@ -56,8 +55,6 @@ func RunLab(app App, cmd *cobra.Command) {
 
 	const startPage = 1
 
-	logger := elog.New()
-
 	firstQueries := make(chan gitlab.UrlQuery)
 	totalPagesLimit := 1000
 	//totalPagesLimit := 1
@@ -65,7 +62,6 @@ func RunLab(app App, cmd *cobra.Command) {
 		ctx,
 		app,
 		client,
-		logger,
 		firstQueries,
 		totalPagesLimit,
 	)

@@ -22,6 +22,7 @@ var (
 
 type App interface {
 	Tracer
+	Logger
 }
 
 type Tracer interface {
@@ -31,6 +32,12 @@ type Tracer interface {
 		opts ...trace.SpanStartOption) (
 		context.Context,
 		trace.Span)
+}
+
+type Logger interface {
+	Printf(format string, v ...any)
+	Print(v ...any)
+	Println(v ...any)
 }
 
 type TokenClient struct {

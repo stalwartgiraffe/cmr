@@ -39,7 +39,7 @@ func GatherPageCallsWithUM[RespT any](
 	errorCap int,
 	unmarshal func(context.Context, restclient.App, *resty.Response) (*RespT, error),
 ) <-chan Call[RespT] {
-	ctx, span := app.StartSpan(ctx, " GatherPageCallsWithUM")
+	ctx, span := app.StartSpan(ctx, "GatherPageCallsWithUM")
 	defer span.End()
 
 	calls := make([]<-chan Call[RespT], 2)
@@ -85,6 +85,8 @@ func headPageQueriesUM[RespT any](
 	calls := make(chan Call[RespT], callCap)
 	queries := make(chan UrlQuery, callCap)
 	go func() {
+		ctx, span := app.StartSpan(ctx, "go_headPageQueriesUM")
+		defer span.End()
 		defer close(calls)
 		defer close(queries)
 		for firstQuery := range firstQueries {

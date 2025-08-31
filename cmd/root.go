@@ -72,6 +72,7 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 	// print the number of projects we have in the projects file
 	rootCmd.AddCommand(NewViewProjectsCommand(cfg, cancel))
 
+	// get user affecting events 
 	rootCmd.AddCommand(NewEventsCommand(app, cfg, cancel))
 
 	// get events for each project in the projects file
@@ -79,6 +80,7 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 
 	// fetch merge requests from gitlab
 	rootCmd.AddCommand(NewMergeRequestCommand(app, cfg, cancel))
+
 	rootCmd.AddCommand(NewCloneCommand(cfg))
 	rootCmd.AddCommand(NewPullCommand(cfg))
 	rootCmd.AddCommand(NewLintCommand(cfg))

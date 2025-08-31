@@ -7,14 +7,9 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-type AppLog interface {
-	Printf(format string, v ...any)
-	Print(v ...any)
-	Println(v ...any)
-}
-
 type App interface {
 	Tracer
+	Logger
 }
 
 type Tracer interface {
@@ -26,11 +21,16 @@ type Tracer interface {
 		trace.Span)
 }
 
+type Logger interface {
+	Printf(format string, v ...any)
+	Print(v ...any)
+	Println(v ...any)
+}
+
 func GatherPageCallsDualApp[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
 	totalPagesLimit int,
 ) (
@@ -41,7 +41,6 @@ func GatherPageCallsDualApp[RespT any](
 		ctx,
 		app,
 		client,
-		logger,
 		initialQueries,
 		5,               // callCap int,
 		5,               // queryCap int,
@@ -53,8 +52,8 @@ func GatherPageCallsDualApp[RespT any](
 
 func GatherPageCallsDual[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
 	totalPagesLimit int,
 ) (
@@ -63,8 +62,8 @@ func GatherPageCallsDual[RespT any](
 ) {
 	return GatherPageCallsWithDual[RespT](
 		ctx,
+		app,
 		client,
-		logger,
 		initialQueries,
 		5,               // callCap int,
 		5,               // queryCap int,
@@ -78,7 +77,6 @@ func GatherPageCallsWithDualApp[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
@@ -102,7 +100,6 @@ func GatherPageCallsWithDualApp[RespT any](
 		ctx,
 		app,
 		client,
-		logger,
 		initialQueries,
 		callCap,
 		queryCap,
@@ -113,7 +110,6 @@ func GatherPageCallsWithDualApp[RespT any](
 		ctx,
 		app,
 		client,
-		logger,
 		queries,
 		workersCap,
 		errorCap,
@@ -123,8 +119,8 @@ func GatherPageCallsWithDualApp[RespT any](
 
 func GatherPageCallsWithDual[RespT any](
 	ctx context.Context,
+	app App,
 	client *Client,
-	logger AppLog,
 	initialQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
@@ -137,9 +133,8 @@ func GatherPageCallsWithDual[RespT any](
 ) {
 	return GatherPageCallsWithDualApp[RespT](
 		ctx,
-		nil,
+		app,
 		client,
-		logger,
 		initialQueries,
 		callCap,
 		queryCap,
@@ -153,7 +148,6 @@ func headPageQueriesDual[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	_ AppLog,
 	firstQueries <-chan UrlQuery,
 	callCap int,
 	queryCap int,
@@ -221,7 +215,6 @@ func tailPageCallsDual[RespT any](
 	ctx context.Context,
 	app App,
 	client *Client,
-	_ AppLog,
 	queries <-chan UrlQuery,
 	workersCap int,
 	errorsCap int,

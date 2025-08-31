@@ -18,13 +18,6 @@ import (
 	"github.com/stalwartgiraffe/cmr/withstack"
 )
 
-type AppLog interface {
-	Printf(format string, v ...any)
-	Print(v ...any)
-	Println(v ...any)
-	Flush()
-}
-
 func NewEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
 	return &cobra.Command{
 		Use:   "events",
@@ -38,14 +31,14 @@ func NewEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			RunEventsCmd(app, cancel, cmd)
+			runEventsCmd(app, cancel, cmd)
 		},
 	}
 }
 
-func RunEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
+func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	ctx := cmd.Context()
-	ctx, span := app.StartSpan(ctx, "RunEvents")
+	ctx, span := app.StartSpan(ctx, "runEventsCmd")
 	defer span.End()
 
 	projects, err := gitlab.ReadProjects()
@@ -79,7 +72,6 @@ func RunEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 func getEvents(
 	ctx context.Context,
 	app App,
-	logger AppLog,
 	cancel context.CancelFunc,
 	route string,
 	afterThisDate string,
