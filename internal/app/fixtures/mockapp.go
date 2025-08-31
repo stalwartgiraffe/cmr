@@ -3,17 +3,19 @@ package fixtures
 
 import (
 	"context"
-
+	"fmt"
+	"strings"
 
 	"go.opentelemetry.io/otel/trace"
 )
 
 type MockApp struct {
 	InitErr error
+	MockLogger
 }
 
-func (a *MockApp) Err() error {
-	return a.InitErr
+func NewApp() *MockApp {
+	return &MockApp{}
 }
 
 func (a *MockApp) WithOtel(ctx context.Context, schema string) *MockApp {
@@ -28,4 +30,19 @@ func (a *MockApp) StartSpan(
 	trace.Span) {
 
 	return ctx, &MockSpan{}
+}
+
+type MockLogger struct {
+	SB strings.Builder
+}
+
+func (m *MockLogger) Printf(format string, v ...any) {
+	m.SB.WriteString(fmt.Sprintf(format, v...))
+}
+
+func (m *MockLogger) Print(v ...any) {
+	m.SB.WriteString(fmt.Sprint(v...))
+}
+func (m *MockLogger) Println(v ...any) {
+	m.SB.WriteString(fmt.Sprintln(v...))
 }

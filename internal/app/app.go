@@ -18,7 +18,7 @@ type AppErr struct {
 	Err error
 }
 
-func NewApp() AppErr {
+func NewAppErr() AppErr {
 	return AppErr{
 		App: &App{
 			Shutdowns: newShutdowns(),

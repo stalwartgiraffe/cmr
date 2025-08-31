@@ -10,10 +10,12 @@ import (
 	"github.com/go-resty/resty/v2"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/stalwartgiraffe/cmr/internal/elog"
+
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
 	"github.com/stalwartgiraffe/cmr/restclient"
+
+	appfixtures "github.com/stalwartgiraffe/cmr/internal/app/fixtures"
 )
 
 //go:embed data/*
@@ -60,11 +62,11 @@ func makeGetPages[RespT any](
 	queryCap := channelCapacity
 	errorCap := channelCapacity
 
-	logger := &elog.NoopLogger{}
+	app := appfixtures.NewApp()
 	calls, queries, errors := headPageQueriesDual[RespT](
 		ctx,
+		app,
 		client,
-		logger,
 		firstQueries,
 		callCap,
 		queryCap,
@@ -79,7 +81,7 @@ func makeGetPages[RespT any](
 
 func makeGetPageCalls[RespT any](
 	ctx context.Context,
-	logger AppLog,
+	app App,
 	channelCapacity int,
 	firstQueries chan UrlQuery,
 	haveResponses responseMap,
@@ -92,8 +94,8 @@ func makeGetPageCalls[RespT any](
 
 	calls, errors := tailPageCallsDual[RespT](
 		ctx,
+		app,
 		client,
-		logger,
 		firstQueries,
 		workersCap,
 		errorCap,
@@ -227,11 +229,11 @@ var _ = Describe("test gather page calls RespT", func() {
 		channelCapacity := 5
 		It("two responses", func(ctx SpecContext) {
 			firstQueries := make(chan UrlQuery)
-			logger := &elog.NoopLogger{}
 			var haveErr error
+			app := appfixtures.NewApp()
 			calls, errors := makeGetPageCalls[[]GroupModel](
 				ctx,
-				logger,
+				app,
 				channelCapacity,
 				firstQueries,
 				makeDataResponses(),
@@ -270,7 +272,7 @@ var _ = Describe("test gather page calls RespT", func() {
 
 func makeGatherAllCalls[RespT any](
 	ctx context.Context,
-	logger AppLog,
+	app App,
 	channelCapacity int,
 	firstQueries chan UrlQuery,
 	haveResponses responseMap,
@@ -288,8 +290,8 @@ func makeGatherAllCalls[RespT any](
 
 	calls, errors := GatherPageCallsWithDual[RespT](
 		ctx,
+		app,
 		client,
-		logger,
 		firstQueries,
 		callCap,
 		queryCap,
@@ -310,11 +312,11 @@ var _ = Describe("test gather all calls RespT", func() {
 		const totalPagesLimit = 5
 		It("two responses", func(ctx SpecContext) {
 			firstQueries := make(chan UrlQuery)
-			logger := &elog.NoopLogger{}
+			app := appfixtures.NewApp()
 			var haveErr error
 			calls, errors := makeGatherAllCalls[[]GroupModel](
 				ctx,
-				logger,
+				app,
 				channelCapacity,
 				firstQueries,
 				makeDataResponses(),

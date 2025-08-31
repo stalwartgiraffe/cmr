@@ -3,6 +3,9 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/mailru/easyjson/jlexer"
@@ -174,29 +177,10 @@ func unmarshalMergeRequestModel(
 		return nil, restclient.NewFailureResponse("Response object had failure status", resp)
 	}
 
-	body := resp.Body()
-
-	//err := os.WriteFile("body.txt", body, 0644)
-	//if err != nil {
-	//	panic(err)
-	//}
-
-	//lexer := jlexer.Lexer{Data: resp.Body()}
-	lexer := jlexer.Lexer{Data: body}
-	var em gitlab.MergeRequestModelSlice
-
-	em.UnmarshalEasyJSON(&lexer)
-	if lexer.Error() != nil {
-		//panic(lexer.Error())
-		app.Println(lexer.Error())
-		app.Println(string(body))
-		return nil, lexer.Error()
-	}
-	ss := []gitlab.MergeRequestModel(em)
-	return &ss, nil
+	return unmarshalModels(app, resp.Body())
 }
 
-func LoadModels(app App, jsonBlob []byte) (
+func unmarshalModels(app App, jsonBlob []byte) (
 	*[]gitlab.MergeRequestModel,
 	error) {
 	lexer := jlexer.Lexer{Data: jsonBlob}
@@ -204,13 +188,89 @@ func LoadModels(app App, jsonBlob []byte) (
 
 	em.UnmarshalEasyJSON(&lexer)
 	if lexer.Error() != nil {
-		//panic(lexer.Error())
-		app.Println(lexer.Error())
-		app.Println(string(jsonBlob))
-		return nil, lexer.Error()
+		errTxt := lexer.Error().Error()
+		body := string(jsonBlob)
+		prettyTxt := prettySubStringJson(body, errTxt)
+		return nil, fmt.Errorf("Error:%s\n%s", errTxt, prettyTxt)
 	}
 	ss := []gitlab.MergeRequestModel(em)
 	return &ss, nil
+}
+
+func prettySubStringJson(body string, errTxt string) string {
+	last := len(body) - 1
+	if last < 0 {
+		return ""
+	}
+
+	mid, err := parseNextInt(errTxt)
+	if err != nil {
+		return body
+	}
+
+	start := lastNIndex(body[:mid-1], 5, ",")
+	start = max(0, start)
+	end := nextNIndex(body[mid+1:], 5, ",")
+	if end == -1 {
+		end = last
+	} else {
+		end = min(last, mid+end+1)
+	}
+
+	txt := body[start:end]
+	if strings.Contains(txt, "\n") {
+		return txt
+	} else {
+		return strings.Replace(txt, ",", ",\n", -1)
+	}
+}
+
+func subStringJson(body string, mid int) string {
+	start := lastNIndex(body[:mid-1], 10, ",")
+	start = max(0, start)
+	end := lastNIndex(body[mid+1:], 10, ",")
+	end = min(len(body)-1, end)
+
+	txt := body[start:end]
+	return strings.Replace(txt, ",", ",\n", -1)
+}
+
+var reInt = regexp.MustCompile(`\d+`)
+
+func parseNextInt(s string) (int, error) {
+	match := reInt.FindString(s)
+	if match == "" {
+		return 0, fmt.Errorf("no number found in string")
+	}
+	return strconv.Atoi(match)
+}
+
+func lastNIndex(body string, count int, txt string) int {
+	currentPos := len(body)
+	for range count {
+		last := strings.LastIndex(body[:currentPos], txt)
+		if last == -1 {
+			return -1
+		}
+		currentPos = last
+	}
+	return currentPos
+}
+
+func nextNIndex(body string, count int, txt string) int {
+	if count == 0 {
+		return -1
+	}
+	currentPos := 0
+	found := 0
+	for range count {
+		found = strings.Index(body[currentPos:], txt)
+		if found == -1 {
+			return -1
+		}
+		currentPos = currentPos + found + 1
+	}
+	return currentPos
 }
 
 /*

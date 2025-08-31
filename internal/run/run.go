@@ -55,7 +55,7 @@ type makeAppFn func(context.Context) app.AppErr
 // otel metrics, traces and logs exports
 func makeApp(ctx context.Context) app.AppErr {
 	const otelSchema = "cmr_cli"
-	return app.NewApp().
+	return app.NewAppErr().
 		WithOtel(ctx, otelSchema)
 }
 
