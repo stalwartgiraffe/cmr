@@ -23,9 +23,11 @@ type DetailsPanel interface {
 // ThreePanelScreen manages a layout with filter, table, and details panels
 type ThreePanelScreen struct {
 	*tview.Flex
-	filter  FilterPanel
-	table   *tview.Table
-	details DetailsPanel
+
+	tviewApp *tview.Application
+	filter   FilterPanel
+	table    *tview.Table
+	details  DetailsPanel
 
 	currentPanel int // 0=filter, 1=table, 2=details
 	onStop       StopFunc
@@ -33,6 +35,7 @@ type ThreePanelScreen struct {
 
 // NewThreePanelScreen creates a new three-panel layout
 func NewThreePanelScreen(
+	tviewApp *tview.Application,
 	filter FilterPanel,
 	tableContent tview.TableContent,
 	details DetailsPanel,
@@ -40,6 +43,7 @@ func NewThreePanelScreen(
 ) *ThreePanelScreen {
 	screen := &ThreePanelScreen{
 		Flex:         tview.NewFlex(),
+		tviewApp:     tviewApp,
 		filter:       filter,
 		details:      details,
 		currentPanel: 1, // Start with table focused
@@ -113,16 +117,14 @@ func (s *ThreePanelScreen) prevPanel() {
 
 // updateFocus sets focus to the current panel
 func (s *ThreePanelScreen) updateFocus() {
-	/*
-		switch s.currentPanel {
-		case 0:
-			tview.GetApplication().SetFocus(s.filter.GetPrimitive())
-		case 1:
-			tview.GetApplication().SetFocus(s.table)
-		case 2:
-			tview.GetApplication().SetFocus(s.details.GetPrimitive())
-		}
-	*/
+	switch s.currentPanel {
+	case 0:
+		s.tviewApp.SetFocus(s.filter.GetPrimitive())
+	case 1:
+		s.tviewApp.SetFocus(s.table)
+	case 2:
+		s.tviewApp.SetFocus(s.details.GetPrimitive())
+	}
 }
 
 // showTableRowDetails displays details for the selected table row
@@ -150,4 +152,3 @@ func (s *ThreePanelScreen) SetCurrentPanel(panel int) {
 		s.updateFocus()
 	}
 }
-

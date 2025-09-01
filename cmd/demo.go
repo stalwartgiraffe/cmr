@@ -51,6 +51,7 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	filter := tviewwrapper.NewBasicFilter("sure")
 	details := tviewwrapper.NewTextDetails()
 	screen := tviewwrapper.NewThreePanelScreen(
+	tviewApp, 
 		filter,
 		tableContent,
 		details,
