@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
+	"github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
 	"github.com/stalwartgiraffe/cmr/restclient"
@@ -64,6 +65,12 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 		return
 	}
 
+	content := tviewwrapper.NewTwoBandTable(
+		tviewwrapper.NewMergeRequestTextTable(
+			requests,
+			nil))
+
+	appTableRun(content, cancel)
 	//content := newEventContent(events)
 	//_ = content
 	//promptTable(content, cancel)

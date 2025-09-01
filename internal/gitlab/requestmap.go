@@ -29,10 +29,8 @@ func NewMergeRequestMapFromYaml(filepath string) (MergeRequestMap, error) {
 
 func NewMergeRequestMapFromSlice(requests []MergeRequestModel) MergeRequestMap {
 	m := make(MergeRequestMap)
-	if requests != nil {
-		for _, mr := range requests {
-			m[mr.ID] = mr
-		}
+	for _, mr := range requests {
+		m[mr.ID] = mr
 	}
 	return m
 }
