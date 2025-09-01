@@ -71,9 +71,6 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 			nil))
 
 	appTableRun(content, cancel)
-	//content := newEventContent(events)
-	//_ = content
-	//promptTable(content, cancel)
 }
 
 type MergeRequestClient struct {

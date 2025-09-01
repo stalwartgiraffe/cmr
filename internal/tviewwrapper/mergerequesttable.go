@@ -15,7 +15,7 @@ type MergeRequestTextTable struct {
 	contents      []MergeRequestModelContent
 }
 
-var _ TextTable = (*EventsTextTable)(nil)
+var _ TextTable = (*MergeRequestTextTable)(nil)
 
 func NewMergeRequestTextTable(
 	mrs gitlab.MergeRequestMap,
