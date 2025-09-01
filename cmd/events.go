@@ -228,10 +228,10 @@ func (ec *EventClient) getEvents(
 	return eventsMap, nil
 }
 
-func appTableRun(ptc tview.TableContent, _ context.CancelFunc) {
-	app := tview.NewApplication()
-	table := tviewwrapper.MakeContentTable(ptc, app.Stop)
-	if err := app.SetRoot(table, true).SetFocus(table).Run(); err != nil {
+func appTableRun(tableContent tview.TableContent, _ context.CancelFunc) {
+	tviewApp := tview.NewApplication()
+	table := tviewwrapper.MakeContentTable(tableContent, tviewApp.Stop)
+	if err := tviewApp.SetRoot(table, true).SetFocus(table).Run(); err != nil {
 		panic(err)
 	}
 }
