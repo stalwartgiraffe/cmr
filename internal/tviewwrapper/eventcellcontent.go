@@ -11,9 +11,8 @@ import (
 type EventModelTextFunc func(e *gitlab.EventModel, projects map[int]gitlab.ProjectModel) string
 
 type EventModelCellContent struct {
-	title    string
-	maxWidth int
-	text     EventModelTextFunc
+	title string
+	cell  EventModelTextFunc
 }
 
 var defaultFormat = time.Stamp
@@ -21,14 +20,12 @@ var defaultFormat = time.Stamp
 func NewEventCellContents() []EventModelCellContent {
 	return []EventModelCellContent{
 		{
-			title:    "ID",
-			maxWidth: 8,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.ID) },
+			title: "ID",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.ID) },
 		},
 		{
-			title:    "ProjectID",
-			maxWidth: 20,
-			text: func(e *gitlab.EventModel, projects map[int]gitlab.ProjectModel) string {
+			title: "ProjectID",
+			cell: func(e *gitlab.EventModel, projects map[int]gitlab.ProjectModel) string {
 				if p, ok := projects[e.ProjectID]; ok {
 					return p.Name
 				}
@@ -48,41 +45,34 @@ func NewEventCellContents() []EventModelCellContent {
 			},
 		*/
 		{
-			title:    "AuthorUsername",
-			maxWidth: 10,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.AuthorUsername) },
+			title: "AuthorUsername",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.AuthorUsername) },
 		},
 		{
-			title:    "Title",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Title.GetOr("") },
+			title: "Title",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Title.GetOr("") },
 		},
 		{
-			title:    "ActionName",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.ActionName) },
+			title: "ActionName",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.ActionName) },
 		},
 		{
-			title:    "TargetType",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.TargetType) },
+			title: "TargetType",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return fmt.Sprint(e.TargetType) },
 		},
 		{
-			title:    "TargetTitle",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.TargetTitle.GetOr("") },
+			title: "TargetTitle",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.TargetTitle.GetOr("") },
 		},
 		{
-			title:    "CreatedAt",
-			maxWidth: 20,
-			text: func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string {
+			title: "CreatedAt",
+			cell: func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string {
 				return fmt.Sprint(e.CreatedAt.Format(defaultFormat))
 			},
 		},
 		{
-			title:    "Data",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Data.GetOr("") },
+			title: "Data",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Data.GetOr("") },
 		},
 		// {
 		// 	title:    "Author",
@@ -98,19 +88,16 @@ func NewEventCellContents() []EventModelCellContent {
 		// },
 
 		{
-			title:    "Imported",
-			maxWidth: 10,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return getOrEmpty(e.Imported) },
+			title: "Imported",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return getOrEmpty(e.Imported) },
 		},
 		{
-			title:    "ImportedFrom",
-			maxWidth: 10,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return getOrEmpty(e.ImportedFrom) },
+			title: "ImportedFrom",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return getOrEmpty(e.ImportedFrom) },
 		},
 		{
-			title:    "PushData",
-			maxWidth: 10,
-			text: func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string {
+			title: "PushData",
+			cell: func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string {
 				if p, ok := e.PushData.Get(); ok {
 					return p.String()
 				}
@@ -119,9 +106,8 @@ func NewEventCellContents() []EventModelCellContent {
 		},
 
 		{
-			title:    "Note",
-			maxWidth: 20,
-			text:     func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Note.String() },
+			title: "Note",
+			cell:  func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string { return e.Note.String() },
 		},
 	}
 }

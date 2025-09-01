@@ -41,6 +41,7 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 
 	filepath := "ignore/my_recent_merge_request.yaml"
 	route := "merge_requests/"
+	_ = route
 	var err error
 	// start := time.Now()
 	accessToken, err := loadGitlabAccessToken()
@@ -53,8 +54,10 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 	}
 
 	mrc := NewMergeRequestClient(accessToken)
+	_ = mrc
 	app.Println("start updating recentEvents")
-	requests, err := mrc.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
+	//requests, err := mrc.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
+	requests, err := gitlab.NewMergeRequestMapFromYaml(filepath)
 	app.Printf("we got events %d", len(requests))
 	if err != nil {
 		utils.Redln(err)
@@ -62,6 +65,7 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 	}
 
 	//content := newEventContent(events)
+	//_ = content
 	//promptTable(content, cancel)
 }
 

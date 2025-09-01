@@ -1,4 +1,6 @@
 cmr
 .vscode
+*.cov
 ignore/
+build/
 

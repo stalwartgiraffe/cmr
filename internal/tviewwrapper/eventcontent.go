@@ -1,13 +1,14 @@
 package tviewwrapper
 
 import (
+	"maps"
+	"slices"
 	"sort"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 
-	"golang.org/x/exp/maps"
+	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
 type EventsContent struct {
@@ -24,7 +25,7 @@ type EventsContent struct {
 var _ tview.TableContent = (*EventsContent)(nil)
 
 func NewEventsContent(events gitlab.EventMap, projects map[int]gitlab.ProjectModel) *EventsContent {
-	s := maps.Values(events)
+	s := slices.Collect(maps.Values(events))
 	sort.Slice(s, func(i, j int) bool {
 		return s[i].ID > s[j].ID
 	})
@@ -64,7 +65,7 @@ func (c *EventsContent) renderCell(row, col int) (
 		txt = content.title
 	} else {
 		event := &c.events[row]
-		txt = content.text(event, c.projects)
+		txt = content.cell(event, c.projects)
 	}
 	return
 }

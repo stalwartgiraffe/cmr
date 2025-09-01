@@ -63,9 +63,12 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 		return
 	}
 	app.Printf("we got events %d", len(events))
-	_ = events
 
-	content := tviewwrapper.NewEventsContent(events, projects)
+	content := tviewwrapper.NewTwoBandTable(
+		tviewwrapper.NewEventsTextTable(
+			events,
+			projects))
+
 	appTableRun(content, cancel)
 }
 
