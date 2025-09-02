@@ -3,6 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"maps"
+	"slices"
 
 	"github.com/rivo/tview"
 	"github.com/spf13/cobra"
@@ -50,8 +52,11 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	tviewApp := tview.NewApplication()
 	filter := tviewwrapper.NewBasicFilter("sure")
 	details := tviewwrapper.NewTextDetails()
+
+	s := slices.Collect(maps.Values(requests))
+	details.ShowDetails(s[0])
 	screen := tviewwrapper.NewThreePanelScreen(
-	tviewApp, 
+		tviewApp,
 		filter,
 		tableContent,
 		details,
