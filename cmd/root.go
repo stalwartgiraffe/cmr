@@ -82,6 +82,7 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 	rootCmd.AddCommand(NewMergeRequestCommand(app, cfg, cancel))
 
 	rootCmd.AddCommand(NewDemoCommand(app, cfg, cancel))
+	rootCmd.AddCommand(NewMVCCommand(app, cfg, cancel))
 
 	rootCmd.AddCommand(NewCloneCommand(cfg))
 	rootCmd.AddCommand(NewPullCommand(cfg))

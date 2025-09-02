@@ -18,10 +18,11 @@ type MergeRequestTextTable struct {
 var _ TextTable = (*MergeRequestTextTable)(nil)
 
 func NewMergeRequestTextTable(
-	mrs gitlab.MergeRequestMap,
-	projects map[int]gitlab.ProjectModel) *MergeRequestTextTable {
+	projects map[int]gitlab.ProjectModel,
+	mergesMap gitlab.MergeRequestMap,
+) *MergeRequestTextTable {
 
-	s := slices.Collect(maps.Values(mrs))
+	s := slices.Collect(maps.Values(mergesMap))
 	sort.Slice(s, func(i, j int) bool {
 		return s[i].ID > s[j].ID
 	})

@@ -10,9 +10,14 @@ func NewMergesController(
 	repo MergesRepository,
 	render MergesRenderer,
 ) *MergesController {
+
+	render.MakeBinding(repo)
 	return &MergesController{
 		repo:   repo,
 		render: render,
 	}
 }
 
+func (m *MergesController) Run() error {
+	return m.render.Run()
+}

@@ -46,8 +46,9 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 
 	tableContent := tviewwrapper.NewTwoBandTable(
 		tviewwrapper.NewMergeRequestTextTable(
+			projects,
 			requests,
-			projects))
+		))
 
 	tviewApp := tview.NewApplication()
 	filter := tviewwrapper.NewBasicFilter("sure")

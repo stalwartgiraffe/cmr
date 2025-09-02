@@ -67,8 +67,8 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 
 	tableContent := tviewwrapper.NewTwoBandTable(
 		tviewwrapper.NewMergeRequestTextTable(
-			requests,
-			nil))
+			nil, requests,
+		))
 
 	appTableRun(tableContent, cancel)
 }

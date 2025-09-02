@@ -1,35 +1,45 @@
 package merges
 
 import (
-	"maps"
-	"slices"
-	"sort"
-
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
 type MergesRepository interface {
 	Load() error
+
+	GetCollections() (
+		map[int]gitlab.ProjectModel,
+		gitlab.MergeRequestMap,
+	)
 }
 
 type InMemoryMergesRepository struct {
-	merges []gitlab.MergeRequestModel
+	projects  map[int]gitlab.ProjectModel
+	mergesMap gitlab.MergeRequestMap
+}
+
+func NewInMemoryMergesRepository() *InMemoryMergesRepository {
+	return &InMemoryMergesRepository{}
 }
 
 func (r *InMemoryMergesRepository) Load() error {
-	filepath := "ignore/my_recent_merge_request.yaml"
-	mergesMap, err := gitlab.NewMergeRequestMapFromYaml(filepath)
+	var err error
+	r.projects, err = gitlab.ReadProjects()
 	if err != nil {
 		return err
 	}
-	r.index(mergesMap)
+
+	filepath := "ignore/my_recent_merge_request.yaml"
+	r.mergesMap, err = gitlab.NewMergeRequestMapFromYaml(filepath)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (r *InMemoryMergesRepository) index(mergesMap gitlab.MergeRequestMap) {
-	merges := slices.Collect(maps.Values(mergesMap))
-	sort.Slice(merges, func(i, j int) bool {
-		return merges[i].ID > merges[j].ID
-	})
-	r.merges = merges
+func (r *InMemoryMergesRepository) GetCollections() (
+	map[int]gitlab.ProjectModel,
+	gitlab.MergeRequestMap,
+) {
+	return r.projects, r.mergesMap
 }
