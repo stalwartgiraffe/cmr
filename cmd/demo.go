@@ -44,7 +44,7 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 		return
 	}
 
-	tableContent := tviewwrapper.NewTwoBandTable(
+	tableContent := tviewwrapper.NewTwoBandTableContent(
 		tviewwrapper.NewMergeRequestTextTable(
 			projects,
 			requests,

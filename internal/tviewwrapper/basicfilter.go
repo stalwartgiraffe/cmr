@@ -18,17 +18,17 @@ func NewBasicFilter(placeholder string) *BasicFilter {
 	input.SetLabel("Filter: ")
 	input.SetPlaceholder(placeholder)
 	input.SetFieldWidth(0) // Use available width
-	
+
 	filter := &BasicFilter{
 		InputField: input,
 	}
-	
+
 	input.SetChangedFunc(func(text string) {
 		if filter.onChanged != nil {
 			filter.onChanged(text)
 		}
 	})
-	
+
 	return filter
 }
 

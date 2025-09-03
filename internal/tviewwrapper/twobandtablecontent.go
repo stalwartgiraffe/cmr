@@ -11,16 +11,16 @@ type TextTable interface {
 	GetCell(row, col int) string
 }
 
-type TwoBandTable struct {
+type TwoBandTableContent struct {
 	tview.TableContentReadOnly
 	rowColors []tcell.Color
 	table     TextTable
 }
 
-var _ tview.TableContent = (*TwoBandTable)(nil)
+var _ tview.TableContent = (*TwoBandTableContent)(nil)
 
-func NewTwoBandTable(table TextTable) *TwoBandTable {
-	return &TwoBandTable{
+func NewTwoBandTableContent(table TextTable) *TwoBandTableContent {
+	return &TwoBandTableContent{
 		table: table,
 		rowColors: []tcell.Color{
 			tcell.ColorDarkBlue,
@@ -31,17 +31,17 @@ func NewTwoBandTable(table TextTable) *TwoBandTable {
 }
 
 // GetRowCount return the count of rows in the table
-func (c *TwoBandTable) GetRowCount() int {
+func (c *TwoBandTableContent) GetRowCount() int {
 	return c.table.GetRowCount()
 }
 
 // GetColumnCount returns the count of columns in the table.
-func (c *TwoBandTable) GetColumnCount() int {
+func (c *TwoBandTableContent) GetColumnCount() int {
 	return c.table.GetColumnCount()
 }
 
 // GetCell returns the contents of a table cell.
-func (c *TwoBandTable) GetCell(row, col int) *tview.TableCell {
+func (c *TwoBandTableContent) GetCell(row, col int) *tview.TableCell {
 	cell := &tview.TableCell{
 		Align:           tview.AlignLeft,
 		Color:           tview.Styles.PrimaryTextColor,
@@ -52,7 +52,7 @@ func (c *TwoBandTable) GetCell(row, col int) *tview.TableCell {
 	}
 	return cell
 }
-func (c *TwoBandTable) bandBackground(row int) tcell.Color {
+func (c *TwoBandTableContent) bandBackground(row int) tcell.Color {
 	if row == 0 {
 		return c.rowColors[0]
 	} else if ((row / 2) % 2) == 0 {
