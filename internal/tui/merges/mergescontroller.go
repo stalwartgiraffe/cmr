@@ -10,8 +10,6 @@ func NewMergesController(
 	repo MergesRepository,
 	render MergesRenderer,
 ) *MergesController {
-
-	render.MakeBinding(repo)
 	return &MergesController{
 		repo:   repo,
 		render: render,

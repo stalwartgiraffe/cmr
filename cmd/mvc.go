@@ -29,11 +29,12 @@ func NewMVCCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Co
 
 func runMVC(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	repo := merges.NewInMemoryMergesRepository()
+
+	// TODO handle in go rouine
 	if err := repo.Load(); err != nil {
 		panic(err)
 	}
-	fmt.Println("mvc2 loaded")
-	renderer := merges.NewTuiMergesRenderer()
+	renderer := merges.NewTuiMergesRenderer(repo)
 
 	controller := merges.NewMergesController(
 		repo,
