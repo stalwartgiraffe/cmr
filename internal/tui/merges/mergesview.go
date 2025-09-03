@@ -19,11 +19,9 @@ type TuiMergesRenderer struct {
 
 	tablePage *tview.Flex
 
-	filter *tviewwrapper.BasicFilter
-
-	tablePanel *tview.Table
-
-	details *tviewwrapper.TextDetails
+	filter     *tviewwrapper.BasicFilter
+	tablePanel *tviewwrapper.TablePanel
+	details    *tviewwrapper.TextDetails
 
 	currentFocus int
 	focusOps     []focusOp
@@ -33,26 +31,27 @@ type TuiMergesRenderer struct {
 type StopFn func()
 
 func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
+	tviewApp := tview.NewApplication()
+	stop := tviewApp.Stop
 	r := &TuiMergesRenderer{
-		tviewApp:  tview.NewApplication(),
+		tviewApp:  tviewApp,
 		tablePage: tview.NewFlex(),
 
-		filter:  tviewwrapper.NewBasicFilter(""),
+		filter: tviewwrapper.NewBasicFilter(""),
+
+		tablePanel: tviewwrapper.NewTablePanel(
+			tviewwrapper.NewTwoBandTableContent(repo),
+			stop),
+
 		details: tviewwrapper.NewTextDetails(),
+		stop:    stop,
 	}
+
 	r.panels = []tview.Primitive{
 		r.filter,
 		r.tablePanel,
 		r.details,
 	}
-	r.stop = r.tviewApp.Stop
-
-	// TODO 
-	replace 
-	r.makePanels(repo)
-	with TablePanel
-
-	replace filterops  Filterable interface
 
 	r.setupLayout()
 	r.setupFocusRing()
@@ -62,11 +61,6 @@ func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
 
 func (r *TuiMergesRenderer) Run() error {
 	return r.tviewApp.SetRoot(r.tablePage, true).SetFocus(r.tablePage).Run()
-}
-
-func (r *TuiMergesRenderer) makePanels(repo MergesRepository) {
-	tableContent := tviewwrapper.NewTwoBandTableContent(repo)
-	r.tablePanel = tviewwrapper.MakeContentTable(tableContent, r.tviewApp.Stop)
 }
 
 func (r *TuiMergesRenderer) setupLayout() {
