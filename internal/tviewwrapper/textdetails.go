@@ -12,7 +12,7 @@ type TextDetails struct {
 	*tview.TextView
 }
 
-var _ DetailsPanel = (*TextDetails)(nil)
+var _ DetailsPanelTPSTPS = (*TextDetails)(nil)
 
 // NewTextDetails creates a basic text details panel
 func NewTextDetails() *TextDetails {

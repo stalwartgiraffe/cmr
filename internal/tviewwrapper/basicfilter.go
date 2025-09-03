@@ -10,8 +10,6 @@ type BasicFilter struct {
 	onChanged func(string)
 }
 
-var _ FilterPanel = (*BasicFilter)(nil)
-
 // NewBasicFilter creates a basic filter input
 func NewBasicFilter(placeholder string) *BasicFilter {
 	input := tview.NewInputField()

@@ -5,16 +5,16 @@ import (
 	"github.com/rivo/tview"
 )
 
-// FilterPanel represents a filter input component
-type FilterPanel interface {
+// FilterPanelTPS represents a filter input component
+type FilterPanelTPS interface {
 	GetPrimitive() tview.Primitive
 	GetFilter() string
 	SetFilter(string)
 	SetChangedFunc(func(string))
 }
 
-// DetailsPanel represents a details display component
-type DetailsPanel interface {
+// DetailsPanelTPSTPS represents a details display component
+type DetailsPanelTPSTPS interface {
 	GetPrimitive() tview.Primitive
 	ShowDetails(interface{})
 	Clear()
@@ -25,9 +25,9 @@ type ThreePanelScreen struct {
 	*tview.Flex
 
 	tviewApp *tview.Application
-	filter   FilterPanel
+	filter   FilterPanelTPS
 	table    *tview.Table
-	details  DetailsPanel
+	details  DetailsPanelTPSTPS
 
 	currentPanel int // 0=filter, 1=table, 2=details
 	onStop       StopFunc
@@ -36,9 +36,9 @@ type ThreePanelScreen struct {
 // NewThreePanelScreen creates a new three-panel layout
 func NewThreePanelScreen(
 	tviewApp *tview.Application,
-	filter FilterPanel,
+	filter FilterPanelTPS,
 	tableContent tview.TableContent,
-	details DetailsPanel,
+	details DetailsPanelTPSTPS,
 	onStop StopFunc,
 ) *ThreePanelScreen {
 	screen := &ThreePanelScreen{
