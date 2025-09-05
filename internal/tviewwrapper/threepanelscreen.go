@@ -10,7 +10,7 @@ type FilterPanelTPS interface {
 	GetPrimitive() tview.Primitive
 	GetFilter() string
 	SetFilter(string)
-	SetChangedFunc(func(string))
+	OnChangeSubscribe(func(string))
 }
 
 // DetailsPanelTPSTPS represents a details display component
@@ -98,7 +98,7 @@ func (s *ThreePanelScreen) setupKeyHandlers() {
 	})
 
 	// Filter change handler
-	s.filter.SetChangedFunc(func(filterText string) {
+	s.filter.OnChangeSubscribe(func(filterText string) {
 		s.applyFilter(filterText)
 	})
 }

@@ -2,46 +2,47 @@ package tviewwrapper
 
 import (
 	"github.com/rivo/tview"
+
+	"github.com/stalwartgiraffe/cmr/events"
 )
 
-// BasicFilter implements FilterPanel with a simple input field
-type BasicFilter struct {
+// BasicFilterPanel implements FilterPanel with a simple input field
+type BasicFilterPanel struct {
 	*tview.InputField
-	onChanged func(string)
+
+	OnChange events.Event[string]
 }
 
-// NewBasicFilter creates a basic filter input
-func NewBasicFilter(placeholder string) *BasicFilter {
+// NewBasicFilterPanel creates a basic filter input
+func NewBasicFilterPanel(placeholder string) *BasicFilterPanel {
 	input := tview.NewInputField()
 	input.SetLabel("Filter: ")
 	input.SetPlaceholder(placeholder)
 	input.SetFieldWidth(0) // Use available width
 
-	filter := &BasicFilter{
+	f := &BasicFilterPanel{
 		InputField: input,
 	}
 
 	input.SetChangedFunc(func(text string) {
-		if filter.onChanged != nil {
-			filter.onChanged(text)
-		}
+		f.OnChange.Notify(text)
 	})
 
-	return filter
+	return f
 }
 
-func (f *BasicFilter) GetPrimitive() tview.Primitive {
+func (f *BasicFilterPanel) OnChangeSubscribe(fn func(string)) {
+	f.OnChange.Subscribe(fn)
+}
+
+func (f *BasicFilterPanel) GetPrimitive() tview.Primitive {
 	return f.InputField
 }
 
-func (f *BasicFilter) GetFilter() string {
-	return f.InputField.GetText()
+func (f *BasicFilterPanel) GetFilter() string {
+	return f.GetText()
 }
 
-func (f *BasicFilter) SetFilter(text string) {
-	f.InputField.SetText(text)
-}
-
-func (f *BasicFilter) SetChangedFunc(fn func(string)) {
-	f.onChanged = fn
+func (f *BasicFilterPanel) SetFilter(text string) {
+	f.SetText(text)
 }

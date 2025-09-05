@@ -16,8 +16,8 @@ type FocusRing struct {
 }
 
 // NewFocusRing returns a configured focus ring of panels.
-func NewFocusRing(tviewApp *tview.Application, panels ...tview.Primitive) FocusRing {
-	r := FocusRing{
+func NewFocusRing(tviewApp *tview.Application, panels ...tview.Primitive) *FocusRing {
+	r := &FocusRing{
 		tviewApp:     tviewApp,
 		focusedPanel: 0,
 		panels:       panels,

@@ -51,8 +51,8 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 		))
 
 	tviewApp := tview.NewApplication()
-	filter := tviewwrapper.NewBasicFilter("sure")
-	details := tviewwrapper.NewTextDetails()
+	filter := tviewwrapper.NewBasicFilterPanel("sure")
+	details := tviewwrapper.NewTextDetailsPanel()
 
 	s := slices.Collect(maps.Values(requests))
 	details.ShowDetails(s[0])

@@ -5,30 +5,29 @@ import (
 	"maps"
 	"slices"
 	"sort"
+	"strings"
 
+	"github.com/stalwartgiraffe/cmr/events"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
+	"github.com/stalwartgiraffe/cmr/views"
 )
 
-type MergesRepository interface {
-	TableContents
-
-	Load() error
-
-	// TODO remove
-	GetCollections() (
-		map[int]gitlab.ProjectModel,
-		gitlab.MergeRequestMap,
-	)
-}
-
 type InMemoryMergesRepository struct {
-	projects      map[int]gitlab.ProjectModel
-	mergesMap     gitlab.MergeRequestMap
-	mergeRequests []gitlab.MergeRequestModel
+	projects  map[int]gitlab.ProjectModel
+	mergesMap gitlab.MergeRequestMap
+
+	mergeRequests views.DataView[gitlab.MergeRequestModel]
 	contents      []MergeRequestModelContent
+
+	changes events.Event[EmptyT]
 }
 
-var _ MergesRepository = (*InMemoryMergesRepository)(nil)
+type EmptyT = struct{}
+
+type rowRef struct {
+	idx int
+	m   *gitlab.MergeRequestModel
+}
 
 func NewInMemoryMergesRepository() *InMemoryMergesRepository {
 	return &InMemoryMergesRepository{
@@ -54,39 +53,63 @@ func (r *InMemoryMergesRepository) Load() error {
 		return s[i].ID > s[j].ID
 	})
 
-	r.mergeRequests = s
+	r.mergeRequests = views.NewDataView(s)
+	r.mergeRequests.FilterAll(func(m *gitlab.MergeRequestModel) bool {
+		return true
+	})
+
+	r.changed()
 	return nil
 }
 
-// TODO remove this and push all behavior to repe
-func (r *InMemoryMergesRepository) GetCollections() (
-	map[int]gitlab.ProjectModel,
-	gitlab.MergeRequestMap,
-) {
-	return r.projects, r.mergesMap
+func (r *InMemoryMergesRepository) Filter(search string) {
+
+	// there is no simple standard libary case insensitive string.Contains()
+	// could use standard lib regex with i
+	//
+	// if perf becomes an concert
+	//
+	// consider third parties
+	// github.com/charlievieth/strcase
+	// import "github.com/sahilm/fuzzy"
+	//
+	// consider fancy alternative
+	// pre generated indexed data structures - ie all txt in lower case
+	search = strings.ToLower(search)
+	r.mergeRequests.FilterAll(func(m *gitlab.MergeRequestModel) bool {
+		// pragmatically waste allocs for now
+		return strings.Contains(
+			strings.ToLower(getUserName(m)), search) ||
+			strings.Contains(strings.ToLower(m.Title), search)
+	})
+	r.changed()
 }
 
-type TableContents interface {
-	GetRowCount() int
-	GetColumnCount() int
-	GetCell(row, col int) string
+func (r *InMemoryMergesRepository) GetRowCount() int {
+	return r.mergeRequests.Len()
 }
 
-func (t *InMemoryMergesRepository) GetRowCount() int {
-	return len(t.mergeRequests)
+func (r *InMemoryMergesRepository) GetColumnCount() int {
+	return len(r.contents)
 }
 
-func (t *InMemoryMergesRepository) GetColumnCount() int {
-	return len(t.contents)
-}
-
-func (t *InMemoryMergesRepository) GetCell(row int, col int) string {
-	content := t.contents[col]
+func (r *InMemoryMergesRepository) GetCell(row int, col int) string {
+	content := r.contents[col]
 	if row == 0 {
 		return content.title
 	}
-	mr := &t.mergeRequests[row-1]
-	return content.cell(mr, t.projects)
+	data := r.mergeRequests.Get(row - 1)
+	return content.cell(data, r.projects)
+}
+
+type EmptyFn = func(EmptyT)
+
+func (r *InMemoryMergesRepository) OnChanged(callback EmptyFn) {
+	r.changes.Subscribe(callback)
+}
+
+func (r *InMemoryMergesRepository) changed() {
+	r.changes.Notify(EmptyT{})
 }
 
 type MergeRequestModelContentFunc func(mr *gitlab.MergeRequestModel, projects map[int]gitlab.ProjectModel) string
@@ -114,11 +137,7 @@ func NewMergeRequestContents() []MergeRequestModelContent {
 		{
 			title: "AuthorUsername",
 			cell: func(m *gitlab.MergeRequestModel, _ map[int]gitlab.ProjectModel) string {
-				name := ""
-				if m.Author != nil {
-					name = m.Author.Username
-				}
-				return name
+				return getUserName(m)
 			},
 		},
 		{
@@ -128,4 +147,11 @@ func NewMergeRequestContents() []MergeRequestModelContent {
 			},
 		},
 	}
+}
+
+func getUserName(m *gitlab.MergeRequestModel) string {
+	if m.Author != nil {
+		return m.Author.Username
+	}
+	return ""
 }

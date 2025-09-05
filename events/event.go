@@ -4,7 +4,12 @@ package events
 // Callback is a generic one argument delegate.
 type Callback[T any] func(T)
 
-// Event is a collection of callbacks that can be subscribed and notified.
+// Event is a simple collection of callbacks that can be subscribed and notified.
+// 
+// All calls are synchronous. 
+// No Unsubscribe is provided.
+// Subscribers must not error.
+// Callback order should not be assumed by subscribers.
 type Event[T any] struct {
 	callbacks []Callback[T]
 }
