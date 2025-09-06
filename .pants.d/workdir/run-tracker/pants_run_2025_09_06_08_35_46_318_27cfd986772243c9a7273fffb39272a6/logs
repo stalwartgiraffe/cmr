@@ -1,0 +1,15 @@
+08:35:46.34 [31m[ERROR][0m 1 Exception encountered:
+
+Engine traceback:
+  in `run` goal
+
+NoApplicableTargetsException: No applicable files or targets matched. The `run` goal works with these target types:
+
+  * go_binary
+
+However, you only specified target arguments with these target types:
+
+  * go_package
+
+Please specify relevant file and/or target arguments. Run `pants --filter-target-type=go_binary list ::` to find all applicable targets in your project.
+

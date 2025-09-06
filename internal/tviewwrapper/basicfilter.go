@@ -21,12 +21,8 @@ func NewBasicFilterPanel(placeholder string) *BasicFilterPanel {
 	input.SetPlaceholder(placeholder)
 	input.SetFieldWidth(0) // Use available width
 
-	//input.SetFieldTextColor(tcell.ColorDarkSlateGray)
-	//input.SetFieldBackgroundColor(tcell.ColorDarkGrey)
-	//almostBlack := tcell.NewRGBColor(10, 10, 10)
-	almostBlack := tcell.NewRGBColor(47, 47, 47)
-	input.SetFieldBackgroundColor(almostBlack)
-	//input.SetFieldBackgroundColor(tcell.ColorDarkGrey)
+	inputDarkGray := tcell.Color234
+	input.SetFieldBackgroundColor(inputDarkGray)
 
 	f := &BasicFilterPanel{
 		InputField: input,

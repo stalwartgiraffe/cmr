@@ -69,6 +69,8 @@ func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
 
 	r.focusRing = tw.NewFocusRing(tviewApp, r.filterPanel, r.tablePanel, r.detailsPanel)
 
+	// tui colors cheat sheet
+	// https://betterterminal.com/terminal-colors
 	r.setupTablePage()
 	r.setupKeyHandlers()
 	r.setupEvents(repo)

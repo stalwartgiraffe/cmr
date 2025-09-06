@@ -1,0 +1,703 @@
+08:49:42.80 [INFO] Completed: Scheduling: Test binary /bin/bash.
+08:49:42.80 [INFO] Completed: Scheduling: Test binary /usr/local/go/bin/go.
+08:49:42.80 [INFO] Completed: Scheduling: Test binary /usr/bin/bash.
+08:49:42.81 [INFO] Completed: Scheduling: Determine Go version for /usr/local/go/bin/go
+08:49:42.82 [INFO] Completed: Scheduling: Determine Go SDK metadata for /usr/local/go/bin/go
+08:49:42.82 [INFO] Completed: Scheduling: Parse go.mod
+08:49:42.84 [INFO] Completed: Scheduling: Analyze Go module dependencies.
+08:49:42.86 [INFO] Completed: Scheduling: Ask Go for its available import paths
+08:49:42.94 [INFO] Completed: Scheduling: Obtain tool ID for Go tool `compile`.
+08:49:42.94 [INFO] Completed: Scheduling: Obtain tool ID for Go tool `asm`.
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: cmp
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/itoa
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/msan
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/goarch
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/coverage/rtcov
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: unicode/utf16
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/profilerecord
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/syslist
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/godebugs
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: math/bits
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/byteorder
+08:49:42.95 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/cpu
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: encoding
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: unicode
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/goos
+08:49:42.95 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/sync/atomic
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: unicode/utf8
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/asan
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/goversion
+08:49:42.95 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/runtime/syscall
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/goexperiment
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/platform
+08:49:42.95 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/runtime/atomic
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/unsafeheader
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: sync/atomic
+08:49:42.95 [INFO] Completed: Scheduling: Compile Go package: internal/cpu
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/syscall
+08:49:42.96 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/abi
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/math
+08:49:42.96 [INFO] Completed: Scheduling: Assemble cpu_x86.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Assemble cpu.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/chacha8rand
+08:49:42.96 [INFO] Completed: Scheduling: Assemble asm.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/atomic
+08:49:42.96 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/runtime/sys
+08:49:42.96 [INFO] Completed: Scheduling: Assemble asm_linux_amd64.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/abi
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/chacha8rand
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.96 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/sys
+08:49:42.96 [INFO] Completed: Scheduling: Assemble atomic_amd64.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Assemble abi_test.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Assemble stub.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Assemble chacha8_amd64.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.96 [INFO] Completed: Scheduling: Assemble empty.s with Go
+08:49:42.96 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/math
+08:49:42.96 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/bytealg
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.96 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.97 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: math
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/exithook
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/bytealg
+08:49:42.97 [INFO] Completed: Scheduling: Assemble log_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble floor_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble hypot_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble dim_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/race
+08:49:42.97 [INFO] Completed: Scheduling: Assemble exp_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble equal_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble index_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble compare_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble indexbyte_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Assemble count_amd64.s with Go
+08:49:42.97 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.97 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/sync
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/runtime/maps
+08:49:42.97 [INFO] Completed: Scheduling: Compile Go package: internal/stringslite
+08:49:42.97 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/runtime
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: runtime
+08:49:42.98 [INFO] Completed: Scheduling: Assemble duff_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble memmove_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble asm.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble test_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble preempt_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble asm_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble memclr_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble rt0_linux_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble ints.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble sys_linux_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Assemble time_linux_amd64.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.98 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/internal/reflectlite
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: iter
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: sync
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: internal/reflectlite
+08:49:42.98 [INFO] Completed: Scheduling: Assemble asm.s with Go
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: slices
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: internal/bisect
+08:49:42.98 [INFO] Completed: Scheduling: Compile Go package: internal/testlog
+08:49:42.98 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: internal/godebug
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: errors
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: sort
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: io
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: path
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: internal/oserror
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: strconv
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: strings
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: bytes
+08:49:42.99 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/syscall
+08:49:42.99 [INFO] Completed: Scheduling: Generate symabis metadata for assembly files for /usr/local/go/src/reflect
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: syscall
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: go/build/constraint
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: reflect
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: bufio
+08:49:42.99 [INFO] Completed: Scheduling: Compile Go package: regexp/syntax
+08:49:42.99 [INFO] Completed: Scheduling: Assemble asm_linux_amd64.s with Go
+08:49:42.99 [INFO] Completed: Scheduling: Assemble asm_amd64.s with Go
+08:49:43.00 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: regexp
+08:49:43.00 [INFO] Completed: Scheduling: Link objects to Go package archive
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: internal/syscall/unix
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: internal/syscall/execenv
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: time
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: encoding/binary
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: internal/fmtsort
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: context
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: io/fs
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: encoding/base64
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: internal/poll
+08:49:43.00 [INFO] Completed: Scheduling: Compile Go package: internal/filepathlite
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: os
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: path/filepath
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: internal/lazyregexp
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: fmt
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: internal/buildcfg
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: encoding/json
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: os/exec
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: go/token
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: go/doc/comment
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: internal/goroot
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: go/scanner
+08:49:43.01 [INFO] Completed: Scheduling: Compile Go package: go/ast
+08:49:43.02 [INFO] Completed: Scheduling: Compile Go package: go/parser
+08:49:43.02 [INFO] Completed: Scheduling: Compile Go package: go/doc
+08:49:43.02 [INFO] Completed: Scheduling: Compile Go package: go/build
+08:49:43.02 [INFO] Completed: Scheduling: Compile Go package: main
+08:49:43.04 [INFO] Completed: Scheduling: Test binary /bin/gcc.
+08:49:43.04 [INFO] Completed: Scheduling: Test binary /usr/bin/gcc.
+08:49:43.05 [INFO] Completed: Scheduling: Obtain tool ID for Go tool `link`.
+08:49:43.05 [INFO] Completed: Scheduling: Link Go binary: ./package_analyzer
+08:49:43.10 [INFO] Completed: Scheduling: Download Go module github.com/go-jose/go-jose/v4@v4.0.5.
+08:49:43.13 [INFO] Completed: Scheduling: Download Go module github.com/emirpasic/gods@v1.18.1.
+08:49:43.19 [INFO] Completed: Scheduling: Download Go module github.com/gin-contrib/sse@v0.1.0.
+08:49:43.21 [INFO] Completed: Scheduling: Download Go module github.com/aarondl/opt@v0.0.0-20230313190023-85d93d668fec.
+08:49:43.21 [INFO] Completed: Scheduling: Download Go module github.com/google/renameio@v0.1.0.
+08:49:43.22 [INFO] Completed: Scheduling: Download Go module github.com/gabriel-vasile/mimetype@v1.4.2.
+08:49:43.24 [INFO] Completed: Scheduling: Download Go module github.com/json-iterator/go@v1.1.12.
+08:49:43.27 [INFO] Completed: Scheduling: Download Go module github.com/BurntSushi/toml@v0.3.1.
+08:49:43.31 [INFO] Completed: Scheduling: Download Go module github.com/chzyer/test@v0.0.0-20180213035817-a1ea475d72b1.
+08:49:43.34 [INFO] Completed: Scheduling: Download Go module github.com/google/btree@v1.0.0.
+08:49:43.35 [INFO] Completed: Scheduling: Download Go module github.com/subosito/gotenv@v1.6.0.
+08:49:43.36 [INFO] Completed: Scheduling: Download Go module github.com/cncf/xds/go@v0.0.0-20250326154945-ae57f3c0d45f.
+08:49:43.36 [INFO] Completed: Scheduling: Download Go module github.com/nats-io/nkeys@v0.4.5.
+08:49:43.36 [INFO] Completed: Scheduling: Download Go module github.com/kr/text@v0.2.0.
+08:49:43.37 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/contrib/detectors/gcp@v1.35.0.
+08:49:43.38 [INFO] Completed: Scheduling: Download Go module github.com/acomagu/bufpipe@v1.0.4.
+08:49:43.38 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp@v0.13.0.
+08:49:43.39 [INFO] Completed: Scheduling: Download Go module github.com/spf13/cobra@v1.8.0.
+08:49:43.40 [INFO] Completed: Scheduling: Download Go module github.com/spiffe/go-spiffe/v2@v2.5.0.
+08:49:43.40 [INFO] Completed: Scheduling: Download Go module github.com/grpc-ecosystem/grpc-gateway/v2@v2.27.1.
+08:49:43.40 [INFO] Completed: Scheduling: Download Go module github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd.
+08:49:43.41 [INFO] Completed: Scheduling: Download Go module github.com/aarondl/json@v0.0.0-20221020222930-8b0db17ef1bf.
+08:49:43.41 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/log@v0.13.0.
+08:49:43.44 [INFO] Completed: Scheduling: Download Go module github.com/google/s2a-go@v0.1.7.
+08:49:43.44 [INFO] Completed: Scheduling: Download Go module rsc.io/pdf@v0.1.1.
+08:49:43.44 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/sdk/metric@v1.37.0.
+08:49:43.45 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/golang-lru@v0.5.4.
+08:49:43.45 [INFO] Completed: Scheduling: Download Go module github.com/stretchr/testify@v1.10.0.
+08:49:43.46 [INFO] Completed: Scheduling: Download Go module cel.dev/expr@v0.23.0.
+08:49:43.46 [INFO] Completed: Scheduling: Download Go module github.com/chzyer/readline@v0.0.0-20180603132655-2972be24d48e.
+08:49:43.47 [INFO] Completed: Scheduling: Download Go module github.com/jessevdk/go-flags@v1.5.0.
+08:49:43.48 [INFO] Completed: Scheduling: Download Go module go.etcd.io/etcd/client/pkg/v3@v3.5.9.
+08:49:43.48 [INFO] Completed: Scheduling: Download Go module go.uber.org/zap@v1.21.0.
+08:49:43.49 [INFO] Completed: Scheduling: Download Go module github.com/BurntSushi/xgb@v0.0.0-20160522181843-27f122750802.
+08:49:43.49 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/go-cleanhttp@v0.5.2.
+08:49:43.49 [INFO] Completed: Scheduling: Download Go module github.com/client9/misspell@v0.3.4.
+08:49:43.49 [INFO] Completed: Scheduling: Download Go module github.com/cespare/xxhash/v2@v2.3.0.
+08:49:43.49 [INFO] Completed: Scheduling: Download Go module github.com/pjbgf/sha1cd@v0.3.0.
+08:49:43.50 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/sdk@v1.37.0.
+08:49:43.52 [INFO] Completed: Scheduling: Download Go module github.com/mmcloughlin/avo@v0.5.0.
+08:49:43.52 [INFO] Completed: Scheduling: Download Go module github.com/gdamore/tcell/v2@v2.6.1-0.20231203215052-2917c3801e73.
+08:49:43.52 [INFO] Completed: Scheduling: Download Go module github.com/bwesterb/go-ristretto@v1.2.3.
+08:49:43.53 [INFO] Completed: Scheduling: Download Go module github.com/nats-io/nats.go@v1.30.2.
+08:49:43.53 [INFO] Completed: Scheduling: Download Go module gopkg.in/ini.v1@v1.67.0.
+08:49:43.53 [INFO] Completed: Scheduling: Download Go module github.com/google/martian/v3@v3.1.0.
+08:49:43.53 [INFO] Completed: Scheduling: Download Go module github.com/modern-go/reflect2@v1.0.2.
+08:49:43.54 [INFO] Completed: Scheduling: Download Go module github.com/klauspost/cpuid/v2@v2.2.4.
+08:49:43.55 [INFO] Completed: Scheduling: Download Go module google.golang.org/genproto/googleapis/api@v0.0.0-20250603155806-513f23925822.
+08:49:43.56 [INFO] Completed: Scheduling: Download Go module github.com/sagikazarmark/slog-shim@v0.1.0.
+08:49:43.56 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/compute/metadata@v0.6.0.
+08:49:43.56 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/go-hclog@v1.5.0.
+08:49:43.56 [INFO] Completed: Scheduling: Download Go module google.golang.org/appengine@v1.6.7.
+08:49:43.57 [INFO] Completed: Scheduling: Download Go module github.com/googleapis/gax-go/v2@v2.12.0.
+08:49:43.57 [INFO] Completed: Scheduling: Download Go module github.com/russross/blackfriday/v2@v2.1.0.
+08:49:43.58 [INFO] Completed: Scheduling: Download Go module github.com/anmitsu/go-shlex@v0.0.0-20200514113438-38f4b401e2be.
+08:49:43.58 [INFO] Completed: Scheduling: Download Go module github.com/cloudflare/circl@v1.3.3.
+08:49:43.58 [INFO] Completed: Scheduling: Download Go module github.com/pmezard/go-difflib@v1.0.1-0.20181226105442-5d4384ee4fb2.
+08:49:43.59 [INFO] Completed: Scheduling: Download Go module github.com/spf13/viper@v1.17.0.
+08:49:43.59 [INFO] Completed: Scheduling: Download Go module github.com/josharian/intern@v1.0.0.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/google/pprof@v0.0.0-20210407192527-94a9f03dee38.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/coreos/go-semver@v0.3.0.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/google/martian@v2.1.0+incompatible.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/antihax/optional@v1.0.0.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/golang/mock@v1.4.4.
+08:49:43.60 [INFO] Completed: Scheduling: Download Go module github.com/cyphar/filepath-securejoin@v0.2.4.
+08:49:43.61 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/auto/sdk@v1.1.0.
+08:49:43.61 [INFO] Completed: Scheduling: Download Go module github.com/jstemmer/go-junit-report@v0.9.1.
+08:49:43.61 [INFO] Completed: Scheduling: Download Go module github.com/census-instrumentation/opencensus-proto@v0.2.1.
+08:49:43.62 [INFO] Completed: Scheduling: Download Go module golang.org/x/oauth2@v0.30.0.
+08:49:43.62 [INFO] Completed: Scheduling: Download Go module github.com/cenkalti/backoff/v5@v5.0.2.
+08:49:43.62 [INFO] Completed: Scheduling: Download Go module github.com/mitchellh/mapstructure@v1.5.0.
+08:49:43.63 [INFO] Completed: Scheduling: Download Go module github.com/go-git/gcfg@v1.5.1-0.20230307220236-3a3c6141e376.
+08:49:43.63 [INFO] Completed: Scheduling: Download Go module github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp@v1.27.0.
+08:49:43.63 [INFO] Completed: Scheduling: Download Go module golang.org/x/image@v0.0.0-20190802002840-cff245a6509b.
+08:49:43.63 [INFO] Completed: Scheduling: Download Go module github.com/gogo/protobuf@v1.3.2.
+08:49:43.63 [INFO] Completed: Scheduling: Download Go module rsc.io/quote/v3@v3.1.0.
+08:49:43.64 [INFO] Completed: Scheduling: Download Go module github.com/golang/glog@v1.2.4.
+08:49:43.64 [INFO] Completed: Scheduling: Download Go module github.com/pelletier/go-toml/v2@v2.1.0.
+08:49:43.64 [INFO] Completed: Scheduling: Download Go module github.com/go-git/go-git-fixtures/v4@v4.3.2-0.20231010084843-55a94097c399.
+08:49:43.65 [INFO] Completed: Scheduling: Download Go module github.com/armon/go-socks5@v0.0.0-20160902184237-e75332964ef5.
+08:49:43.65 [INFO] Completed: Scheduling: Download Go module github.com/TwiN/go-color@v1.4.1.
+08:49:43.65 [INFO] Completed: Scheduling: Download Go module golang.org/x/telemetry@v0.0.0-20240521205824-bda55230c457.
+08:49:43.66 [INFO] Completed: Scheduling: Download Go module gopkg.in/yaml.v2@v2.4.0.
+08:49:43.66 [INFO] Completed: Scheduling: Download Go module github.com/frankban/quicktest@v1.14.4.
+08:49:43.66 [INFO] Completed: Scheduling: Download Go module golang.org/x/time@v0.3.0.
+08:49:43.67 [INFO] Completed: Scheduling: Download Go module github.com/chzyer/logex@v1.1.10.
+08:49:43.67 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/metric@v1.37.0.
+08:49:43.68 [INFO] Completed: Scheduling: Download Go module github.com/klauspost/compress@v1.17.0.
+08:49:43.68 [INFO] Completed: Scheduling: Download Go module github.com/google/uuid@v1.6.0.
+08:49:43.68 [INFO] Completed: Scheduling: Download Go module rsc.io/sampler@v1.3.0.
+08:49:43.69 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.37.0.
+08:49:43.70 [INFO] Completed: Scheduling: Download Go module github.com/go-gl/glfw@v0.0.0-20190409004039-e6da0acd62b1.
+08:49:43.70 [INFO] Completed: Scheduling: Download Go module github.com/skeema/knownhosts@v1.2.0.
+08:49:43.70 [INFO] Completed: Scheduling: Download Go module github.com/rivo/uniseg@v0.4.3.
+08:49:43.70 [INFO] Completed: Scheduling: Download Go module github.com/fatih/color@v1.14.1.
+08:49:43.70 [INFO] Completed: Scheduling: Download Go module github.com/kr/pty@v1.1.1.
+08:49:43.71 [INFO] Completed: Scheduling: Download Go module go.uber.org/multierr@v1.9.0.
+08:49:43.71 [INFO] Completed: Scheduling: Download Go module github.com/nats-io/nuid@v1.0.1.
+08:49:43.72 [INFO] Completed: Scheduling: Download Go module golang.org/x/net@v0.41.0.
+08:49:43.73 [INFO] Completed: Scheduling: Download Go module golang.org/x/mod@v0.25.0.
+08:49:43.74 [INFO] Completed: Scheduling: Download Go module github.com/kisielk/gotool@v1.0.0.
+08:49:43.74 [INFO] Completed: Scheduling: Download Go module github.com/nats-io/jwt/v2@v2.4.1.
+08:49:43.74 [INFO] Completed: Scheduling: Download Go module github.com/go-gl/glfw/v3.3/glfw@v0.0.0-20200222043503-6f7a984d4dc4.
+08:49:43.74 [INFO] Completed: Scheduling: Download Go module golang.org/x/text@v0.26.0.
+08:49:43.75 [INFO] Completed: Scheduling: Download Go module golang.org/x/sys@v0.33.0.
+08:49:43.75 [INFO] Completed: Scheduling: Download Go module github.com/rogpeppe/go-internal@v1.13.1.
+08:49:43.76 [INFO] Completed: Scheduling: Download Go module github.com/magiconair/properties@v1.8.7.
+08:49:43.76 [INFO] Completed: Scheduling: Download Go module github.com/spf13/cast@v1.5.1.
+08:49:43.76 [INFO] Completed: Scheduling: Download Go module golang.org/x/xerrors@v0.0.0-20220907171357-04be3eba64a2.
+08:49:43.77 [INFO] Completed: Scheduling: Download Go module gopkg.in/warnings.v0@v0.1.2.
+08:49:43.77 [INFO] Completed: Scheduling: Download Go module github.com/cpuguy83/go-md2man/v2@v2.0.3.
+08:49:43.77 [INFO] Completed: Scheduling: Download Go module github.com/gdamore/encoding@v1.0.0.
+08:49:43.79 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/contrib/bridges/otelslog@v0.12.0.
+08:49:43.79 [INFO] Completed: Scheduling: Download Go module github.com/pkg/errors@v0.9.1.
+08:49:43.79 [INFO] Completed: Scheduling: Download Go module github.com/onsi/gomega@v1.30.0.
+08:49:43.80 [INFO] Completed: Scheduling: Download Go module github.com/fsnotify/fsnotify@v1.6.0.
+08:49:43.80 [INFO] Completed: Scheduling: Download Go module go.etcd.io/etcd/client/v2@v2.305.9.
+08:49:43.80 [INFO] Completed: Scheduling: Download Go module golang.org/x/arch@v0.3.0.
+08:49:43.80 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/pubsub@v1.3.1.
+08:49:43.82 [INFO] Completed: Scheduling: Download Go module github.com/onsi/ginkgo/v2@v2.13.1.
+08:49:43.82 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/hcl@v1.0.0.
+08:49:43.85 [INFO] Completed: Scheduling: Download Go module github.com/mitchellh/go-homedir@v1.1.0.
+08:49:43.85 [INFO] Completed: Scheduling: Download Go module golang.org/x/sync@v0.15.0.
+08:49:43.86 [INFO] Completed: Scheduling: Download Go module golang.org/x/crypto@v0.39.0.
+08:49:43.86 [INFO] Completed: Scheduling: Download Go module github.com/matryer/is@v1.2.0.
+08:49:43.87 [INFO] Completed: Scheduling: Download Go module github.com/go-resty/resty/v2@v2.10.0.
+08:49:43.88 [INFO] Completed: Scheduling: Download Go module github.com/jbenet/go-context@v0.0.0-20150711004518-d14ea06fba99.
+08:49:43.88 [INFO] Completed: Scheduling: Download Go module github.com/zeebo/errs@v1.4.0.
+08:49:43.88 [INFO] Completed: Scheduling: Download Go module github.com/kr/pretty@v0.3.1.
+08:49:43.89 [INFO] Completed: Scheduling: Download Go module golang.org/x/exp@v0.0.0-20231110203233-9a3e6036ecaa.
+08:49:43.89 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/longrunning@v0.5.1.
+08:49:43.89 [INFO] Completed: Scheduling: Download Go module github.com/envoyproxy/protoc-gen-validate@v1.2.1.
+08:49:43.90 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.37.0.
+08:49:43.91 [INFO] Completed: Scheduling: Download Go module github.com/mattn/go-runewidth@v0.0.14.
+08:49:43.91 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/serf@v0.10.1.
+08:49:43.91 [INFO] Completed: Scheduling: Download Go module github.com/envoyproxy/go-control-plane/envoy@v1.32.4.
+08:49:43.93 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/firestore@v1.13.0.
+08:49:43.93 [INFO] Completed: Scheduling: Download Go module github.com/chenzhuoyu/base64x@v0.0.0-20221115062448-fe3a3abad311.
+08:49:43.93 [INFO] Completed: Scheduling: Download Go module github.com/ProtonMail/go-crypto@v0.0.0-20230828082145-3c4c8a2d2371.
+08:49:43.95 [INFO] Completed: Scheduling: Download Go module github.com/coreos/go-systemd/v22@v22.3.2.
+08:49:43.96 [INFO] Completed: Scheduling: Download Go module github.com/lucasb-eyer/go-colorful@v1.2.0.
+08:49:43.96 [INFO] Completed: Scheduling: Download Go module github.com/google/go-cmp@v0.7.0.
+08:49:43.96 [INFO] Completed: Scheduling: Download Go module dmitri.shuralyov.com/gpu/mtl@v0.0.0-20190408044501-666a987793e9.
+08:49:43.96 [INFO] Completed: Scheduling: Download Go module github.com/spf13/pflag@v1.0.5.
+08:49:43.97 [INFO] Completed: Scheduling: Download Go module github.com/ianlancetaylor/demangle@v0.0.0-20200824232613-28f6c0f3b639.
+08:49:43.98 [INFO] Completed: Scheduling: Download Go module github.com/inconshreveable/mousetrap@v1.1.0.
+08:49:44.00 [INFO] Completed: Scheduling: Download Go module github.com/rivo/tview@v0.0.0-20231206124440-5f078138442e.
+08:49:44.01 [INFO] Completed: Scheduling: Download Go module github.com/twitchyliquid64/golang-asm@v0.15.1.
+08:49:44.01 [INFO] Completed: Scheduling: Download Go module gopkg.in/check.v1@v1.0.0-20201130134442-10cb98267c6c.
+08:49:44.01 [INFO] Completed: Scheduling: Download Go module github.com/xanzy/ssh-agent@v0.3.3.
+08:49:44.02 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/storage@v1.14.0.
+08:49:44.02 [INFO] Completed: Scheduling: Download Go module github.com/pkg/sftp@v1.13.1.
+08:49:44.02 [INFO] Completed: Scheduling: Download Go module github.com/golang/groupcache@v0.0.0-20210331224755-41bb18bfe9da.
+08:49:44.02 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/bigquery@v1.8.0.
+08:49:44.03 [INFO] Completed: Scheduling: Download Go module github.com/yuin/goldmark@v1.4.13.
+08:49:44.04 [INFO] Completed: Scheduling: Download Go module honnef.co/go/tools@v0.0.1-2020.1.4.
+08:49:44.05 [INFO] Completed: Scheduling: Download Go module golang.org/x/mobile@v0.0.0-20190719004257-d2bd2a29d028.
+08:49:44.05 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/compute@v1.23.0.
+08:49:44.05 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/exporters/stdout/stdoutmetric@v1.37.0.
+08:49:44.05 [INFO] Completed: Scheduling: Download Go module github.com/stretchr/objx@v0.5.2.
+08:49:44.05 [INFO] Completed: Scheduling: Download Go module github.com/go-logr/stdr@v1.2.2.
+08:49:44.06 [INFO] Completed: Scheduling: Download Go module dario.cat/mergo@v1.0.0.
+08:49:44.06 [INFO] Completed: Scheduling: Download Go module github.com/go-playground/universal-translator@v0.18.1.
+08:49:44.07 [INFO] Completed: Scheduling: Download Go module github.com/sergi/go-diff@v1.1.0.
+08:49:44.07 [INFO] Completed: Scheduling: Download Go module github.com/go-playground/locales@v0.14.1.
+08:49:44.07 [INFO] Completed: Scheduling: Download Go module github.com/ugorji/go/codec@v1.2.11.
+08:49:44.07 [INFO] Completed: Scheduling: Download Go module gopkg.in/errgo.v2@v2.1.0.
+08:49:44.07 [INFO] Completed: Scheduling: Download Go module github.com/mailru/easyjson@v0.7.7.
+08:49:44.08 [INFO] Completed: Scheduling: Download Go module google.golang.org/protobuf@v1.36.6.
+08:49:44.08 [INFO] Completed: Scheduling: Download Go module github.com/prometheus/client_model@v0.0.0-20190812154241-14fe0d1b01d4.
+08:49:44.08 [INFO] Completed: Scheduling: Download Go module go.uber.org/atomic@v1.9.0.
+08:49:44.08 [INFO] Completed: Scheduling: Download Go module github.com/mattn/go-isatty@v0.0.19.
+08:49:44.09 [INFO] Completed: Scheduling: Download Go module github.com/spf13/afero@v1.10.0.
+08:49:44.11 [INFO] Completed: Scheduling: Download Go module go.etcd.io/etcd/client/v3@v3.5.9.
+08:49:44.11 [INFO] Completed: Scheduling: Download Go module github.com/cncf/udpa/go@v0.0.0-20201120205902-5459f2c99403.
+08:49:44.12 [INFO] Completed: Scheduling: Download Go module github.com/googleapis/google-cloud-go-testing@v0.0.0-20200911160855-bcd43fbb19e8.
+08:49:44.15 [INFO] Completed: Scheduling: Download Go module github.com/elazarl/goproxy@v0.0.0-20230808193330-2592e75ae04a.
+08:49:44.15 [INFO] Completed: Scheduling: Download Go module google.golang.org/grpc@v1.73.0.
+08:49:44.16 [INFO] Completed: Scheduling: Download Go module go.opencensus.io@v0.24.0.
+08:49:44.17 [INFO] Completed: Scheduling: Download Go module github.com/gin-gonic/gin@v1.9.1.
+08:49:44.17 [INFO] Completed: Scheduling: Download Go module github.com/envoyproxy/go-control-plane@v0.13.4.
+08:49:44.17 [INFO] Completed: Scheduling: Download Go module github.com/go-logr/logr@v1.4.3.
+08:49:44.18 [INFO] Completed: Scheduling: Download Go module github.com/envoyproxy/go-control-plane/ratelimit@v0.1.0.
+08:49:44.19 [INFO] Completed: Scheduling: Download Go module github.com/google/gofuzz@v1.0.0.
+08:49:44.24 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/sdk/log/logtest@v0.13.0.
+08:49:44.26 [INFO] Completed: Scheduling: Download Go module github.com/minio/highwayhash@v1.0.2.
+08:49:44.27 [INFO] Completed: Scheduling: Download Go module github.com/sagikazarmark/locafero@v0.3.0.
+08:49:44.31 [INFO] Completed: Scheduling: Download Go module github.com/davecgh/go-spew@v1.1.2-0.20180830191138-d8f796af33cc.
+08:49:44.32 [INFO] Completed: Scheduling: Download Go module github.com/go-git/go-git/v5@v5.10.0.
+08:49:44.33 [INFO] Completed: Scheduling: Download Go module github.com/planetscale/vtprotobuf@v0.6.1-0.20240319094008-0393e58bdf10.
+08:49:44.33 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/go-immutable-radix@v1.3.1.
+08:49:44.33 [INFO] Completed: Scheduling: Download Go module github.com/googleapis/enterprise-certificate-proxy@v0.3.1.
+08:49:44.34 [INFO] Completed: Scheduling: Download Go module github.com/mattn/go-colorable@v0.1.13.
+08:49:44.37 [INFO] Completed: Scheduling: Download Go module google.golang.org/api@v0.143.0.
+08:49:44.38 [INFO] Completed: Scheduling: Download Go module golang.org/x/tools@v0.33.0.
+08:49:44.38 [INFO] Completed: Scheduling: Download Go module github.com/sagikazarmark/crypt@v0.15.0.
+08:49:44.38 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel@v1.37.0.
+08:49:44.41 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/trace@v1.37.0.
+08:49:44.41 [INFO] Completed: Scheduling: Download Go module gopkg.in/yaml.v3@v3.0.1.
+08:49:44.42 [INFO] Completed: Scheduling: Download Go module github.com/leodido/go-urn@v1.2.4.
+08:49:44.48 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp@v1.37.0.
+08:49:44.48 [INFO] Completed: Scheduling: Download Go module github.com/go-playground/validator/v10@v10.14.0.
+08:49:44.48 [INFO] Completed: Scheduling: Download Go module rsc.io/binaryregexp@v0.2.0.
+08:49:44.49 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gdamore/tcell/v2@v2.6.1-0.20231203215052-2917c3801e73
+08:49:44.51 [INFO] Completed: Scheduling: Download Go module golang.org/x/lint@v0.0.0-20201208152925-83fdc39ff7b5.
+08:49:44.53 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/go-rootcerts@v1.0.2.
+08:49:44.53 [INFO] Completed: Scheduling: Download Go module github.com/golang/protobuf@v1.5.4.
+08:49:44.53 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/contrib/instrumentation/runtime@v0.62.0.
+08:49:44.54 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/proto/otlp@v1.7.0.
+08:49:44.54 [INFO] Completed: Scheduling: Download Go module github.com/Microsoft/go-winio@v0.6.1.
+08:49:44.54 [INFO] Completed: Scheduling: Download Go module github.com/rogpeppe/fastuuid@v1.2.0.
+08:49:44.55 [INFO] Completed: Scheduling: Download Go module github.com/kr/fs@v0.1.0.
+08:49:44.56 [INFO] Completed: Scheduling: Download Go module golang.org/x/term@v0.32.0.
+08:49:44.56 [INFO] Completed: Scheduling: Download Go module github.com/goccy/go-json@v0.10.2.
+08:49:44.56 [INFO] Completed: Scheduling: Download Go module go.etcd.io/etcd/api/v3@v3.5.9.
+08:49:44.56 [INFO] Completed: Scheduling: Download Go module github.com/gliderlabs/ssh@v0.3.5.
+08:49:44.56 [INFO] Completed: Scheduling: Download Go module github.com/sirupsen/logrus@v1.9.0.
+08:49:44.60 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go@v0.110.7.
+08:49:44.60 [INFO] Completed: Scheduling: Download Go module github.com/armon/go-metrics@v0.4.1.
+08:49:44.60 [INFO] Completed: Scheduling: Download Go module github.com/go-playground/assert/v2@v2.2.0.
+08:49:44.61 [INFO] Completed: Scheduling: Download Go module cloud.google.com/go/datastore@v1.1.0.
+08:49:44.61 [INFO] Completed: Scheduling: Download Go module github.com/bytedance/sonic@v1.9.1.
+08:49:44.61 [INFO] Completed: Scheduling: Download Go module github.com/go-git/go-billy/v5@v5.5.0.
+08:49:44.61 [INFO] Completed: Scheduling: Download Go module github.com/sourcegraph/conc@v0.3.0.
+08:49:44.63 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/BurntSushi/toml@v0.3.1
+08:49:44.64 [INFO] Completed: Scheduling: Download Go module google.golang.org/genproto@v0.0.0-20230913181813-007df8e322eb.
+08:49:44.66 [INFO] Completed: Scheduling: Download Go module github.com/go-task/slim-sprig@v0.0.0-20230315185526-52ccab3ef572.
+08:49:44.66 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-jose/go-jose/v4@v4.0.5
+08:49:44.67 [INFO] Completed: Scheduling: Download Go module go.uber.org/goleak@v1.3.0.
+08:49:44.67 [INFO] Completed: Scheduling: Download Go module google.golang.org/genproto/googleapis/rpc@v0.0.0-20250603155806-513f23925822.
+08:49:44.67 [INFO] Completed: Scheduling: Download Go module github.com/hashicorp/consul/api@v1.25.1.
+08:49:44.68 [INFO] Completed: Scheduling: Download Go module go.opentelemetry.io/otel/sdk/log@v0.13.0.
+08:49:44.77 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/stretchr/testify@v1.10.0
+08:49:44.77 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/emirpasic/gods@v1.18.1
+08:49:44.78 [INFO] Completed: Scheduling: Download Go module github.com/kevinburke/ssh_config@v1.2.0.
+08:49:44.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kr/text@v0.2.0
+08:49:44.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/golang-lru@v0.5.4
+08:49:44.84 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spiffe/go-spiffe/v2@v2.5.0
+08:49:44.93 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/bwesterb/go-ristretto@v1.2.3
+08:49:44.93 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/skeema/knownhosts@v1.2.0
+08:49:44.94 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/magiconair/properties@v1.8.7
+08:49:44.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/uuid@v1.6.0
+08:49:44.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp@v0.13.0
+08:49:44.96 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/jessevdk/go-flags@v1.5.0
+08:49:45.01 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/longrunning@v0.5.1
+08:49:45.01 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/log@v0.13.0
+08:49:45.01 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/chzyer/readline@v0.0.0-20180603132655-2972be24d48e
+08:49:45.01 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cel.dev/expr@v0.23.0
+08:49:45.02 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spf13/cobra@v1.8.0
+08:49:45.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kr/pretty@v0.3.1
+08:49:45.04 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/auto/sdk@v1.1.0
+08:49:45.05 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.uber.org/zap@v1.21.0
+08:49:45.07 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mattn/go-runewidth@v0.0.14
+08:49:45.08 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: dmitri.shuralyov.com/gpu/mtl@v0.0.0-20190408044501-666a987793e9
+08:49:45.09 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/sdk/metric@v1.37.0
+08:49:45.09 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/chzyer/test@v0.0.0-20180213035817-a1ea475d72b1
+08:49:45.09 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/martian/v3@v3.1.0
+08:49:45.11 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/acomagu/bufpipe@v1.0.4
+08:49:45.12 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/aarondl/opt@v0.0.0-20230313190023-85d93d668fec
+08:49:45.16 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/contrib/bridges/otelslog@v0.12.0
+08:49:45.19 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/nats-io/nkeys@v0.4.5
+08:49:45.19 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/census-instrumentation/opencensus-proto@v0.2.1
+08:49:45.19 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/btree@v1.0.0
+08:49:45.20 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/zeebo/errs@v1.4.0
+08:49:45.21 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/armon/go-socks5@v0.0.0-20160902184237-e75332964ef5
+08:49:45.22 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/exporters/stdout/stdoutmetric@v1.37.0
+08:49:45.24 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/check.v1@v1.0.0-20201130134442-10cb98267c6c
+08:49:45.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-gl/glfw/v3.3/glfw@v0.0.0-20200222043503-6f7a984d4dc4
+08:49:45.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gin-contrib/sse@v0.1.0
+08:49:45.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/golang/groupcache@v0.0.0-20210331224755-41bb18bfe9da
+08:49:45.29 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/contrib/detectors/gcp@v1.35.0
+08:49:45.29 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/envoyproxy/go-control-plane/ratelimit@v0.1.0
+08:49:45.31 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-logr/stdr@v1.2.2
+08:49:45.32 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/sync@v0.15.0
+08:49:45.32 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/go-hclog@v1.5.0
+08:49:45.33 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/klauspost/cpuid/v2@v2.2.4
+08:49:45.33 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spf13/viper@v1.17.0
+08:49:45.36 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp@v1.37.0
+08:49:45.37 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/inconshreveable/mousetrap@v1.1.0
+08:49:45.37 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/client9/misspell@v0.3.4
+08:49:45.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: rsc.io/pdf@v0.1.1
+08:49:45.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/golang/glog@v1.2.4
+08:49:45.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/aarondl/json@v0.0.0-20221020222930-8b0db17ef1bf
+08:49:45.42 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.uber.org/multierr@v1.9.0
+08:49:45.42 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sagikazarmark/locafero@v0.3.0
+08:49:45.42 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/chenzhuoyu/base64x@v0.0.0-20221115062448-fe3a3abad311
+08:49:45.43 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: dario.cat/mergo@v1.0.0
+08:49:45.43 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cncf/xds/go@v0.0.0-20250326154945-ae57f3c0d45f
+08:49:45.43 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/hcl@v1.0.0
+08:49:45.44 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/jbenet/go-context@v0.0.0-20150711004518-d14ea06fba99
+08:49:45.44 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kr/fs@v0.1.0
+08:49:45.55 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/stretchr/objx@v0.5.2
+08:49:45.55 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/ini.v1@v1.67.0
+08:49:45.55 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/gofuzz@v1.0.0
+08:49:45.55 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.37.0
+08:49:45.55 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sergi/go-diff@v1.1.0
+08:49:45.57 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/fatih/color@v1.14.1
+08:49:45.58 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/envoyproxy/protoc-gen-validate@v1.2.1
+08:49:45.58 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/pelletier/go-toml/v2@v2.1.0
+08:49:45.59 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/grpc-ecosystem/grpc-gateway/v2@v2.27.1
+08:49:45.59 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spf13/afero@v1.10.0
+08:49:45.59 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/googleapis/google-cloud-go-testing@v0.0.0-20200911160855-bcd43fbb19e8
+08:49:45.60 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/go-cmp@v0.7.0
+08:49:45.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/bigquery@v1.8.0
+08:49:45.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/pubsub@v1.3.1
+08:49:45.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/xanzy/ssh-agent@v0.3.3
+08:49:45.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/compute/metadata@v0.6.0
+08:49:45.62 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/ugorji/go/codec@v1.2.11
+08:49:45.62 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/coreos/go-semver@v0.3.0
+08:49:45.64 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/subosito/gotenv@v1.6.0
+08:49:45.64 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opencensus.io@v0.24.0
+08:49:45.72 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/sdk/log/logtest@v0.13.0
+08:49:45.73 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/firestore@v1.13.0
+08:49:45.74 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gdamore/encoding@v1.0.0
+08:49:45.74 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/coreos/go-systemd/v22@v22.3.2
+08:49:45.74 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/BurntSushi/xgb@v0.0.0-20160522181843-27f122750802
+08:49:45.74 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/s2a-go@v0.1.7
+08:49:45.76 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-logr/logr@v1.4.3
+08:49:45.76 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/ProtonMail/go-crypto@v0.0.0-20230828082145-3c4c8a2d2371
+08:49:45.77 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/protobuf@v1.36.6
+08:49:45.78 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/oauth2@v0.30.0
+08:49:45.79 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gabriel-vasile/mimetype@v1.4.2
+08:49:45.80 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cyphar/filepath-securejoin@v0.2.4
+08:49:45.81 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/proto/otlp@v1.7.0
+08:49:45.81 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-playground/universal-translator@v0.18.1
+08:49:45.81 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mmcloughlin/avo@v0.5.0
+08:49:45.82 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/jstemmer/go-junit-report@v0.9.1
+08:49:45.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spf13/pflag@v1.0.5
+08:49:45.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/renameio@v0.1.0
+08:49:45.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/matryer/is@v1.2.0
+08:49:45.83 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/minio/highwayhash@v1.0.2
+08:49:45.84 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/json-iterator/go@v1.1.12
+08:49:45.85 [INFO] Completed: Scheduling: Compile Go package: io/ioutil
+08:49:45.85 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/term@v0.32.0
+08:49:45.86 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/trace@v1.37.0
+08:49:45.86 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sagikazarmark/crypt@v0.15.0
+08:49:45.86 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/nats-io/nuid@v1.0.1
+08:49:45.88 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-git/gcfg@v1.5.1-0.20230307220236-3a3c6141e376
+08:49:45.88 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/errgo.v2@v2.1.0
+08:49:45.89 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/twitchyliquid64/golang-asm@v0.15.1
+08:49:45.91 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: rsc.io/quote/v3@v3.1.0
+08:49:45.91 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/lucasb-eyer/go-colorful@v1.2.0
+08:49:45.91 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/googleapis/gax-go/v2@v2.12.0
+08:49:45.94 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/lint@v0.0.0-20201208152925-83fdc39ff7b5
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/sdk/log@v0.13.0
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/anmitsu/go-shlex@v0.0.0-20200514113438-38f4b401e2be
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/go-rootcerts@v1.0.2
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/exp@v0.0.0-20231110203233-9a3e6036ecaa
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/go-cleanhttp@v0.5.2
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/pmezard/go-difflib@v1.0.1-0.20181226105442-5d4384ee4fb2
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/onsi/ginkgo/v2@v2.13.1
+08:49:45.95 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/genproto/googleapis/rpc@v0.0.0-20250603155806-513f23925822
+08:49:45.96 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/nats-io/jwt/v2@v2.4.1
+08:49:45.97 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/martian@v2.1.0+incompatible
+08:49:45.97 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cncf/udpa/go@v0.0.0-20201120205902-5459f2c99403
+08:49:45.97 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/GoogleCloudPlatform/opentelemetry-operations-go/detectors/gcp@v1.27.0
+08:49:45.97 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/frankban/quicktest@v1.14.4
+08:49:45.98 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/serf@v0.10.1
+08:49:45.98 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/sys@v0.33.0
+08:49:45.99 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.etcd.io/etcd/client/v2@v2.305.9
+08:49:45.99 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/arch@v0.3.0
+08:49:46.00 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/antihax/optional@v1.0.0
+08:49:46.00 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sagikazarmark/slog-shim@v0.1.0
+08:49:46.01 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-task/slim-sprig@v0.0.0-20230315185526-52ccab3ef572
+08:49:46.01 [INFO] Completed: Scheduling: Compile Go package: main
+08:49:46.02 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/warnings.v0@v0.1.2
+08:49:46.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/golang/mock@v1.4.4
+08:49:46.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/net@v0.41.0
+08:49:46.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.etcd.io/etcd/client/pkg/v3@v3.5.9
+08:49:46.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/davecgh/go-spew@v1.1.2-0.20180830191138-d8f796af33cc
+08:49:46.03 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/yaml.v3@v3.0.1
+08:49:46.04 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/compute@v1.23.0
+08:49:46.05 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/prometheus/client_model@v0.0.0-20190812154241-14fe0d1b01d4
+08:49:46.05 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kisielk/gotool@v1.0.0
+08:49:46.05 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mitchellh/mapstructure@v1.5.0
+08:49:46.06 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cpuguy83/go-md2man/v2@v2.0.3
+08:49:46.06 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/sdk@v1.37.0
+08:49:46.06 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gliderlabs/ssh@v0.3.5
+08:49:46.06 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-playground/assert/v2@v2.2.0
+08:49:46.06 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-playground/validator/v10@v10.14.0
+08:49:46.16 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/russross/blackfriday/v2@v2.1.0
+08:49:46.16 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.uber.org/atomic@v1.9.0
+08:49:46.16 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/contrib/instrumentation/runtime@v0.62.0
+08:49:46.16 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/modern-go/concurrent@v0.0.0-20180306012644-bacd9c7ef1dd
+08:49:46.17 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/modern-go/reflect2@v1.0.2
+08:49:46.17 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/rivo/tview@v0.0.0-20231206124440-5f078138442e
+08:49:46.17 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/pjbgf/sha1cd@v0.3.0
+08:49:46.17 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cespare/xxhash/v2@v2.3.0
+08:49:46.20 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/mod@v0.25.0
+08:49:46.21 [INFO] Completed: Scheduling: Link Go binary: ./embedder
+08:49:46.21 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kr/pty@v1.1.1
+08:49:46.22 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go/internal/v2/tlsconfigstore
+08:49:46.22 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.etcd.io/etcd/client/v3@v3.5.9
+08:49:46.22 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/mobile@v0.0.0-20190719004257-d2bd2a29d028
+08:49:46.22 [INFO] Completed: Scheduling: Create embed mapping for google.golang.org/protobuf/internal/editiondefaults
+08:49:46.22 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go/internal/v2/certverifier
+08:49:46.22 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/time@v0.3.0
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go/internal/v2/remotesigner
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go/internal/v2
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for github.com/mmcloughlin/avo/internal/cmd/docgen
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/net/publicsuffix
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go
+08:49:46.23 [INFO] Completed: Scheduling: Create embed mapping for github.com/google/s2a-go/internal/v2/fakes2av2
+08:49:46.23 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-git/go-git-fixtures/v4@v4.3.2-0.20231010084843-55a94097c399
+08:49:46.23 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/envoyproxy/go-control-plane@v0.13.4
+08:49:46.25 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: rsc.io/binaryregexp@v0.2.0
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/goccy/go-json@v0.10.2
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sirupsen/logrus@v1.9.0
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/bytedance/sonic@v1.9.1
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mattn/go-isatty@v0.0.19
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go@v0.110.7
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/consul/api@v1.25.1
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mitchellh/go-homedir@v1.1.0
+08:49:46.26 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/kevinburke/ssh_config@v1.2.0
+08:49:46.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/elazarl/goproxy@v0.0.0-20230808193330-2592e75ae04a
+08:49:46.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cenkalti/backoff/v5@v5.0.2
+08:49:46.27 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/googleapis/enterprise-certificate-proxy@v0.3.1
+08:49:46.29 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mattn/go-colorable@v0.1.13
+08:49:46.30 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-git/go-git/v5@v5.10.0
+08:49:46.30 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/rogpeppe/fastuuid@v1.2.0
+08:49:46.30 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp@v1.37.0
+08:49:46.31 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/leodido/go-urn@v1.2.4
+08:49:46.31 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-gl/glfw@v0.0.0-20190409004039-e6da0acd62b1
+08:49:46.32 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel/metric@v1.37.0
+08:49:46.32 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/cloudflare/circl@v1.3.3
+08:49:46.33 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/image@v0.0.0-20190802002840-cff245a6509b
+08:49:46.33 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/xerrors@v0.0.0-20220907171357-04be3eba64a2
+08:49:46.33 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/pkg/errors@v0.9.1
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/genproto/googleapis/api@v0.0.0-20250603155806-513f23925822
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/golang/protobuf@v1.5.4
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-git/go-billy/v5@v5.5.0
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/google/pprof@v0.0.0-20210407192527-94a9f03dee38
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/yuin/goldmark@v1.4.13
+08:49:46.34 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/nats-io/nats.go@v1.30.2
+08:49:46.35 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/datastore@v1.1.0
+08:49:46.36 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: rsc.io/sampler@v1.3.0
+08:49:46.36 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/planetscale/vtprotobuf@v0.6.1-0.20240319094008-0393e58bdf10
+08:49:46.36 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/hashicorp/go-immutable-radix@v1.3.1
+08:49:46.36 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/josharian/intern@v1.0.0
+08:49:46.37 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/rivo/uniseg@v0.4.3
+08:49:46.37 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: cloud.google.com/go/storage@v1.14.0
+08:49:46.38 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/ianlancetaylor/demangle@v0.0.0-20200824232613-28f6c0f3b639
+08:49:46.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/mailru/easyjson@v0.7.7
+08:49:46.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/appengine@v1.6.7
+08:49:46.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/klauspost/compress@v1.17.0
+08:49:46.39 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.opentelemetry.io/otel@v1.37.0
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/onsi/gomega@v1.30.0
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: gopkg.in/yaml.v2@v2.4.0
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/text@v0.26.0
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/pkg/sftp@v1.13.1
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gogo/protobuf@v1.3.2
+08:49:46.41 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/sourcegraph/conc@v0.3.0
+08:49:46.43 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/chzyer/logex@v1.1.10
+08:49:46.46 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/crypto@v0.39.0
+08:49:46.46 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/telemetry@v0.0.0-20240521205824-bda55230c457
+08:49:46.46 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-resty/resty/v2@v2.10.0
+08:49:46.47 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.uber.org/goleak@v1.3.0
+08:49:46.47 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/fsnotify/fsnotify@v1.6.0
+08:49:46.47 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/gin-gonic/gin@v1.9.1
+08:49:46.47 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/TwiN/go-color@v1.4.1
+08:49:46.48 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/telemetry/internal/chartconfig
+08:49:46.49 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/telemetry/internal/content
+08:49:46.49 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/grpc@v1.73.0
+08:49:46.49 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/spf13/cast@v1.5.1
+08:49:46.49 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: honnef.co/go/tools@v0.0.1-2020.1.4
+08:49:46.52 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/Microsoft/go-winio@v0.6.1
+08:49:46.52 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: go.etcd.io/etcd/api/v3@v3.5.9
+08:49:46.52 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/envoyproxy/go-control-plane/envoy@v1.32.4
+08:49:46.56 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/armon/go-metrics@v0.4.1
+08:49:46.59 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/rogpeppe/go-internal@v1.13.1
+08:49:46.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/genproto@v0.0.0-20230913181813-007df8e322eb
+08:49:46.61 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: github.com/go-playground/locales@v0.14.1
+08:49:46.70 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: golang.org/x/tools@v0.33.0
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/nilfunc
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/lostcancel
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/nilness
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/cmd/present
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/cmd/digraph
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/assign
+08:49:46.72 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/printf
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/defers
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/loopclosure
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/ifaceassert
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/atomic
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/gofix
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/appends
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/reflectvaluecompare
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/cmd/deadcode
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/internal/gofix
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/unsafeptr
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/unreachable
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/shadow
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/testinggoroutine
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/unusedresult
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/sigchanyzer
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/timeformat
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/tests
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/stringintconv
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/unmarshal
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/waitgroup
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/usesgenerics
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/unusedwrite
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/stdmethods
+08:49:46.73 [INFO] Completed: Scheduling: Create embed mapping for golang.org/x/tools/go/analysis/passes/slog
+08:49:46.85 [ERROR] The scheduler was invalidated: Exception('pantsd process 3324251 was using 4315.12 MiB of memory (above the `--pantsd-max-memory-usage` limit of 4096.00 MiB).')
+08:49:46.87 [INFO] Completed: Scheduling: Analyze metadata for Go third-party module: google.golang.org/api@v0.143.0
+08:49:47.32 [ERROR] service failure for <pants.pantsd.service.scheduler_service.SchedulerService object at 0x7103c47ddbd0>.
+08:49:47.32 [INFO] Waiting for ongoing runs to complete before exiting...
+08:49:47.33 [INFO] Completed: Scheduling: Determine metadata for //:0
+08:49:48.09 [INFO] Completed: Scheduling: Ask Go for its available import paths
+08:49:48.16 [INFO] Completed: Scheduling: Determine metadata for internal/run:run
+08:49:48.16 [INFO] Completed: Scheduling: Determine metadata for internal/app:app
+08:49:48.16 [INFO] Completed: Scheduling: Determine metadata for cmd:cmd
+08:49:48.17 [INFO] Completed: Scheduling: Determine metadata for internal/elog:elog
+08:49:48.17 [INFO] Completed: Scheduling: Determine metadata for internal/otel:otel
+08:49:48.27 [INFO] Completed: Scheduling: Create embed mapping for cmd:cmd
+08:49:48.67 [INFO] Completed: Scheduling: Determine metadata for kam:kam
+08:49:48.67 [INFO] Completed: Scheduling: Determine metadata for internal/gitutil:gitutil
+08:49:48.67 [INFO] Completed: Scheduling: Determine metadata for withstack:withstack
+08:49:48.93 [INFO] Completed: Scheduling: Determine metadata for internal/config:config
+08:49:48.93 [INFO] Completed: Scheduling: Determine metadata for internal/tui/merges:merges
+08:49:48.95 [INFO] Completed: Scheduling: Determine metadata for internal/lint:lint
+08:49:48.95 [INFO] Completed: Scheduling: Determine metadata for internal/xr:xr
+08:49:49.01 [INFO] Completed: Scheduling: Determine metadata for internal/tviewwrapper:tviewwrapper
+08:49:49.08 [INFO] Completed: Scheduling: Determine metadata for internal/utils:utils
+08:49:49.14 [INFO] Completed: Scheduling: Determine metadata for internal/prompts:prompts
+08:49:49.22 [INFO] Completed: Scheduling: Determine metadata for restclient:restclient
+08:49:49.30 [INFO] Completed: Scheduling: Determine metadata for internal/gitlab:gitlab
+08:49:49.38 [INFO] Completed: Scheduling: Create embed mapping for internal/config:config
+08:49:49.38 [31m[ERROR][0m Completed: Set up Go compilation request - internal/config:config - github.com/stalwartgiraffe/cmr/internal/config failed (exit code 1).
+{"Error": "Failed to find embedded resources: could not embed data/loadtests/*: no matching files found"}
+
+08:49:49.46 [INFO] Completed: Scheduling: Determine metadata for views:views
+08:49:49.54 [INFO] Completed: Scheduling: Determine metadata for events:events
+08:49:49.58 [INFO] Completed: Scheduling: Create embed mapping for internal/gitlab:gitlab
+08:49:49.58 [31m[ERROR][0m Completed: Set up Go compilation request - internal/gitlab:gitlab - github.com/stalwartgiraffe/cmr/internal/gitlab failed (exit code 1).
+{"Error": "Failed to find embedded resources: could not embed data/*: no matching files found"}
+
+08:49:49.58 [31m[ERROR][0m 1 Exception encountered:
+
+Engine traceback:
+  in `run` goal
+
+Exception: Failed to determine metadata to compile github.com/stalwartgiraffe/cmr/internal/config:
+{"Error": "Failed to find embedded resources: could not embed data/loadtests/*: no matching files found"}
+
+

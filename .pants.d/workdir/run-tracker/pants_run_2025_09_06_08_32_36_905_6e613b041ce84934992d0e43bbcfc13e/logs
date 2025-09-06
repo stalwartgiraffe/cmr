@@ -1,0 +1,71 @@
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 267 nodes for: {".tmpXAUZVE.hardlink_canary", ""}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 267 nodes for: {"", ".tmpXAUZVE.hardlink_canary"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"BUILD", ""}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"BUILD", ""}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"cmd", "cmd/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"events", "events/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"events/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"events/BUILD", "events"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"cmd/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"cmd", "cmd/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"kam/BUILD", "kam"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"restclient", "restclient/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"withstack/BUILD", "withstack"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 67 nodes for: {"internal/app", "internal/app/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"kam/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/config", "internal/config/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"restclient/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"kam", "kam/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"restclient/BUILD", "restclient"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"views/BUILD", "views"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/app/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/app/BUILD", "internal/app"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/gitlab", "internal/gitlab/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"withstack/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"withstack", "withstack/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/config/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/prompts", "internal/prompts/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/config/BUILD", "internal/config"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/lint", "internal/lint/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/elog", "internal/elog/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/prompts/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/gitlab/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/prompts", "internal/prompts/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/gitutil", "internal/gitutil/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/gitlab/BUILD", "internal/gitlab"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/otel/BUILD", "internal/otel"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/run", "internal/run/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"views/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/queue/BUILD", "internal/queue"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 67 nodes for: {"internal/tviewwrapper", "internal/tviewwrapper/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/lint/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"views", "views/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/lint/BUILD", "internal/lint"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/run/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tviewwrapper/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/run", "internal/run/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tviewwrapper/BUILD", "internal/tviewwrapper"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/elog/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/queue/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/xr/BUILD", "internal/xr"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/elog", "internal/elog/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/queue", "internal/queue/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/utils", "internal/utils/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/otel/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/gitutil/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/otel", "internal/otel/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/xr/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/app/fixtures/BUILD", "internal/app/fixtures"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/xr/BUILD", "internal/xr"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/gitutil/BUILD", "internal/gitutil"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/utils/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/tui/merges", "internal/tui/merges/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/utils/BUILD", "internal/utils"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/app/fixtures/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/app/fixtures", "internal/app/fixtures/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tui/merges/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tui/merges/BUILD", "internal/tui/merges"}
+08:32:36.94 [INFO] notify invalidation: cleared 1 and dirtied 58 nodes for: {"internal/tviewwrapper/fixtures/BUILD", "internal/tviewwrapper/fixtures"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tviewwrapper/fixtures/BUILD"}
+08:32:36.94 [INFO] notify invalidation: cleared 0 and dirtied 0 nodes for: {"internal/tviewwrapper/fixtures", "internal/tviewwrapper/fixtures/BUILD"}

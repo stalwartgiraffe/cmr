@@ -18,7 +18,9 @@ import (
 	appfixtures "github.com/stalwartgiraffe/cmr/internal/app/fixtures"
 )
 
-//go:embed data/*
+//go:embed data/group01.json
+//go:embed data/group02.json
+//go:embed data/subgroup.json
 var loadTestsFS embed.FS
 
 func makeClient(

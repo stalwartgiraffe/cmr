@@ -1,0 +1,13 @@
+[GLOBAL]
+pants_version = "2.27.0"
+
+backend_packages = [
+  "pants.backend.go",
+]
+
+[go]
+# Point to your go.mod location (defaults to repo root)
+go_mod = "go.mod"
+
+# Optional: specify Go version
+go_root = "/usr/local/go"

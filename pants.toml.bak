@@ -1,0 +1,3 @@
+[GLOBAL]
+backend_packages = ["pants.backend.experimental.go"]
+

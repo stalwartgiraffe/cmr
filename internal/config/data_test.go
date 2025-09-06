@@ -10,7 +10,8 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
-//go:embed data/loadtests/*
+//go:embed data/loadtests/bad_quoted_001.yaml
+//go:embed data/loadtests/ok_test1.yaml
 var loadTestsFS embed.FS
 
 var _ = Describe("for each data file, loadtests", func() {
