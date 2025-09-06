@@ -1,9 +1,0 @@
-08:00:44.53 [31m[ERROR][0m Unknown 1 flag --verision on global scope
-
-
-Use --print-stacktrace for more error details and/or -ldebug for more logs. 
-See https://www.pantsbuild.org/2.27/docs/using-pants/troubleshooting-common-issues for common issues.
-Consider reaching out for help: https://www.pantsbuild.org/community/getting-help
-
-08:00:44.53 [INFO] request completed: `--verision`
-08:01:27.14 [INFO] handling request: `--help`
