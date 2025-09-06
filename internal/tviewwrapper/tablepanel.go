@@ -3,35 +3,55 @@ package tviewwrapper
 import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
-)
 
-//type StopFunc func()
+	"github.com/stalwartgiraffe/cmr/events"
+)
 
 type TablePanel struct {
 	*tview.Table
+
+	onCellSelected events.Event[CellParams]
 }
 
 func NewTablePanel(ptc tview.TableContent, stop StopFunc) *TablePanel {
-	p := &TablePanel{
+	t := &TablePanel{
 		Table: tview.NewTable(),
 	}
-	p.Table.SetContent(ptc)
-	layoutTablePanel(p.Table, stop)
-	return p
+	t.Table.SetContent(ptc)
+	t.setupTableLayout(stop)
+	t.setupEvents()
+	return t
 }
 
-func layoutTablePanel(table *tview.Table, stop StopFunc) {
-	table.Select(0, 0).
+func (t *TablePanel) setupTableLayout(stop StopFunc) {
+	t.Select(0, 0).
 		SetFixed(1, 1).
 		SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEscape {
 				stop()
 			}
 			if key == tcell.KeyEnter {
-				table.SetSelectable(true, true)
+				t.SetSelectable(true, true)
 			}
 		}).SetSelectedFunc(func(row int, column int) {
-		table.GetCell(row, column).SetTextColor(tcell.ColorRed)
-		table.SetSelectable(true, true)
+		t.GetCell(row, column).SetTextColor(tcell.ColorRed)
+		t.SetSelectable(true, true)
 	})
+}
+
+func (t *TablePanel) setupEvents() {
+	t.SetSelectedFunc(func(row, col int) {
+		t.onCellSelected.Notify(CellParams{row, col})
+	})
+}
+
+type CellParams struct {
+	Row, Col int
+}
+
+func (t *TablePanel) OnCellSelectedSubscribe(fn func(CellParams)) {
+	t.onCellSelected.Subscribe(fn)
+}
+func (t *TablePanel) OnCellSelectedNotify(c CellParams) {
+	t.onCellSelected.Notify(c)
 }

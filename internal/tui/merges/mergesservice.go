@@ -102,6 +102,13 @@ func (r *InMemoryMergesRepository) GetCell(row int, col int) string {
 	return content.cell(data, r.projects)
 }
 
+func (r *InMemoryMergesRepository) GetRowRecord(row int) any {
+	if row == 0 {
+		return nil
+	}
+	return r.mergeRequests.Get(row - 1)
+}
+
 type EmptyFn = func(EmptyT)
 
 func (r *InMemoryMergesRepository) OnChanged(callback EmptyFn) {

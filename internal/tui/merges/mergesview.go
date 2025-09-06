@@ -38,6 +38,12 @@ type MergesRepository interface {
 	Load() error
 
 	Filter(string)
+
+	RecordsTable
+}
+
+type RecordsTable interface {
+	GetRowRecord(int) any
 }
 
 type TableContents interface {
@@ -49,13 +55,14 @@ type TableContents interface {
 func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
 	tviewApp := tview.NewApplication()
 	stop := tviewApp.Stop
+	tablePanel := tw.NewTablePanel(
+		tw.NewTwoBandTableContent(repo),
+		stop)
 	r := &TuiMergesRenderer{
-		tviewApp:    tviewApp,
-		tablePage:   tview.NewFlex(),
-		filterPanel: tw.NewBasicFilterPanel(""),
-		tablePanel: tw.NewTablePanel(
-			tw.NewTwoBandTableContent(repo),
-			stop),
+		tviewApp:     tviewApp,
+		tablePage:    tview.NewFlex(),
+		filterPanel:  tw.NewBasicFilterPanel(""),
+		tablePanel:   tablePanel,
 		detailsPanel: tw.NewTextDetailsPanel(),
 		stop:         stop,
 	}
@@ -99,39 +106,21 @@ func (r *TuiMergesRenderer) setupKeyHandlers() {
 		case tcell.KeyBacktab:
 			r.focusRing.Cycle(tw.PrevDir)
 			return nil
+		case tcell.KeyUp:
+			r.tablePanel.OnCellSelectedNotify(tw.CellParams{1, 0})
+		case tcell.KeyDown:
+			r.tablePanel.OnCellSelectedNotify(tw.CellParams{2, 0})
 		}
 		return event
 	})
 }
 
 func (r *TuiMergesRenderer) setupEvents(repo MergesRepository) {
-	// Table selection handler
-	r.tablePanel.SetSelectedFunc(func(row, col int) {
-		if row > 0 { // Skip header row
-			r.showTableRowDetails(row - 1)
-		}
+	r.tablePanel.OnCellSelectedSubscribe(func(cell tw.CellParams) {
+		r.detailsPanel.ShowDetails(repo.GetRowRecord(cell.Row))
 	})
 
-	// Filter change handler
 	r.filterPanel.OnChangeSubscribe(func(filterText string) {
 		repo.Filter(filterText)
 	})
 }
-
-// showTableRowDetails displays details for the selected table row
-func (r *TuiMergesRenderer) showTableRowDetails(row int) {
-	// This would need to be implemented by the specific table type
-	// For now, just clear details
-	//s := slices.Collect(maps.Values(requests))
-	//details.ShowDetails(s[0])
-
-	r.detailsPanel.Clear()
-}
-
-/*
-// applyFilter applies the filter to the table content
-func (r *TuiMergesRenderer) applyFilter(filterText string) {
-	// This would need to be implemented to filter the table content
-	// Implementation depends on the specific data being displayed
-}
-*/

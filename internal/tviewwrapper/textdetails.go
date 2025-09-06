@@ -21,24 +21,24 @@ func NewTextDetailsPanel() *TextDetailsPanel {
 	textView.SetWordWrap(true)
 	textView.SetScrollable(true)
 
-	return &TextDetailsPanel{
+	p := &TextDetailsPanel{
 		TextView: textView,
 	}
+
+	return p
 }
 
 func (d *TextDetailsPanel) GetPrimitive() tview.Primitive {
 	return d.TextView
 }
 
-func (d *TextDetailsPanel) ShowDetails(data interface{}) {
+func (d *TextDetailsPanel) ShowDetails(data any) {
 	if data == nil {
 		d.Clear()
 		return
 	}
 
-	// Simple reflection-based detail display
-	details := formatDetails(data)
-	d.TextView.SetText(details)
+	d.TextView.SetText(formatDetails(data))
 }
 
 func (d *TextDetailsPanel) Clear() {

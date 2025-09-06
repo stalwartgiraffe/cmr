@@ -31,6 +31,7 @@ func NewDemoCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.C
 		},
 	}
 }
+
 func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	projects, err := gitlab.ReadProjects()
 	if err != nil {
@@ -52,6 +53,7 @@ func runDemo(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 
 	tviewApp := tview.NewApplication()
 	filter := tviewwrapper.NewBasicFilterPanel("sure")
+
 	details := tviewwrapper.NewTextDetailsPanel()
 
 	s := slices.Collect(maps.Values(requests))
