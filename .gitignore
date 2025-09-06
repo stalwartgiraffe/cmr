@@ -1,6 +1,8 @@
 cmr
+.pants.d/
 .vscode
 *.cov
 ignore/
 build/
+
 

@@ -418,3 +418,22 @@
 09:35:54.55 [INFO] pantsd 2.27.0 running with PID: 3376336
 09:35:54.56 [INFO] handling request: `check pkg::`
 09:35:54.97 [INFO] request completed: `check pkg::`
+09:37:14.95 [INFO] Extending leases
+09:37:14.95 [INFO] Done extending leases
+09:37:46.82 [INFO] handling request: `check pkg::`
+09:37:46.86 [INFO] request completed: `check pkg::`
+09:38:25.84 [INFO] handling request: `check ::`
+09:38:30.02 [ERROR] The scheduler was invalidated: Exception('pantsd process 3376336 was using 4289.90 MiB of memory (above the `--pantsd-max-memory-usage` limit of 4096.00 MiB).')
+09:38:30.58 [ERROR] service failure for <pants.pantsd.service.scheduler_service.SchedulerService object at 0x7beada1a1a50>.
+09:38:30.59 [INFO] Waiting for ongoing runs to complete before exiting...
+09:38:33.62 [INFO] request completed: `check ::`
+09:38:33.62 [INFO] Server exiting with Ok(())
+09:38:33.62 [INFO] Waiting for Sessions to complete before exiting...
+09:38:33.62 [INFO] Waiting for shutdown of: ["scheduler_service_session", "store_gc_service_session", "pants_run_2025_09_06_09_35_54_966_3cf0ec30723a45b087f59f537ba344f0", "pants_run_2025_09_06_09_37_46_860_76c0ae6bb6ba40a9a4623a04dd892938", "pants_run_2025_09_06_09_38_25_881_4f1d3e0290084787b7f1ba230416b2f6"]
+09:38:33.62 [INFO] Shutdown completed: "scheduler_service_session"
+09:38:33.62 [INFO] Shutdown completed: "store_gc_service_session"
+09:38:33.62 [INFO] Shutdown completed: "pants_run_2025_09_06_09_35_54_966_3cf0ec30723a45b087f59f537ba344f0"
+09:38:33.62 [INFO] Shutdown completed: "pants_run_2025_09_06_09_37_46_860_76c0ae6bb6ba40a9a4623a04dd892938"
+09:38:33.62 [INFO] Shutdown completed: "pants_run_2025_09_06_09_38_25_881_4f1d3e0290084787b7f1ba230416b2f6"
+09:38:33.64 [INFO] Exiting pantsd
+09:38:33.64 [WARN] File watcher exiting with: The watcher was shut down.
