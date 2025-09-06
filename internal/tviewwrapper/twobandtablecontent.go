@@ -48,7 +48,6 @@ func (c *TwoBandTableContent) GetCell(row, col int) *tview.TableCell {
 		Transparent:     false, // must for false for BackgroundColor to be drawn
 		Text:            c.table.GetCell(row, col),
 		BackgroundColor: c.bandBackground(row),
-		//MaxWidth:        width,
 	}
 	return cell
 }

@@ -106,10 +106,6 @@ func (r *TuiMergesRenderer) setupKeyHandlers() {
 		case tcell.KeyBacktab:
 			r.focusRing.Cycle(tw.PrevDir)
 			return nil
-		case tcell.KeyUp:
-			r.tablePanel.OnCellSelectedNotify(tw.CellParams{1, 0})
-		case tcell.KeyDown:
-			r.tablePanel.OnCellSelectedNotify(tw.CellParams{2, 0})
 		}
 		return event
 	})
