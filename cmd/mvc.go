@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/stalwartgiraffe/cmr/internal/reload"
 	"github.com/stalwartgiraffe/cmr/internal/tui/merges"
 )
 
@@ -16,25 +17,42 @@ func NewMVCCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Co
 		Long:  `Run mvc`,
 		Args: func(cmd *cobra.Command, args []string) error {
 			if 0 < len(args) {
-				return fmt.Errorf("unexpected args %v", args)
-			} else {
-				return nil
+				for _, arg := range args {
+					switch arg {
+					case "reload":
+						if err := reload.BeginWatchPwd(cancel); err != nil {
+							return err
+						}
+					default:
+						return fmt.Errorf("Unknown argument %s", arg)
+					}
+				}
 			}
+			return nil
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			runMVC(app, cancel, cmd)
+			runMVC(cancel, app, cmd)
 		},
 	}
 }
 
-func runMVC(app App, cancel context.CancelFunc, cmd *cobra.Command) {
+func NoArgs(args []string) error {
+	if 0 < len(args) {
+		return fmt.Errorf("unexpected args %v", args)
+	} else {
+		return nil
+	}
+}
+
+func runMVC(cancel context.CancelFunc, app App, cmd *cobra.Command) {
+	ctx := cmd.Context()
 	repo := merges.NewInMemoryMergesRepository()
 
 	// TODO handle in go rouine
 	if err := repo.Load(); err != nil {
 		panic(err)
 	}
-	renderer := merges.NewTuiMergesRenderer(repo)
+	renderer := merges.NewTuiMergesRenderer(ctx, repo)
 
 	controller := merges.NewMergesController(
 		repo,

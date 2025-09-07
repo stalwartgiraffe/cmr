@@ -24,13 +24,10 @@ func NewMergeRequestCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) 
 		Short: "run mergerequests",
 		Long:  `Run MergeRequest.`,
 		Args: func(cmd *cobra.Command, args []string) error {
-			if 0 < len(args) {
-				return fmt.Errorf("unexpected args %v", args)
-			} else {
-				return nil
-			}
+			return NoArgs(args)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
+
 			runMergeRequestCmd(app, cancel, cmd)
 		},
 	}

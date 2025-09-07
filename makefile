@@ -2,7 +2,7 @@
 all: build
 
 
-GO_FILES = $(shell find . -name '*.go')
+GO_FILES = $(shell fd -e go)
 
 test: $(GO_FILES)
 	go test -tags test ./...
@@ -36,3 +36,8 @@ internal/gitlab/mergerequest_easyjson.go: internal/gitlab/mergerequest.go
 .PHONY: install_easy_json
 install_easy_json:
 	@which easyjson > /dev/null 2>&1 || go install github.com/mailru/easyjson/easyjson@latest
+
+# Watch all .go files and rebuild/test/run reload
+reload:
+	echo {$GO_FILES} | entr -r sh -c 'clear && go build && go test ./... && ./build/cmr mvc'
+

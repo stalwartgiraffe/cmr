@@ -1,6 +1,8 @@
 package merges
 
 import (
+	"context"
+
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 
@@ -52,7 +54,7 @@ type TableContents interface {
 	GetCell(row, col int) string
 }
 
-func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
+func NewTuiMergesRenderer(ctx context.Context, repo MergesRepository) *TuiMergesRenderer {
 	tviewApp := tview.NewApplication()
 	stop := tviewApp.Stop
 	tablePanel := tw.NewTablePanel(
@@ -74,7 +76,16 @@ func NewTuiMergesRenderer(repo MergesRepository) *TuiMergesRenderer {
 	r.setupTablePage()
 	r.setupKeyHandlers()
 	r.setupEvents(repo)
+
+	go blockOnCtxDone(ctx, stop)
+
 	return r
+}
+
+
+func blockOnCtxDone(ctx context.Context, stop StopFn) {
+	<-ctx.Done()
+	stop()
 }
 
 func (r *TuiMergesRenderer) Run() error {
