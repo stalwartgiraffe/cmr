@@ -117,10 +117,6 @@ var _ = Describe("for each data file, loadtests", func() {
 		Expect(err).To(BeNil())
 		Expect(buf).To(Not(BeNil()))
 		err = utils.WalkFileReaders(loadTestsFS, func(path string, file io.Reader) {
-			//log.Println("path", path)
-			//cfg, err := LoadConfig(file)
-			//Expect(err == nil && cfg != nil).To(Equal(isOK))
-			//Expect(isOK).To(Equal(true))
 		})
 		Expect(err).To(BeNil())
 	})

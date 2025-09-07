@@ -25,3 +25,17 @@ func WalkFileReaders(dir fs.FS, read PathReaderFn) error {
 		return nil
 	})
 }
+
+type PathFn func(path string)
+
+func WalkDirs(dir fs.FS, accumulate PathFn) error {
+	return fs.WalkDir(dir, ".", func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if entry.IsDir() {
+			accumulate(path)
+		}
+		return nil
+	})
+}
