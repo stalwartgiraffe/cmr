@@ -81,7 +81,6 @@ func AddRootCommand(app App, cancel context.CancelFunc) *cobra.Command {
 	// fetch merge requests from gitlab
 	rootCmd.AddCommand(NewMergeRequestCommand(app, cfg, cancel))
 
-	rootCmd.AddCommand(NewDemoCommand(app, cfg, cancel))
 	rootCmd.AddCommand(NewMVCCommand(app, cfg, cancel))
 
 	rootCmd.AddCommand(NewCloneCommand(cfg))

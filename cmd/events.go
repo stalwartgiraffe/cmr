@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
-	"github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
+	tw "github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
 	"github.com/stalwartgiraffe/cmr/restclient"
@@ -64,10 +64,12 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	}
 	app.Printf("we got events %d", len(events))
 
-	content := tviewwrapper.NewTwoBandTableContent(
-		tviewwrapper.NewEventsTextTable(
+	content := tw.NewTwoBandTableContent(
+		tw.NewEventsTextTable(
 			events,
-			projects))
+			projects,
+		),
+	)
 
 	appTableRun(content, cancel)
 }
@@ -230,7 +232,7 @@ func (ec *EventClient) getEvents(
 
 func appTableRun(tableContent tview.TableContent, _ context.CancelFunc) {
 	tviewApp := tview.NewApplication()
-	table := tviewwrapper.MakeContentTable(tableContent, tviewApp.Stop)
+	table := tw.MakeContentTable(tableContent, tviewApp.Stop)
 	if err := tviewApp.SetRoot(table, true).SetFocus(table).Run(); err != nil {
 		panic(err)
 	}

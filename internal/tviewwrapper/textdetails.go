@@ -10,10 +10,11 @@ import (
 // TextDetailsPanel implements DetailsPanel with a text view
 type TextDetailsPanel struct {
 	*tview.TextView
+	style *Style
 }
 
 // NewTextDetails creates a basic text details panel
-func NewTextDetailsPanel() *TextDetailsPanel {
+func NewTextDetailsPanel(style *Style) *TextDetailsPanel {
 	textView := tview.NewTextView()
 	textView.SetBorder(true)
 	textView.SetTitle("Details")
@@ -23,26 +24,28 @@ func NewTextDetailsPanel() *TextDetailsPanel {
 
 	p := &TextDetailsPanel{
 		TextView: textView,
+		style:    style,
 	}
+	p.SetBlurred()
 
 	return p
 }
 
-func (d *TextDetailsPanel) GetPrimitive() tview.Primitive {
-	return d.TextView
+func (p *TextDetailsPanel) GetPrimitive() tview.Primitive {
+	return p.TextView
 }
 
-func (d *TextDetailsPanel) ShowDetails(data any) {
+func (p *TextDetailsPanel) ShowDetails(data any) {
 	if data == nil {
-		d.Clear()
+		p.Clear()
 		return
 	}
 
-	d.TextView.SetText(formatDetails(data))
+	p.TextView.SetText(formatDetails(data))
 }
 
-func (d *TextDetailsPanel) Clear() {
-	d.TextView.SetText("")
+func (p *TextDetailsPanel) Clear() {
+	p.TextView.SetText("")
 }
 
 // formatDetails uses reflection to format any struct for display
@@ -75,4 +78,13 @@ func formatDetails(data any) string {
 	}
 
 	return result
+}
+
+func (p *TextDetailsPanel) SetBlurred() {
+	p.SetBackgroundColor(p.style.BlurBackground)
+}
+
+func (p *TextDetailsPanel) SetFocus(tviewApp *tview.Application) {
+	p.SetBackgroundColor(p.style.FocusBackground)
+	tviewApp.SetFocus(p)
 }

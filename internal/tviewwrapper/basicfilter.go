@@ -11,42 +11,55 @@ import (
 type BasicFilterPanel struct {
 	*tview.InputField
 
+	style *Style
+
 	OnChange events.Event[string]
 }
 
 // NewBasicFilterPanel creates a basic filter input
-func NewBasicFilterPanel(placeholder string) *BasicFilterPanel {
+func NewBasicFilterPanel(placeholder string, style *Style) *BasicFilterPanel {
 	input := tview.NewInputField()
 	input.SetLabel("Filter: ")
 	input.SetPlaceholder(placeholder)
 	input.SetFieldWidth(0) // Use available width
 
-	inputDarkGray := tcell.Color234
+	inputDarkGray := tcell.Color236
 	input.SetFieldBackgroundColor(inputDarkGray)
 
-	f := &BasicFilterPanel{
+	p := &BasicFilterPanel{
 		InputField: input,
+		style:      style,
 	}
+	p.SetBlurred()
 
 	input.SetChangedFunc(func(text string) {
-		f.OnChange.Notify(text)
+		p.OnChange.Notify(text)
 	})
 
-	return f
+	return p
 }
 
-func (f *BasicFilterPanel) OnChangeSubscribe(fn func(string)) {
-	f.OnChange.Subscribe(fn)
+func (p *BasicFilterPanel) OnChangeSubscribe(fn func(string)) {
+	p.OnChange.Subscribe(fn)
 }
 
-func (f *BasicFilterPanel) GetPrimitive() tview.Primitive {
-	return f.InputField
+func (p *BasicFilterPanel) GetPrimitive() tview.Primitive {
+	return p.InputField
 }
 
-func (f *BasicFilterPanel) GetFilter() string {
-	return f.GetText()
+func (p *BasicFilterPanel) GetFilter() string {
+	return p.GetText()
 }
 
-func (f *BasicFilterPanel) SetFilter(text string) {
-	f.SetText(text)
+func (p *BasicFilterPanel) SetFilter(text string) {
+	p.SetText(text)
+}
+
+func (p *BasicFilterPanel) SetBlurred() {
+	p.SetBackgroundColor(p.style.BlurBackground)
+}
+
+func (p *BasicFilterPanel) SetFocus(tviewApp *tview.Application) {
+	p.SetBackgroundColor(p.style.FocusBackground)
+	tviewApp.SetFocus(p)
 }

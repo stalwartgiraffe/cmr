@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
-	"github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
+	tw "github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
 	"github.com/stalwartgiraffe/cmr/restclient"
@@ -62,10 +62,11 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 		return
 	}
 
-	tableContent := tviewwrapper.NewTwoBandTableContent(
-		tviewwrapper.NewMergeRequestTextTable(
+	tableContent := tw.NewTwoBandTableContent(
+		tw.NewMergeRequestTextTable(
 			nil, requests,
-		))
+		),
+	)
 
 	appTableRun(tableContent, cancel)
 }
@@ -277,70 +278,3 @@ func nextNIndex(body string, count int, txt string) int {
 	}
 	return currentPos
 }
-
-/*
-
-func promptTable(ptc tview.TableContent, cancel context.CancelFunc) {
-	fmt.Println("start promptTable")
-	app := tview.NewApplication()
-	table := tview.NewTable()
-
-	table.SetContent(ptc)
-	table.Select(0, 0).
-		SetFixed(1, 1).
-		SetDoneFunc(func(key tcell.Key) {
-			if key == tcell.KeyEscape {
-				app.Stop()
-			}
-			if key == tcell.KeyEnter {
-				table.SetSelectable(true, true)
-			}
-		}).SetSelectedFunc(func(row int, column int) {
-		table.GetCell(row, column).SetTextColor(tcell.ColorRed)
-		table.SetSelectable(true, true)
-	})
-
-	fmt.Println("done table set up")
-	if err := app.SetRoot(table, true).SetFocus(table).Run(); err != nil {
-		panic(err)
-	}
-	fmt.Println("finish table ")
-}
-
-type eventContent struct {
-	tview.TableContentReadOnly
-
-	events []gitlab.EventModel
-}
-
-func newEventContent(events gitlab.EventMap) *eventContent {
-	s := maps.Values(events)
-	sort.Slice(s, func(i, j int) bool {
-		return s[i].ID > s[j].ID
-	})
-	return &eventContent{
-		events: s,
-	}
-}
-
-func (c *eventContent) GetCell(row, col int) *tview.TableCell {
-	cell := tview.NewTableCell(c.events[row].Column(col))
-
-	if ((row / 2) % 2) == 0 {
-		cell.SetBackgroundColor(tcell.Color234)
-	} else {
-		cell.SetBackgroundColor(tcell.Color16)
-	}
-	return cell
-}
-
-// Return the total number of rows in the table.
-func (c *eventContent) GetRowCount() int {
-	return len(c.events)
-}
-
-// Return the total number of columns in the table.
-func (c *eventContent) GetColumnCount() int {
-	return gitlab.EventModelColumnCount()
-}
-*/

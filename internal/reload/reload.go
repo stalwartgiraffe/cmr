@@ -55,7 +55,6 @@ type Watcher interface {
 	Add(string) error
 }
 
-// func watchDirsRecursively(fs fs.FS, w *fsnotify.Watcher) error {
 func watchDirsRecursively(fs fs.FS, w Watcher) error {
 	var errs error
 	ignorePrefix := []string{".git", "ignore"}

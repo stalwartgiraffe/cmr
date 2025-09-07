@@ -57,15 +57,18 @@ type TableContents interface {
 func NewTuiMergesRenderer(ctx context.Context, repo MergesRepository) *TuiMergesRenderer {
 	tviewApp := tview.NewApplication()
 	stop := tviewApp.Stop
+	style := tw.NewStyle()
 	tablePanel := tw.NewTablePanel(
 		tw.NewTwoBandTableContent(repo),
-		stop)
+		stop,
+		style,
+	)
 	r := &TuiMergesRenderer{
 		tviewApp:     tviewApp,
 		tablePage:    tview.NewFlex(),
-		filterPanel:  tw.NewBasicFilterPanel(""),
+		filterPanel:  tw.NewBasicFilterPanel("", style),
 		tablePanel:   tablePanel,
-		detailsPanel: tw.NewTextDetailsPanel(),
+		detailsPanel: tw.NewTextDetailsPanel(style),
 		stop:         stop,
 	}
 
@@ -81,7 +84,6 @@ func NewTuiMergesRenderer(ctx context.Context, repo MergesRepository) *TuiMerges
 
 	return r
 }
-
 
 func blockOnCtxDone(ctx context.Context, stop StopFn) {
 	<-ctx.Done()

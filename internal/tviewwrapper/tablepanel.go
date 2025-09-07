@@ -9,39 +9,42 @@ import (
 
 type TablePanel struct {
 	*tview.Table
+	style *Style
 
 	onCellSelected events.Event[CellParams]
 }
 
-func NewTablePanel(ptc tview.TableContent, stop StopFunc) *TablePanel {
-	t := &TablePanel{
+func NewTablePanel(ptc tview.TableContent, stop StopFunc, style *Style) *TablePanel {
+	p := &TablePanel{
 		Table: tview.NewTable(),
+		style: style,
 	}
-	t.Table.SetContent(ptc)
-	t.setupTableLayout(stop)
-	t.setupEvents()
-	return t
+	p.Table.SetContent(ptc)
+	p.setupTableLayout(stop)
+	p.setupEvents()
+    p.SetBlurred()
+	return p
 }
 
-func (t *TablePanel) setupTableLayout(stop StopFunc) {
-	t.Select(0, 0).
+func (p *TablePanel) setupTableLayout(stop StopFunc) {
+	p.Select(0, 0).
 		SetFixed(1, 1).
 		SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEscape {
 				stop()
 			}
 			if key == tcell.KeyEnter {
-				t.SetSelectable(true, true)
+				p.SetSelectable(true, true)
 			}
 		}).SetSelectedFunc(func(row int, column int) {
-		t.GetCell(row, column).SetTextColor(tcell.ColorRed)
-		t.SetSelectable(true, true)
+		p.GetCell(row, column).SetTextColor(tcell.ColorRed)
+		p.SetSelectable(true, true)
 	})
 }
 
-func (t *TablePanel) setupEvents() {
-	t.SetSelectedFunc(func(row, col int) {
-		t.onCellSelected.Notify(CellParams{row, col})
+func (p *TablePanel) setupEvents() {
+	p.SetSelectedFunc(func(row, col int) {
+		p.onCellSelected.Notify(CellParams{row, col})
 	})
 }
 
@@ -49,9 +52,18 @@ type CellParams struct {
 	Row, Col int
 }
 
-func (t *TablePanel) OnCellSelectedSubscribe(fn func(CellParams)) {
-	t.onCellSelected.Subscribe(fn)
+func (p *TablePanel) OnCellSelectedSubscribe(fn func(CellParams)) {
+	p.onCellSelected.Subscribe(fn)
 }
-func (t *TablePanel) OnCellSelectedNotify(c CellParams) {
-	t.onCellSelected.Notify(c)
+func (p *TablePanel) OnCellSelectedNotify(c CellParams) {
+	p.onCellSelected.Notify(c)
+}
+
+func (p *TablePanel) SetBlurred() {
+	p.SetBackgroundColor(p.style.BlurBackground)
+}
+
+func (p *TablePanel) SetFocus(tviewApp *tview.Application) {
+	p.SetBackgroundColor(p.style.FocusBackground)
+	tviewApp.SetFocus(p)
 }
