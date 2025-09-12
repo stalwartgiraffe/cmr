@@ -63,11 +63,10 @@ func (r *InMemoryMergesRepository) Load() error {
 }
 
 func (r *InMemoryMergesRepository) Filter(search string) {
-
-	// there is no simple standard libary case insensitive string.Contains()
+	// there is no simple standard library case insensitive string.Contains()
 	// could use standard lib regex with i
 	//
-	// if perf becomes an concert
+	// if perf becomes an concern
 	//
 	// consider third parties
 	// github.com/charlievieth/strcase
