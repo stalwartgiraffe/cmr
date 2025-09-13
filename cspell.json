@@ -2,7 +2,7 @@
   "version": "0.2",
   "language": "en",
   "allowCompoundWords": true,
-  "dictionaries": ["go", "typescript", "node"],
+  "dictionaries": ["go", "typescript", "node", "softwareTerms", "companies"],
   "words": [
 	"goroutine",
     "goroutines", 
@@ -18,7 +18,9 @@
 
     "resty",
     "withstack",
-    "anyv"
+    "anyv",
+		"any",
+		"clone"
   ]
 }
 
