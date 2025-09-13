@@ -1,0 +1,24 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "allowCompoundWords": true,
+  "dictionaries": ["go", "typescript", "node"],
+  "words": [
+	"goroutine",
+    "goroutines", 
+    "mutex",
+    "struct",
+    "func",
+    "init",
+    "defer",
+    "chan",
+    "golang",
+    "gofmt",
+    "godoc",
+
+    "resty",
+    "withstack",
+    "anyv"
+  ]
+}
+

@@ -66,7 +66,7 @@ func (c *Client) Get(ctx context.Context, app App, q UrlQuery) (kam.JSONValue, h
 }
 
 func (c *Client) GetPathParams(ctx context.Context, app App, path string, params kam.Map) (kam.JSONValue, http.Header, error) {
-	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, app, c.TokenClient, path, params.ToQueryParams())
+	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, app, c.TokenClient, path, params.ToQueryParameters())
 	if err != nil {
 		return kam.JSONValue{}, nil, err
 	}
@@ -84,7 +84,7 @@ func GetWithHeader[RespT any](
 	params kam.Map) (
 	*RespT,
 	http.Header, error) {
-	return restclient.GetWithHeader[RespT](ctx, app, c.TokenClient, path, params.ToQueryParams())
+	return restclient.GetWithHeader[RespT](ctx, app, c.TokenClient, path, params.ToQueryParameters())
 }
 
 func GetWithUnmarshal[RespT any](
@@ -100,7 +100,7 @@ func GetWithUnmarshal[RespT any](
 		app,
 		c.TokenClient,
 		path,
-		params.ToQueryParams(),
+		params.ToQueryParameters(),
 		unmarshal,
 	)
 }
@@ -118,7 +118,7 @@ func (q *UrlQuery) Clone() *UrlQuery {
 }
 
 func (q *UrlQuery) String() string {
-	return fmt.Sprint(q.Path, q.Params.ToQueryParams())
+	return fmt.Sprint(q.Path, q.Params.ToQueryParameters())
 }
 
 func NewPageQuery(path string, page int) *UrlQuery {

@@ -41,8 +41,8 @@ func NewMapWithByte(b []byte) (Map, error) {
 	return m, nil
 }
 
-// ToQueryParams return the map in url query param format.
-func (m Map) ToQueryParams() string {
+// ToQueryParameters return the map in URL query parameter format.
+func (m Map) ToQueryParameters() string {
 	if m == nil {
 		return ""
 	}
@@ -73,7 +73,7 @@ func (m Map) Keys() []string {
 	return maps.Keys(m) // order will be randomized by the language
 }
 
-// Keys returns the map keys as a sorted slice.
+// SortedKeys returns the map keys as a sorted slice.
 func (m Map) SortedKeys() []string {
 	k := m.Keys()
 	slices.Sort(k)
@@ -85,7 +85,7 @@ func (m Map) Values() []any {
 	return maps.Values(m) // order will randomized by the language
 }
 
-// anyClone makes a deep clone of anyv on a supported type.
+// anyClone makes a deep clone of any on a supported type.
 func anyClone(anyv any) any {
 	switch v := anyv.(type) {
 	case complex64,

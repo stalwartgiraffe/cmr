@@ -99,7 +99,7 @@ func TestNewTerms(t *testing.T) {
 
 			require.Equal(t, tt.expectedKeys, result.keys, "keys mismatch")
 			require.Equal(t, tt.expectedKeyPat, result.keyPatterns, "key patterns mismatch")
-			require.Equal(t, tt.expectedValuePat, result.valuesPatterns, "value patterns mismatch")
+			require.Equal(t, tt.expectedValuePat, result.valuePatterns, "value patterns mismatch")
 		})
 	}
 }
