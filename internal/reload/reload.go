@@ -71,4 +71,4 @@ func watchDirsRecursively(fs fs.FS, w Watcher) error {
 	return errs
 }
 
-var wdrIgnorePrefix = []string{"./", ".git", "ignore"}
+var wdrIgnorePrefix = []string{".", ".git", "ignore"}

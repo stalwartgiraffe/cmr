@@ -9,7 +9,7 @@ import (
 
 func TestWatchDirsRecursively(t *testing.T) {
 	fs := fstest.MapFS{
-		"./skip.txt":      &fstest.MapFile{Data: []byte("git file")},
+		"skip.txt":      &fstest.MapFile{Data: []byte("git file")},
 		".git/skip.txt":   &fstest.MapFile{Data: []byte("git file")},
 		"ignore/skip.txt": &fstest.MapFile{Data: []byte("skip file")},
 		"a/b/c/file.txt":  &fstest.MapFile{Data: []byte("deep file")},
