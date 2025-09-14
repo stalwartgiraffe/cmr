@@ -107,11 +107,13 @@ func TestColumnSource_removeMatches(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			excluded := removeExcluded(
+			colSrc := &columnSource{
+				kvSrc:      tt.kvSrc,
+				findNoSort: mocks.FindSubstrings,
+			}
+			excluded := colSrc.removeExcluded(
 				tt.initialRows,
-				mocks.FindSubstrings,
 				tt.pattern,
-				tt.kvSrc,
 				0)
 
 			require.ElementsMatch(t, tt.expectedRows, excluded)
@@ -221,7 +223,6 @@ func TestEveryElement(t *testing.T) {
 	tests := []struct {
 		name     string
 		n        int
-		expected []int
 	}{
 		{
 			name: "zero elements",

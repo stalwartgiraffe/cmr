@@ -45,13 +45,16 @@ type Match struct {
 */
 
 func Find(rawPattern string, kvSrc KVSource) []int {
-	terms := newTerms(rawPattern)
+	patterns := newTerms(rawPattern)
 	keySource := newKeySource(kvSrc)
 	numAllRows := kvSrc.NumValues()
-	colSrc := newColumnSourceAllRows(kvSrc)
-	searchedCols := colIdxSet{}
+	skipColumns := idxSet{}
+	colSrc := &columnSource{
+		kvSrc: kvSrc,
+	}
 
-	for keyIdx, key := range terms.keys {
+	excluded := everyElement(numAllRows)
+	for keyIdx, key := range patterns.keys {
 		matches := fuzzy.FindFromNoSort(key, keySource)
 		if len(matches) < 0 {
 			continue
@@ -59,44 +62,25 @@ func Find(rawPattern string, kvSrc KVSource) []int {
 
 		for _, match := range matches {
 			col := match.Index
-			searchedCols[col] = empty{}
+			skipColumns[col] = empty{}
 			colSrc = newColumnSource(kvSrc, col, colSrc)
 
-			pattern := terms.keyPatterns[keyIdx]
-			colSrc.rows = removeExcluded(
-				colSrc.rows,
-				colSrc.findNoSort,
+			pattern := patterns.keyPatterns[keyIdx]
+			excluded = colSrc.removeExcluded(
+				excluded,
 				pattern,
-				colSrc.kvSrc,
-				colSrc.column,
+				col,
 			)
 		}
 	}
 
-	// name description author
-	for col := range kvSrc.NumKeys() {
-		if _, ok := searchedCols[col]; ok {
-			continue
-		}
-		// karl joe bob
-		for _, pattern := range terms.valuePatterns {
-			colSrc = newColumnSource(kvSrc, col, colSrc)
-			colSrc.rows = removeExcluded(
-				colSrc.rows,
-				colSrc.findNoSort,
-				pattern,
-				colSrc.kvSrc,
-				colSrc.column,
-			)
-		}
-	}
+	excluded = colSrc.removePatterns(excluded, skipColumns, patterns)
 
-	matchRows := subtractFromAll(colSrc.rows, numAllRows)
-	return matchRows
+	return subtractFromAll(excluded, numAllRows)
 }
 
 type empty struct{}
-type colIdxSet = map[int]empty
+type idxSet = map[int]empty
 
 type keySource struct {
 	src KVSource
@@ -122,6 +106,46 @@ type columnSource struct {
 	findNoSort FindNoSortFn
 }
 
+func (s *columnSource) removePatterns(excluded []int, skipColumns idxSet, patterns *terms) []int {
+	for col := range s.kvSrc.NumKeys() {
+		if _, ok := skipColumns[col]; ok {
+			continue
+		}
+		for _, pattern := range patterns.valuePatterns {
+			excluded = s.removeExcluded(
+				excluded,
+				pattern,
+				col,
+			)
+		}
+	}
+
+	return excluded
+}
+
+// removeExcluded returns the rows which match pattern in src removed from excluded.
+// The elements of the excluded slice may shuffled in place and the slice shortened.
+func (s *columnSource) removeExcluded(
+	excluded []int,
+	pattern string,
+	col int) []int {
+	data := []string{""}
+	i := 0
+	for i < len(excluded) {
+		data[0] = s.kvSrc.Value(excluded[i], col)
+
+		m := s.findNoSort(pattern, data)
+		if 0 < m.Len() { // on match, shuffle down last and pop
+			last := len(excluded) - 1
+			excluded[i] = excluded[last]
+			excluded = excluded[:last]
+		} else {
+			i++
+		}
+	}
+	return excluded
+}
+
 type FindFn func(pattern string, data []string) fuzzy.Matches
 type FindNoSortFn func(pattern string, data []string) fuzzy.Matches
 
@@ -144,13 +168,6 @@ func newColumnSource(kvSrc KVSource, col int, colSrc *columnSource) *columnSourc
 	}
 }
 
-func newColumnSourceAllRows(kvSrc KVSource) *columnSource {
-	return &columnSource{
-		kvSrc: kvSrc,
-		rows:  everyElement(kvSrc.NumValues()),
-	}
-}
-
 // everyElement returns the slice of 0..n-1
 func everyElement(n int) []int {
 	e := make([]int, n)
@@ -158,30 +175,6 @@ func everyElement(n int) []int {
 		e[i] = i
 	}
 	return e
-}
-
-// removeExcluded returns the rows which match pattern in src removed from excluded.
-// The elements of the excluded slice may shuffled in place and the slice shortened.
-func removeExcluded(
-	excluded []int,
-	findNoSort FindNoSortFn,
-	pattern string,
-	src KVSource,
-	column int) []int {
-	data := []string{""}
-	i := 0
-	for i < len(excluded) {
-		data[0] = src.Value(excluded[i], column)
-		m := findNoSort(pattern, data)
-		if 0 < m.Len() { // on match, shuffle down last and pop
-			last := len(excluded) - 1
-			excluded[i] = excluded[last] 
-			excluded = excluded[:last]  
-		} else {
-			i++
-		}
-	}
-	return excluded
 }
 
 // subtractFromAll returns the set inverse of src.

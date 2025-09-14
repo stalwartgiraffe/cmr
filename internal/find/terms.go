@@ -16,7 +16,7 @@ const KVSeparator = ":"
 // ?key1:val1 ?key2:val2 val3...
 // and returns the parse terms
 // whitespace is treated as separators.
-func newTerms(rawPattern string) terms {
+func newTerms(rawPattern string) *terms {
 	rawTerms := strings.Fields(rawPattern)
 	rawN := len(rawTerms)
 	keyPatterns := make([]string, 0, rawN)
@@ -29,7 +29,7 @@ func newTerms(rawPattern string) terms {
 			valuesPatterns = append(valuesPatterns, term)
 		}
 	}
-	return terms{keys, keyPatterns, valuesPatterns}
+	return &terms{keys, keyPatterns, valuesPatterns}
 }
 
 // parseKV accepts term in the form ?key:val and appends
