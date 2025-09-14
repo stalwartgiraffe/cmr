@@ -4,6 +4,9 @@ package fixtures
 import (
 	"fmt"
 	"strconv"
+	"strings"
+
+	"github.com/sahilm/fuzzy"
 )
 
 type Table struct {
@@ -27,6 +30,8 @@ func (t *Table) Value(row, col int) string {
 	return t.Values[row][col]
 }
 
+// NewTable returns a fake kvSource.
+// Each element is the index "r,c" as a string.
 func NewTable(rows, cols int) *Table {
 	keys := make([]string, cols)
 	for i := range cols {
@@ -42,5 +47,27 @@ func NewTable(rows, cols int) *Table {
 	return &Table{
 		Keys:   keys,
 		Values: vals,
+	}
+}
+
+// FindSubstrings fake the fuzzy finder interface.
+// Return the simple substring matches.
+func FindSubstrings(pattern string, data []string) fuzzy.Matches {
+	matches := fuzzy.Matches{}
+	for i, s := range data {
+		idx := strings.Index(s, pattern)
+		if idx != -1 {
+			matches = append(matches, newMatch(s, i, idx))
+		}
+	}
+	return matches
+}
+
+func newMatch(word string, wordIdx int, chIdx int) fuzzy.Match {
+	return fuzzy.Match{
+		Str:            word,
+		Index:          wordIdx,
+		MatchedIndexes: []int{chIdx},
+		Score:          1, // Score used to rank matches
 	}
 }

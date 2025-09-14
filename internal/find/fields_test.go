@@ -1,10 +1,126 @@
 package find
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	mocks "github.com/stalwartgiraffe/cmr/internal/find/fixtures"
 )
+
+func TestColumnSource_removeMatches(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name         string
+		kvSrc        KVSource
+		findNoSort   FindNoSortFn
+		column       int
+		initialCol   int
+		initialRows  []int
+		pattern      string
+		mockMatches  map[string]bool // value -> should match
+		expectedRows []int
+	}{
+		{
+			name:         "no matches - all rows preserved",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{0, 1, 2},
+			pattern:      "xyz",
+			expectedRows: []int{0, 1, 2},
+		},
+		{
+			name:         "all matches - no rows preserved",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{0, 1, 2},
+			pattern:      "0",
+			expectedRows: []int{},
+		},
+		{
+			name:         "partial matches/middle removed",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{2, 0, 1},
+			pattern:      "1",
+			expectedRows: []int{0, 2},
+		},
+		{
+			name:         "partial matches/first removed",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{2, 0, 1},
+			pattern:      "2",
+			expectedRows: []int{0, 1},
+		},
+		{
+			name:         "partial matches/last removed",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{2, 0, 1},
+			pattern:      "1",
+			expectedRows: []int{0, 2},
+		},
+		{
+			name:         "empty rows",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{},
+			pattern:      "1",
+			expectedRows: []int{},
+		},
+		{
+			name:         "single row/no match",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{0},
+			pattern:      "1",
+			expectedRows: []int{0},
+		},
+		{
+			name:         "single row/one match",
+			kvSrc:        mocks.NewTable(3, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{0},
+			pattern:      "0",
+			expectedRows: []int{},
+		},
+		{
+			name:         "multiple matches in sequence",
+			kvSrc:        mocks.NewTable(20, 2),
+			findNoSort:   mocks.FindSubstrings,
+			initialCol:   0,
+			initialRows:  []int{7, 8, 9, 10, 12},
+			pattern:      "1",
+			expectedRows: []int{7, 8, 9},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			cs := columnSource{
+				kvSrc:      tt.kvSrc,
+				findNoSort: tt.findNoSort,
+				column:     tt.initialCol,
+				rows:       slices.Clone(tt.initialRows),
+			}
+
+			cs.removeMatches(tt.pattern)
+			require.ElementsMatch(t, tt.expectedRows, cs.rows)
+		})
+	}
+}
 
 func TestColumnSource_SubtractFromAll(t *testing.T) {
 	t.Parallel()
@@ -103,6 +219,7 @@ func TestColumnSource_SubtractFromAll(t *testing.T) {
 }
 
 func TestFillVals(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		name     string
 		i        int

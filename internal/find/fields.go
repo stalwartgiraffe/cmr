@@ -113,9 +113,6 @@ type columnSource struct {
 type FindFn func(pattern string, data []string) fuzzy.Matches
 type FindNoSortFn func(pattern string, data []string) fuzzy.Matches
 
-//type FindFromFn func(pattern string, data fuzzy.Source) fuzzy.Matches
-//type FindFromNoSortFn func(pattern string, data fuzzy.Source) fuzzy.Matches
-
 func (s *columnSource) deepCopy() *columnSource {
 	dst := make([]int, len(s.rows))
 	copy(dst, s.rows)
@@ -162,6 +159,7 @@ func (s *columnSource) removeMatches(pattern string) {
 			i++
 		}
 	}
+	s.rows = rows
 }
 
 // subtractFromAll returns the set inverse of src.
