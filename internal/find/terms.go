@@ -4,8 +4,8 @@ package find
 import "strings"
 
 type terms struct {
-	keys           []string
-	keyPatterns    []string
+	keys          []string
+	keyPatterns   []string
 	valuePatterns []string
 }
 
@@ -24,7 +24,7 @@ func newTerms(rawPattern string) terms {
 	valuesPatterns := make([]string, 0, rawN)
 	for _, term := range rawTerms {
 		if strings.HasPrefix(term, KVPrefix) {
-			keys, keyPatterns = parsekv(term, keys, keyPatterns)
+			keys, keyPatterns = parseKV(term, keys, keyPatterns)
 		} else {
 			valuesPatterns = append(valuesPatterns, term)
 		}
@@ -32,18 +32,17 @@ func newTerms(rawPattern string) terms {
 	return terms{keys, keyPatterns, valuesPatterns}
 }
 
-
-// parsekv accepts term in the form ?key:val and appends 
-// parse errors are silently discarded 
-func parsekv(term string, keys []string, keyPatterns []string) ([]string, []string) {
+// parseKV accepts term in the form ?key:val and appends
+// parse errors are silently discarded
+func parseKV(term string, keys []string, keyPatterns []string) ([]string, []string) {
 	term = term[1:]
 	idx := strings.Index(term, KVSeparator)
 	if idx < 0 {
 		return keys, keyPatterns
 	}
-	before, after := term[:idx], term[idx+1:]
-	if len(before) < 1 || len(after) < 1 {
+	key, pattern := term[:idx], term[idx+1:]
+	if len(key) < 1 || len(pattern) < 1 {
 		return keys, keyPatterns
 	}
-	return append(keys, before), append(keyPatterns, after)
+	return append(keys, key), append(keyPatterns, pattern)
 }
