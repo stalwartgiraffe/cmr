@@ -9,31 +9,32 @@ import (
 
 func TestNewFocusRing(t *testing.T) {
 	app := tview.NewApplication()
-	panel1 := tview.NewBox()
-	panel2 := tview.NewBox()
-	panel3 := tview.NewBox()
+	style := NewStyle()
+	panel1 := NewBasicFilterPanel("1", style)
+	panel2 := NewBasicFilterPanel("2", style)
+	panel3 := NewBasicFilterPanel("3", style)
 
 	tests := []struct {
 		name           string
-		panels         []tview.Primitive
+		panels         []Panel
 		expectedPanels int
 		expectedFocus  int
 	}{
 		{
 			name:           "empty panels",
-			panels:         []tview.Primitive{},
+			panels:         []Panel{},
 			expectedPanels: 0,
 			expectedFocus:  0,
 		},
 		{
 			name:           "single panel",
-			panels:         []tview.Primitive{panel1},
+			panels:         []Panel{panel1},
 			expectedPanels: 1,
 			expectedFocus:  0,
 		},
 		{
 			name:           "multiple panels",
-			panels:         []tview.Primitive{panel1, panel2, panel3},
+			panels:         []Panel{panel1, panel2, panel3},
 			expectedPanels: 3,
 			expectedFocus:  0,
 		},
@@ -42,7 +43,7 @@ func TestNewFocusRing(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ring := NewFocusRing(app, tt.panels...)
-			
+
 			require.NotNil(t, ring.tviewApp)
 			require.Equal(t, app, ring.tviewApp)
 			require.Equal(t, tt.expectedFocus, ring.focusedPanel)
@@ -54,83 +55,84 @@ func TestNewFocusRing(t *testing.T) {
 
 func TestFocusRing_Cycle(t *testing.T) {
 	app := tview.NewApplication()
-	panel1 := tview.NewBox()
-	panel2 := tview.NewBox()
-	panel3 := tview.NewBox()
+	style := NewStyle()
+	panel1 := NewBasicFilterPanel("1", style)
+	panel2 := NewBasicFilterPanel("2", style)
+	panel3 := NewBasicFilterPanel("3", style)
 
 	tests := []struct {
-		name           string
-		panels         []tview.Primitive
-		initialFocus   int
-		direction      RingDirection
-		expectedFocus  int
+		name          string
+		panels        []Panel
+		initialFocus  int
+		direction     RingDirection
+		expectedFocus int
 	}{
 		{
 			name:          "next direction with 3 panels from start",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  0,
 			direction:     NextDir,
 			expectedFocus: 1,
 		},
 		{
 			name:          "next direction with 3 panels from middle",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  1,
 			direction:     NextDir,
 			expectedFocus: 2,
 		},
 		{
 			name:          "next direction with 3 panels from end (wraps around)",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  2,
 			direction:     NextDir,
 			expectedFocus: 0,
 		},
 		{
 			name:          "prev direction with 3 panels from start (wraps around)",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  0,
 			direction:     PrevDir,
 			expectedFocus: 2,
 		},
 		{
 			name:          "prev direction with 3 panels from middle",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  1,
 			direction:     PrevDir,
 			expectedFocus: 0,
 		},
 		{
 			name:          "prev direction with 3 panels from end",
-			panels:        []tview.Primitive{panel1, panel2, panel3},
+			panels:        []Panel{panel1, panel2, panel3},
 			initialFocus:  2,
 			direction:     PrevDir,
 			expectedFocus: 1,
 		},
 		{
 			name:          "single panel next direction",
-			panels:        []tview.Primitive{panel1},
+			panels:        []Panel{panel1},
 			initialFocus:  0,
 			direction:     NextDir,
 			expectedFocus: 0,
 		},
 		{
 			name:          "single panel prev direction",
-			panels:        []tview.Primitive{panel1},
+			panels:        []Panel{panel1},
 			initialFocus:  0,
 			direction:     PrevDir,
 			expectedFocus: 0,
 		},
 		{
 			name:          "two panels next from first",
-			panels:        []tview.Primitive{panel1, panel2},
+			panels:        []Panel{panel1, panel2},
 			initialFocus:  0,
 			direction:     NextDir,
 			expectedFocus: 1,
 		},
 		{
 			name:          "two panels next from second (wraps)",
-			panels:        []tview.Primitive{panel1, panel2},
+			panels:        []Panel{panel1, panel2},
 			initialFocus:  1,
 			direction:     NextDir,
 			expectedFocus: 0,
@@ -141,9 +143,9 @@ func TestFocusRing_Cycle(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ring := NewFocusRing(app, tt.panels...)
 			ring.focusedPanel = tt.initialFocus
-			
+
 			ring.Cycle(tt.direction)
-			
+
 			require.Equal(t, tt.expectedFocus, ring.focusedPanel)
 		})
 	}
@@ -176,13 +178,15 @@ func TestRingDirection_Constants(t *testing.T) {
 
 func TestFocusParams(t *testing.T) {
 	app := tview.NewApplication()
-	panel := tview.NewBox()
-	
+	style := NewStyle()
+	panel := NewBasicFilterPanel("1", style)
+
 	params := FocusParams{
 		TviewApp: app,
 		Panel:    panel,
 	}
-	
+
 	require.Equal(t, app, params.TviewApp)
 	require.Equal(t, panel, params.Panel)
 }
+
