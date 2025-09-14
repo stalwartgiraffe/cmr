@@ -22,11 +22,11 @@ type KVSource interface {
 }
 
 func Find(rawPattern string, kvSrc KVSource) []int {
-	colSrc := newColumnSource(kvSrc)
+	src := newFindSrc(kvSrc)
 	patterns := newTerms(rawPattern)
-	excluded, skipColumns := colSrc.removeKeys(patterns)
-	excluded = colSrc.removeValues(excluded, skipColumns, patterns)
-	return subtractFromAll(excluded, colSrc.numRows())
+	excluded, skipColumns := src.removeKeys(patterns)
+	excluded = src.removeValues(excluded, skipColumns, patterns)
+	return subtractFromAll(excluded, src.numRows())
 }
 
 // subtractFromAll returns the set inverse of src.
