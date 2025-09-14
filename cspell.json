@@ -3,17 +3,17 @@
   "language": "en",
   "allowCompoundWords": true,
   "dictionaries": [
-    "companies"
+    "companies",
     "go",
     "node",
     "softwareTerms",
-    "typescript",
+    "typescript"
   ],
   "words": [
     "any",
     "anyv",
     "chan",
-    "clone"
+    "clone",
     "defer",
     "func",
     "godoc",
@@ -24,8 +24,8 @@
     "init",
     "mutex",
     "resty",
-	"stretchr"
+    "stretchr",
     "struct",
-    "withstack",
+    "withstack"
   ]
 }
