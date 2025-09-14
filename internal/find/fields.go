@@ -63,7 +63,13 @@ func Find(rawPattern string, kvSrc KVSource) []int {
 			colSrc = newColumnSource(kvSrc, col, colSrc)
 
 			pattern := terms.keyPatterns[keyIdx]
-			colSrc.removeMatches(pattern)
+			colSrc.rows = removeExcluded(
+				colSrc.rows,
+				colSrc.findNoSort,
+				pattern,
+				colSrc.kvSrc,
+				colSrc.column,
+			)
 		}
 	}
 
@@ -75,7 +81,13 @@ func Find(rawPattern string, kvSrc KVSource) []int {
 		// karl joe bob
 		for _, pattern := range terms.valuePatterns {
 			colSrc = newColumnSource(kvSrc, col, colSrc)
-			colSrc.removeMatches(pattern)
+			colSrc.rows = removeExcluded(
+				colSrc.rows,
+				colSrc.findNoSort,
+				pattern,
+				colSrc.kvSrc,
+				colSrc.column,
+			)
 		}
 	}
 
@@ -133,33 +145,43 @@ func newColumnSource(kvSrc KVSource, col int, colSrc *columnSource) *columnSourc
 }
 
 func newColumnSourceAllRows(kvSrc KVSource) *columnSource {
-	numAllRows := kvSrc.NumValues()
-	rows := make([]int, numAllRows)
-	for i := range numAllRows {
-		rows[i] = i
-	}
 	return &columnSource{
 		kvSrc: kvSrc,
-		rows:  rows,
+		rows:  everyElement(kvSrc.NumValues()),
 	}
 }
 
-func (s *columnSource) removeMatches(pattern string) {
-	data := make([]string, 1)
-	rows := s.rows
+// everyElement returns the slice of 0..n-1
+func everyElement(n int) []int {
+	e := make([]int, n)
+	for i := range n {
+		e[i] = i
+	}
+	return e
+}
+
+// removeExcluded returns the rows which match pattern in src removed from excluded.
+// The elements of the excluded slice may shuffled in place and the slice shortened.
+func removeExcluded(
+	excluded []int,
+	findNoSort FindNoSortFn,
+	pattern string,
+	src KVSource,
+	column int) []int {
+	data := []string{""}
 	i := 0
-	for i < len(rows) {
-		data[0] = s.kvSrc.Value(rows[i], s.column)
-		m := s.findNoSort(pattern, data)
-		if 0 < m.Len() { // match
-			tail := len(rows) - 1
-			rows[i] = rows[tail] // erase match
-			rows = rows[:tail]   // clip tail
+	for i < len(excluded) {
+		data[0] = src.Value(excluded[i], column)
+		m := findNoSort(pattern, data)
+		if 0 < m.Len() { // on match, shuffle down last and pop
+			last := len(excluded) - 1
+			excluded[i] = excluded[last] 
+			excluded = excluded[:last]  
 		} else {
 			i++
 		}
 	}
-	s.rows = rows
+	return excluded
 }
 
 // subtractFromAll returns the set inverse of src.

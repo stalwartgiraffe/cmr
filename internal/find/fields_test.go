@@ -1,7 +1,6 @@
 package find
 
 import (
-	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -108,16 +107,14 @@ func TestColumnSource_removeMatches(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			excluded := removeExcluded(
+				tt.initialRows,
+				mocks.FindSubstrings,
+				tt.pattern,
+				tt.kvSrc,
+				0)
 
-			cs := columnSource{
-				kvSrc:      tt.kvSrc,
-				findNoSort: tt.findNoSort,
-				column:     tt.initialCol,
-				rows:       slices.Clone(tt.initialRows),
-			}
-
-			cs.removeMatches(tt.pattern)
-			require.ElementsMatch(t, tt.expectedRows, cs.rows)
+			require.ElementsMatch(t, tt.expectedRows, excluded)
 		})
 	}
 }
@@ -218,8 +215,52 @@ func TestColumnSource_SubtractFromAll(t *testing.T) {
 	}
 }
 
+func TestEveryElement(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		n        int
+		expected []int
+	}{
+		{
+			name: "zero elements",
+			n:    0,
+		},
+		{
+			name: "single element",
+			n:    1,
+		},
+		{
+			name: "multiple elements",
+			n:    5,
+		},
+		{
+			name: "ten elements",
+			n:    10,
+		},
+		{
+			name: "two elements",
+			n:    2,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			result := everyElement(tt.n)
+			require.Equal(t, tt.n, len(result))
+			// Verify each element equals its index
+			for i, val := range result {
+				require.Equal(t, i, val, "element at index %d should equal %d", i, i)
+			}
+		})
+	}
+}
+
 func TestFillVals(t *testing.T) {
 	t.Parallel()
+
 	tests := []struct {
 		name     string
 		i        int
