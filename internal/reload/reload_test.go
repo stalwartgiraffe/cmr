@@ -1,7 +1,6 @@
 package reload
 
 import (
-	"fmt"
 	"testing"
 	"testing/fstest"
 
@@ -10,7 +9,8 @@ import (
 
 func TestWatchDirsRecursively(t *testing.T) {
 	fs := fstest.MapFS{
-		".get/skip.txt":   &fstest.MapFile{Data: []byte("git file")},
+		"./skip.txt":      &fstest.MapFile{Data: []byte("git file")},
+		".git/skip.txt":   &fstest.MapFile{Data: []byte("git file")},
 		"ignore/skip.txt": &fstest.MapFile{Data: []byte("skip file")},
 		"a/b/c/file.txt":  &fstest.MapFile{Data: []byte("deep file")},
 		"a/b/file2.txt":   &fstest.MapFile{Data: []byte("file2")},
@@ -31,7 +31,6 @@ type mockWatcher struct {
 }
 
 func (w *mockWatcher) Add(p string) error {
-
 	w.dirs = append(w.dirs, p)
 	return nil
 }

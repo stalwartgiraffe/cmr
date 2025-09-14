@@ -57,9 +57,8 @@ type Watcher interface {
 
 func watchDirsRecursively(fs fs.FS, w Watcher) error {
 	var errs error
-	ignorePrefix := []string{".git", "ignore"}
 	utils.WalkDirs(fs, func(path string) {
-		for _, p := range ignorePrefix {
+		for _, p := range wdrIgnorePrefix {
 			if strings.HasPrefix(path, p) {
 				return
 			}
@@ -71,3 +70,5 @@ func watchDirsRecursively(fs fs.FS, w Watcher) error {
 
 	return errs
 }
+
+var wdrIgnorePrefix = []string{"./", ".git", "ignore"}
