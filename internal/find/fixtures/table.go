@@ -14,6 +14,21 @@ type Table struct {
 	Values [][]string
 }
 
+func (t *Table) GetColumnCount() int {
+	return len(t.Keys)
+}
+
+func (t *Table) GetColumn(col int) string {
+	return t.Keys[col]
+}
+func (t *Table) GetRowCount() int {
+	return len(t.Values)
+}
+
+func (t *Table) GetCell(row, col int) string {
+	return t.Values[row][col]
+}
+
 func (t *Table) NumKeys() int {
 	return len(t.Keys)
 }

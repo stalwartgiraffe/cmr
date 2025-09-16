@@ -3,6 +3,7 @@ package find
 
 import (
 	"sort"
+	"strings"
 )
 
 type Fields struct {
@@ -14,14 +15,33 @@ func NewFields() *Fields {
 	return fields
 }
 
+/*
 type KVSource interface {
 	NumKeys() int
 	Key(col int) string
 	NumValues() int
 	Value(row, col int) string
 }
+*/
 
-func Find(rawPattern string, kvSrc KVSource) []int {
+type TextTable interface {
+	GetColumnCount() int
+	GetColumn(col int) string
+	GetRowCount() int
+	GetCell(row, col int) string
+}
+
+type keyCols = map[string]int
+
+func getColumnKeysToLower(src TextTable) keyCols {
+	colMap := keyCols{}
+	for col := range src.GetColumnCount() {
+		colMap[strings.ToLower(src.GetColumn(col))] = col
+	}
+	return colMap
+}
+
+func Find(rawPattern string, kvSrc TextTable) []int {
 	src := newFindSrc(kvSrc)
 	patterns := newTerms(rawPattern)
 	excluded, skipColumns := src.removeKeys(patterns)

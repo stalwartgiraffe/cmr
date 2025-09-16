@@ -13,7 +13,7 @@ func TestColumnSource_removeMatches(t *testing.T) {
 
 	tests := []struct {
 		name         string
-		kvSrc        KVSource
+		kvSrc        TextTable
 		findNoSort   FindNoSortFn
 		column       int
 		initialCol   int
