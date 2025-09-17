@@ -6,24 +6,6 @@ import (
 	"strings"
 )
 
-type Fields struct {
-}
-
-func NewFields() *Fields {
-	fields := &Fields{}
-
-	return fields
-}
-
-/*
-type KVSource interface {
-	NumKeys() int
-	Key(col int) string
-	NumValues() int
-	Value(row, col int) string
-}
-*/
-
 type TextTable interface {
 	GetColumnCount() int
 	GetColumn(col int) string

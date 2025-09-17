@@ -2,23 +2,19 @@ package merges
 
 import (
 	"fmt"
-	"maps"
-	"slices"
-	"sort"
-	"strings"
 
 	"github.com/stalwartgiraffe/cmr/events"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
-	"github.com/stalwartgiraffe/cmr/views"
 )
 
 type InMemoryMergesRepository struct {
-	projects  map[int]gitlab.ProjectModel
-	mergesMap gitlab.MergeRequestMap
+	//projects  map[int]gitlab.ProjectModel
+	//mergesMap gitlab.MergeRequestMap
 
-	mergeRequests views.DataView[gitlab.MergeRequestModel]
-	contents      []MergeRequestModelContent
+	//mergeRequests views.DataView[gitlab.MergeRequestModel]
+	//contents []MergeRequestModelContent
 
+	table   *RecordTable
 	changes events.Event[EmptyT]
 }
 
@@ -30,34 +26,22 @@ type rowRef struct {
 }
 
 func NewInMemoryMergesRepository() *InMemoryMergesRepository {
-	return &InMemoryMergesRepository{
-		contents: NewMergeRequestContents(),
-	}
+	return &InMemoryMergesRepository{}
 }
 
 func (r *InMemoryMergesRepository) Load() error {
-	var err error
-	r.projects, err = gitlab.ReadProjects()
+	contents := NewMergeRequestContents()
+	projects, err := gitlab.ReadProjects()
 	if err != nil {
 		return err
 	}
 
 	filepath := "ignore/my_recent_merge_request.yaml"
-	r.mergesMap, err = gitlab.NewMergeRequestMapFromYaml(filepath)
+	mergesMap, err := gitlab.NewMergeRequestMapFromYaml(filepath)
 	if err != nil {
 		return err
 	}
-
-	s := slices.Collect(maps.Values(r.mergesMap))
-	sort.Slice(s, func(i, j int) bool {
-		return s[i].ID > s[j].ID
-	})
-
-	r.mergeRequests = views.NewDataView(s)
-	r.mergeRequests.FilterAll(func(m *gitlab.MergeRequestModel) bool {
-		return true
-	})
-
+	r.table = NewRecordTable(contents, mergesMap, projects)
 	r.changed()
 	return nil
 }
@@ -74,38 +58,48 @@ func (r *InMemoryMergesRepository) Filter(search string) {
 	//
 	// consider fancy alternative
 	// pre generated indexed data structures - ie all txt in lower case
-	search = strings.ToLower(search)
-	r.mergeRequests.FilterAll(func(m *gitlab.MergeRequestModel) bool {
-		// pragmatically waste allocs for now
-		return strings.Contains(
-			strings.ToLower(getUserName(m)), search) ||
-			strings.Contains(strings.ToLower(m.Title), search)
-	})
+	//search = strings.ToLower(search)
+	// r.mergeRequests.FilterAll(func(m *gitlab.MergeRequestModel) bool {
+	// 	// pragmatically waste allocs for now
+	// 	return strings.Contains(
+	// 		strings.ToLower(getUserName(m)), search) ||
+	// 		strings.Contains(strings.ToLower(m.Title), search)
+	// })
 	r.changed()
 }
 
 func (r *InMemoryMergesRepository) GetRowCount() int {
-	return r.mergeRequests.Len()
+	return r.table.GetRowCount()
 }
 
 func (r *InMemoryMergesRepository) GetColumnCount() int {
-	return len(r.contents)
+	return r.table.GetColumnCount()
+}
+
+func (r *InMemoryMergesRepository) GetColumn(col int) string {
+	return r.table.GetColumn(col)
 }
 
 func (r *InMemoryMergesRepository) GetCell(row int, col int) string {
-	content := r.contents[col]
-	if row == 0 {
-		return content.title
-	}
-	data := r.mergeRequests.Get(row - 1)
-	return content.cell(data, r.projects)
+	return r.table.GetCell(row, col)
+	/*
+		content := r.contents[col]
+		if row == 0 {
+			return content.title
+		}
+		data := r.mergeRequests.Get(row - 1)
+		return content.cell(data, r.projects)
+	*/
 }
 
 func (r *InMemoryMergesRepository) GetRowRecord(row int) any {
-	if row == 0 {
-		return nil
-	}
-	return r.mergeRequests.Get(row - 1)
+	return r.table.records[row]
+	/*
+		if row == 0 {
+			return nil
+		}
+		return r.mergeRequests.Get(row - 1)
+	*/
 }
 
 type EmptyFn = func(EmptyT)

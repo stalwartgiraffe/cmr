@@ -1,6 +1,8 @@
 // Package views provides data views of records
 package views
 
+import ()
+
 type DataView[T any] struct {
 	records    []T
 	filterView []Ref[T]
@@ -20,6 +22,17 @@ func NewDataView[T any](records []T) DataView[T] {
 	}
 }
 
+func matchAll[T any](records []T, view []Ref[T], isMatch isMatchFn[T]) []Ref[T] {
+	view = view[:0]
+	for i := range records {
+		p := &records[i]
+		if isMatch(p) {
+			view = append(view, Ref[T]{i, p})
+		}
+	}
+	return view
+}
+
 func (v *DataView[T]) FilterAll(isMatch isMatchFn[T]) []Ref[T] {
 	v.filterView = matchAll(v.records, v.filterView, isMatch)
 	return v.filterView
@@ -31,15 +44,4 @@ func (v *DataView[T]) Len() int {
 
 func (v *DataView[T]) Get(i int) *T {
 	return v.filterView[i].Data
-}
-
-func matchAll[T any](records []T, view []Ref[T], isMatch isMatchFn[T]) []Ref[T] {
-	view = view[:0]
-	for i := range records {
-		p := &records[i]
-		if isMatch(p) {
-			view = append(view, Ref[T]{i, p})
-		}
-	}
-	return view
 }
