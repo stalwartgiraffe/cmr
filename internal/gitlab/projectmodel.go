@@ -68,7 +68,7 @@ func RepoFilePath(home string, root string, project ProjectModel) string {
 }
 
 func ReadProjectsSlice(filepath string) ([]ProjectModel, error) {
-	file, err := os.Open("ignore/projects.yaml")
+	file, err := os.Open(filepath)
 	if err != nil {
 		return nil, err
 	}

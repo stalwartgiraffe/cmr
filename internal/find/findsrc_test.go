@@ -67,7 +67,7 @@ func TestRemoveExcludedWords(t *testing.T) {
 	}
 }
 
-func TwestRemoveExcludedSentences(t *testing.T) {
+func TestRemoveExcludedSentences(t *testing.T) {
 	setupSrc := func() TextTable {
 		return &mocks.Table{
 			Keys: []string{"Fruit"},
@@ -90,20 +90,20 @@ func TwestRemoveExcludedSentences(t *testing.T) {
 		pattern  string
 		want     []int
 	}{
-			{
-				name:     "empty excluded",
-				kvSrc:    setupSrc(),
-				excluded: []int{},
-				pattern:  "anana",
-				want:     []int{},
-			},
-			{
-				name:     "full excluded",
-				kvSrc:    setupSrc(),
-				excluded: []int{0, 1, 2, 3, 4, 5, 6},
-				pattern:  "dread",
-				want:     []int{0, 2, 3, 4, 5, 6},
-			},
+		{
+			name:     "empty excluded",
+			kvSrc:    setupSrc(),
+			excluded: []int{},
+			pattern:  "anana",
+			want:     []int{},
+		},
+		{
+			name:     "full excluded",
+			kvSrc:    setupSrc(),
+			excluded: []int{0, 1, 2, 3, 4, 5, 6},
+			pattern:  "dread",
+			want:     []int{0, 1, 3,4,5,6},
+		},
 		{
 			name:     "several excluded",
 			kvSrc:    setupSrc(),

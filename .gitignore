@@ -2,6 +2,8 @@ cmr
 .pants.d/
 .vscode
 *.cov
+__debug_bin*
+coverage.out
 ignore/
 build/
 
