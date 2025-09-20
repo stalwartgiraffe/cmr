@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/stalwartgiraffe/cmr/events"
+	"github.com/stalwartgiraffe/cmr/internal/find"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
@@ -15,6 +16,7 @@ type InMemoryMergesRepository struct {
 	//contents []MergeRequestModelContent
 
 	table   *RecordTable
+	view    *find.TableView
 	changes events.Event[EmptyT]
 }
 
@@ -42,11 +44,13 @@ func (r *InMemoryMergesRepository) Load() error {
 		return err
 	}
 	r.table = NewRecordTable(contents, mergesMap, projects)
+	r.view = find.NewTableView(r.table)
 	r.changed()
 	return nil
 }
 
 func (r *InMemoryMergesRepository) Filter(search string) {
+
 	// there is no simple standard library case insensitive string.Contains()
 	// could use standard lib regex with i
 	//
@@ -65,23 +69,29 @@ func (r *InMemoryMergesRepository) Filter(search string) {
 	// 		strings.ToLower(getUserName(m)), search) ||
 	// 		strings.Contains(strings.ToLower(m.Title), search)
 	// })
+
+	r.view.UpdateFind(search)
 	r.changed()
 }
 
 func (r *InMemoryMergesRepository) GetRowCount() int {
-	return r.table.GetRowCount()
+	//return r.table.GetRowCount()
+	return r.view.GetRowCount()
 }
 
 func (r *InMemoryMergesRepository) GetColumnCount() int {
-	return r.table.GetColumnCount()
+	//return r.table.GetColumnCount()
+	return r.view.GetColumnCount()
 }
 
 func (r *InMemoryMergesRepository) GetColumn(col int) string {
-	return r.table.GetColumn(col)
+	//return r.table.GetColumn(col)
+	return r.view.GetColumn(col)
 }
 
 func (r *InMemoryMergesRepository) GetCell(row int, col int) string {
-	return r.table.GetCell(row, col)
+	//return r.table.GetCell(row, col)
+	return r.view.GetCell(row, col)
 	/*
 		content := r.contents[col]
 		if row == 0 {

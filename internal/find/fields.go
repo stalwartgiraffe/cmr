@@ -28,7 +28,9 @@ func Find(rawPattern string, kvSrc TextTable) []int {
 	patterns := newTerms(rawPattern)
 	excluded, skipColumns := src.removeKeys(patterns)
 	excluded = src.removeValues(excluded, skipColumns, patterns)
-	return subtractFromAll(excluded, src.numRows())
+	rows := subtractFromAll(excluded, src.numRows())
+	sort.Ints(rows)
+	return  rows
 }
 
 // subtractFromAll returns the set inverse of src.

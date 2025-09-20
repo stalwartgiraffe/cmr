@@ -8,6 +8,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
+// FIXME make it generic
 type RecordTable struct {
 	contents []MergeRequestModelContent
 	records  []gitlab.MergeRequestModel
@@ -30,9 +31,6 @@ func NewRecordTable(
 		projects: projects,
 	}
 }
-func (r *RecordTable) GetRowCount() int {
-	return len(r.records)
-}
 
 func (r *RecordTable) GetColumnCount() int {
 	return len(r.contents)
@@ -42,6 +40,9 @@ func (r *RecordTable) GetColumn(col int) string {
 	return r.contents[col].title
 }
 
+func (r *RecordTable) GetRowCount() int {
+	return len(r.records)
+}
 func (r *RecordTable) GetCell(row int, col int) string {
 	content := r.contents[col]
 	record := &r.records[row]
