@@ -5,42 +5,64 @@ import (
 	"unicode/utf8"
 )
 
-func utfContainsAtFold(str string, sub string, runeStart int) bool {
-	numStrBytes := len(str)
+func asciiContainsAtFold(txt string, sub string, start int) (bool, int) {
+	numStrBytes := len(txt)
 	numSubBytes := len(sub)
 	if numSubBytes == 0 {
-		return true
+		return true, 0
 	}
 	if numStrBytes == 0 {
-		return false
+		return false, 0
 	}
 
-	if (numStrBytes - runeStart) < numSubBytes {
-		return false
+	if (numStrBytes - start) < numSubBytes {
+		return false, 0
+	}
+	b := 0
+	for ; b < numSubBytes; b++ {
+		if !byteEqualsFold(txt[start+b], sub[b]) {
+			return false, 0
+		}
+	}
+	return true, start + b
+}
+
+func utfContainsAtFold(txt string, sub string, start int) (bool, int) {
+	numStrBytes := len(txt)
+	numSubBytes := len(sub)
+	if numSubBytes == 0 {
+		return true, 0
+	}
+	if numStrBytes == 0 {
+		return false, 0
+	}
+
+	if (numStrBytes - start) < numSubBytes {
+		return false, 0
 	}
 	b := 0
 	for b < numSubBytes {
 		subRune, subWidth := utf8.DecodeRuneInString(sub[b:])
 		if subRune == utf8.RuneError {
-			return false
+			return false, 0
 		}
-		strRune, strWidth := utf8.DecodeRuneInString(str[runeStart+b:])
+		strRune, strWidth := utf8.DecodeRuneInString(txt[start+b:])
 		if strRune == utf8.RuneError {
-			return false
+			return false, 0
 		}
 		if subWidth != strWidth {
-			return false
+			return false, 0
 		}
 		if !utfEqualsFold(subRune, strRune) {
-			return false
+			return false, 0
 		}
 		b += subWidth
 	}
-	return true
+	return true, start + b
 }
 
 func utfEqualsFold(a, b rune) bool {
-	if a < utf8.RuneSelf {
+	if a <= unicode.MaxASCII {
 		return asciiEqualsFold(a, b)
 	}
 	return unicodeFoldEquals(a, b)
@@ -63,11 +85,18 @@ func unicodeFoldEquals(a, b rune) bool {
 }
 
 func asciiEqualsFold(a, b rune) bool {
-	if a == b {
-		return true
+	return byteEqualsFold(byte(a), byte(b))
+}
+
+// byteEqualsFold returns true if ascii byte characters are case insensitive equal
+func byteEqualsFold(lo, up byte) bool {
+	if lo == up {
+		return true // just equal
 	}
-	if a < b {
-		a, b = b, a
+	// ascii fold
+	if lo < up { // lexicographic sort, since upper_case < lower_case
+		lo, up = up, lo // have to swap
 	}
-	return 'A' <= b && b <= 'Z' && a == b+('a'-'A')
+	return 'A' <= up && up <= 'Z' && // is_upper_case(up) &&
+		lo == up+('a'-'A') // lower == to_lower(up)
 }

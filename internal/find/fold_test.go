@@ -6,13 +6,14 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUtfContainsAtFold(t *testing.T) {
+func TestAsciiContainsAtFold(t *testing.T) {
 	tests := []struct {
 		name      string
 		str       string
 		sub       string
 		runeStart int
 		want      bool
+		wantEnd   int
 	}{
 		{
 			name:      "exact_match_at_start",
@@ -20,6 +21,15 @@ func TestUtfContainsAtFold(t *testing.T) {
 			sub:       "water",
 			runeStart: 0,
 			want:      true,
+			wantEnd:   5,
+		},
+		{
+			name:      "match_at_bid",
+			str:       "melonwater",
+			sub:       "water",
+			runeStart: 5,
+			want:      true,
+			wantEnd:   10,
 		},
 		{
 			name:      "no_match_offset",
@@ -34,13 +44,7 @@ func TestUtfContainsAtFold(t *testing.T) {
 			sub:       "water",
 			runeStart: 0,
 			want:      true,
-		},
-		{
-			name:      "unicode_case_match",
-			str:       "ΑΒΓΔΕ",
-			sub:       "αβγ",
-			runeStart: 0,
-			want:      true,
+			wantEnd:   5,
 		},
 		// Empty string cases
 		{
@@ -78,6 +82,111 @@ func TestUtfContainsAtFold(t *testing.T) {
 			sub:       "llo",
 			runeStart: 2,
 			want:      true,
+			wantEnd:   5,
+		},
+		// Character mismatch
+		{
+			name:      "character_mismatch",
+			str:       "hello",
+			sub:       "world",
+			runeStart: 0,
+			want:      false,
+		},
+		{
+			name:      "partial_match_then_mismatch",
+			str:       "helloworld",
+			sub:       "help",
+			runeStart: 0,
+			want:      false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			have, haveEnd := asciiContainsAtFold(tt.str, tt.sub, tt.runeStart)
+			require.Equal(t, tt.want, have)
+			require.Equal(t, tt.wantEnd, haveEnd)
+		})
+	}
+}
+func TestUtfContainsAtFold(t *testing.T) {
+	tests := []struct {
+		name      string
+		str       string
+		sub       string
+		runeStart int
+		want      bool
+		wantEnd   int
+	}{
+		{
+			name:      "exact_match_at_start",
+			str:       "watermelon",
+			sub:       "water",
+			runeStart: 0,
+			want:      true,
+			wantEnd:   5,
+		},
+		{
+			name:      "no_match_offset",
+			str:       "watermelon",
+			sub:       "water",
+			runeStart: 1,
+			want:      false,
+		},
+		{
+			name:      "case_insensitive_match",
+			str:       "WaterMelon",
+			sub:       "water",
+			runeStart: 0,
+			want:      true,
+			wantEnd:   5,
+		},
+		{
+			name:      "unicode_case_match",
+			str:       "ΑΒΓΔΕ",
+			sub:       "αβγ",
+			runeStart: 0,
+			want:      true,
+			wantEnd:   6,
+		},
+		// Empty string cases
+		{
+			name:      "both_empty",
+			str:       "",
+			sub:       "",
+			runeStart: 0,
+			want:      true,
+		},
+		{
+			name:      "empty_str_nonempty_sub",
+			str:       "",
+			sub:       "test",
+			runeStart: 0,
+			want:      false,
+		},
+		{
+			name:      "nonempty_str_empty_sub",
+			str:       "test",
+			sub:       "",
+			runeStart: 0,
+			want:      true,
+		},
+		// Length check failure
+		{
+			name:      "sub_longer_than_remaining",
+			str:       "hello",
+			sub:       "world",
+			runeStart: 2,
+			want:      false,
+		},
+		{
+			name:      "sub_exactly_remaining_length",
+			str:       "hello",
+			sub:       "llo",
+			runeStart: 2,
+			want:      true,
+			wantEnd:   5,
 		},
 		// Character mismatch
 		{
@@ -138,8 +247,9 @@ func TestUtfContainsAtFold(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			have := utfContainsAtFold(tt.str, tt.sub, tt.runeStart)
+			have, haveEnd := utfContainsAtFold(tt.str, tt.sub, tt.runeStart)
 			require.Equal(t, tt.want, have)
+			require.Equal(t, tt.wantEnd, haveEnd)
 		})
 	}
 }

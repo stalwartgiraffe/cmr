@@ -9,7 +9,6 @@ type terms struct {
 	valuePatterns []string
 }
 
-
 const KVPrefix = "?"
 const KVSeparator = ":"
 
@@ -46,4 +45,16 @@ func parseKV(term string, keys []string, keyPatterns []string) ([]string, []stri
 		return keys, keyPatterns
 	}
 	return append(keys, key), append(keyPatterns, pattern)
+}
+
+func (t *terms) matchValues(txt string) bool {
+	ok := false
+	start := 0
+	for _, v := range t.valuePatterns {
+		ok, start = asciiContainsAtFold(txt, v, start)
+		if !ok {
+			return false
+		}
+	}
+	return true
 }

@@ -6,6 +6,31 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestTermsMatchValues(t *testing.T) {
+	tests := []struct {
+		name    string
+		pattern string
+		txt     string
+		want    bool
+	}{
+		{
+			name:    "one sentence",
+			pattern: "want match",
+			txt:     "this is some text i want to match",
+			want:    true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			search := newTerms(tt.pattern)
+			have := search.matchValues(tt.txt)
+			require.Equal(t, tt.want, have)
+		})
+	}
+}
 func TestNewTerms(t *testing.T) {
 	tests := []struct {
 		name             string
