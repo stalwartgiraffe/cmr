@@ -1,12 +1,11 @@
 package find
 
-
 import (
 	"unicode"
 	"unicode/utf8"
 )
 
-func containsFoldAt(str string, sub string, runeStart int) bool {
+func utfContainsAtFold(str string, sub string, runeStart int) bool {
 	numStrBytes := len(str)
 	numSubBytes := len(sub)
 	if numStrBytes == 0 || numSubBytes == 0 {
@@ -16,46 +15,35 @@ func containsFoldAt(str string, sub string, runeStart int) bool {
 	if (numStrBytes - runeStart) < numSubBytes {
 		return false
 	}
-	i := 0
-	for i < numSubBytes {
-		subRune, subWidth := utf8.DecodeRuneInString(sub[i:])
+	b := 0
+	for b < numSubBytes {
+		subRune, subWidth := utf8.DecodeRuneInString(sub[b:])
 		if subRune == utf8.RuneError {
 			return false
 		}
-		strRune, strWidth := utf8.DecodeRuneInString(str[i:])
+		strRune, strWidth := utf8.DecodeRuneInString(str[runeStart+b:])
 		if strRune == utf8.RuneError {
 			return false
 		}
 		if subWidth != strWidth {
 			return false
 		}
-		if !foldEquals(subRune, strRune) {
+		if !utfEqualsFold(subRune, strRune) {
 			return false
 		}
-		i += subWidth
+		b += subWidth
 	}
 	return true
 }
 
-
-func foldEquals(a, b rune) bool {
+func utfEqualsFold(a, b rune) bool {
 	if a < utf8.RuneSelf {
-		return asciiFoldEquals(a, b)
+		return asciiEqualsFold(a, b)
 	}
-	return utfFoldEquals(a, b)
+	return unicodeFoldEquals(a, b)
 }
 
-func asciiFoldEquals(a, b rune) bool {
-	if a == b {
-		return true
-	}
-	if a < b {
-		a, b = b, a
-	}
-	return 'A' <= b && b <= 'Z' && a == b+('a'-'A')
-}
-
-func utfFoldEquals(a, b rune) bool {
+func unicodeFoldEquals(a, b rune) bool {
 	if a == b {
 		return true
 	}
@@ -71,3 +59,12 @@ func utfFoldEquals(a, b rune) bool {
 	return r == a
 }
 
+func asciiEqualsFold(a, b rune) bool {
+	if a == b {
+		return true
+	}
+	if a < b {
+		a, b = b, a
+	}
+	return 'A' <= b && b <= 'Z' && a == b+('a'-'A')
+}

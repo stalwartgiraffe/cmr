@@ -6,7 +6,39 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestFoldEquals(t *testing.T) {
+func TestUtfContainsAtFold(t *testing.T) {
+	tests := []struct {
+		name      string
+		str       string
+		sub       string
+		runeStart int
+		want      bool
+	}{
+		{
+			name:      "test_case_name",
+			str:       "watermelon",
+			sub:       "water",
+			runeStart: 0,
+			want:      true,
+		},
+		{
+			name:      "test_case_name",
+			str:       "watermelon",
+			sub:       "water",
+			runeStart: 1,
+			want:      false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			have := utfContainsAtFold(tt.str, tt.sub, tt.runeStart)
+			require.Equal(t, tt.want, have)
+		})
+	}
+}
+func TestUtfFoldEquals(t *testing.T) {
 	tests := []struct {
 		name string
 		tr   rune
@@ -114,15 +146,15 @@ func TestFoldEquals(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			have := foldEquals(tt.tr, tt.sr)
+			have := utfEqualsFold(tt.tr, tt.sr)
 			require.Equal(t, tt.want, have)
-			have := utfFoldEquals(tt.tr, tt.sr)
+			have = unicodeFoldEquals(tt.tr, tt.sr)
 			require.Equal(t, tt.want, have)
 		})
 	}
 }
 
-func TestAsciiFoldEquals(t *testing.T) {
+func TestAsciiEqualsFold(t *testing.T) {
 	tests := []struct {
 		name string
 		tr   rune
@@ -192,7 +224,7 @@ func TestAsciiFoldEquals(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			have := asciiFoldEquals(tt.tr, tt.sr)
+			have := asciiEqualsFold(tt.tr, tt.sr)
 			require.Equal(t, tt.want, have)
 		})
 	}
