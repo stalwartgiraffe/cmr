@@ -15,17 +15,122 @@ func TestUtfContainsAtFold(t *testing.T) {
 		want      bool
 	}{
 		{
-			name:      "test_case_name",
+			name:      "exact_match_at_start",
 			str:       "watermelon",
 			sub:       "water",
 			runeStart: 0,
 			want:      true,
 		},
 		{
-			name:      "test_case_name",
+			name:      "no_match_offset",
 			str:       "watermelon",
 			sub:       "water",
 			runeStart: 1,
+			want:      false,
+		},
+		{
+			name:      "case_insensitive_match",
+			str:       "WaterMelon",
+			sub:       "water",
+			runeStart: 0,
+			want:      true,
+		},
+		{
+			name:      "unicode_case_match",
+			str:       "ΑΒΓΔΕ",
+			sub:       "αβγ",
+			runeStart: 0,
+			want:      true,
+		},
+		// Empty string cases
+		{
+			name:      "both_empty",
+			str:       "",
+			sub:       "",
+			runeStart: 0,
+			want:      true,
+		},
+		{
+			name:      "empty_str_nonempty_sub",
+			str:       "",
+			sub:       "test",
+			runeStart: 0,
+			want:      false,
+		},
+		{
+			name:      "nonempty_str_empty_sub",
+			str:       "test",
+			sub:       "",
+			runeStart: 0,
+			want:      true,
+		},
+		// Length check failure
+		{
+			name:      "sub_longer_than_remaining",
+			str:       "hello",
+			sub:       "world",
+			runeStart: 2,
+			want:      false,
+		},
+		{
+			name:      "sub_exactly_remaining_length",
+			str:       "hello",
+			sub:       "llo",
+			runeStart: 2,
+			want:      true,
+		},
+		// Character mismatch
+		{
+			name:      "character_mismatch",
+			str:       "hello",
+			sub:       "world",
+			runeStart: 0,
+			want:      false,
+		},
+		{
+			name:      "partial_match_then_mismatch",
+			str:       "helloworld",
+			sub:       "help",
+			runeStart: 0,
+			want:      false,
+		},
+		// UTF-8 error cases - need invalid bytes to trigger RuneError
+		{
+			name:      "invalid_utf8_in_sub",
+			str:       "hello",
+			sub:       "\xff\xfe",
+			runeStart: 0,
+			want:      false,
+		},
+		{
+			name:      "invalid_utf8_in_str",
+			str:       "\xff\xfe",
+			sub:       "hello",
+			runeStart: 0,
+			want:      false,
+		},
+		// Width mismatch case - this is tricky to trigger since same chars should have same width
+		{
+			name:      "mixed_width_non_matching",
+			str:       "café", // é is 2 bytes
+			sub:       "cafe", // e is 1 byte
+			runeStart: 0,
+			want:      false,
+		},
+		// Edge case: invalid UTF-8 in middle of substring
+		{
+			name:      "invalid_utf8_in_sub_middle",
+			str:       "hello",
+			sub:       "h\xff", // valid h followed by invalid byte
+			runeStart: 0,
+			want:      false,
+		},
+		// Specific case: valid sub but invalid str at matching position
+		{
+			name:      "valid_sub_invalid_str_at_position",
+			str:       "h\xff", // h followed by invalid byte
+			sub:       "he",    // valid substring
+			runeStart: 0,
 			want:      false,
 		},
 	}

@@ -8,8 +8,11 @@ import (
 func utfContainsAtFold(str string, sub string, runeStart int) bool {
 	numStrBytes := len(str)
 	numSubBytes := len(sub)
-	if numStrBytes == 0 || numSubBytes == 0 {
-		return numStrBytes == 0 && numSubBytes == 0
+	if numSubBytes == 0 {
+		return true
+	}
+	if numStrBytes == 0 {
+		return false
 	}
 
 	if (numStrBytes - runeStart) < numSubBytes {
