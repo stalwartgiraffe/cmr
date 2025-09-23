@@ -20,7 +20,7 @@ func asciiContainsAtFold(txt string, sub string, start int) (bool, int) {
 	}
 	b := 0
 	for ; b < numSubBytes; b++ {
-		if !byteEqualsFold(txt[start+b], sub[b]) {
+		if !CharEqualsFold(txt[start+b], sub[b]) {
 			return false, 0
 		}
 	}
@@ -85,18 +85,5 @@ func unicodeFoldEquals(a, b rune) bool {
 }
 
 func asciiEqualsFold(a, b rune) bool {
-	return byteEqualsFold(byte(a), byte(b))
-}
-
-// byteEqualsFold returns true if ascii byte characters are case insensitive equal
-func byteEqualsFold(lo, up byte) bool {
-	if lo == up {
-		return true // just equal
-	}
-	// ascii fold
-	if lo < up { // lexicographic sort, since upper_case < lower_case
-		lo, up = up, lo // have to swap
-	}
-	return 'A' <= up && up <= 'Z' && // is_upper_case(up) &&
-		lo == up+('a'-'A') // lower == to_lower(up)
+	return CharEqualsFold(byte(a), byte(b))
 }

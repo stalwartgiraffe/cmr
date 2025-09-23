@@ -47,13 +47,17 @@ func parseKV(term string, keys []string, keyPatterns []string) ([]string, []stri
 	return append(keys, key), append(keyPatterns, pattern)
 }
 
-func (t *terms) matchValues(txt string) bool {
-	ok := false
-	start := 0
+func (t *terms) matchValues(strTxt string) bool {
+	txt := Ascii([]byte(strTxt))
 	for _, v := range t.valuePatterns {
-		ok, start = asciiContainsAtFold(txt, v, start)
-		if !ok {
-			return false
+		val := Ascii([]byte(v))
+		numValBytes := len(val)
+		for !txt.StartsWithFold(val) {
+			if len(txt) <= numValBytes {
+				return false
+			}
+			// OPTIMIZE me with generic spans (start, len)
+			txt = txt[1:]
 		}
 	}
 	return true
