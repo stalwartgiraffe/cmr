@@ -4,6 +4,8 @@ package find
 import (
 	"sort"
 	"strings"
+
+	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
 type TextTable interface {
@@ -26,11 +28,21 @@ func getColumnKeysToLower(src TextTable) keyCols {
 func Find(rawPattern string, kvSrc TextTable) []int {
 	src := newFindSrc(kvSrc)
 	patterns := newTerms(rawPattern)
+	skipColumns := utils.Set[int]{}
+	excluded := everyElement(src.numRows())
+	excluded = src.removeAllMatches(excluded, skipColumns, patterns)
+	rows := subtractFromAll(excluded, src.numRows())
+	sort.Ints(rows)
+	return rows
+}
+func FindOld(rawPattern string, kvSrc TextTable) []int {
+	src := newFindSrc(kvSrc)
+	patterns := newTerms(rawPattern)
 	excluded, skipColumns := src.removeKeys(patterns)
 	excluded = src.removeValues(excluded, skipColumns, patterns)
 	rows := subtractFromAll(excluded, src.numRows())
 	sort.Ints(rows)
-	return  rows
+	return rows
 }
 
 // subtractFromAll returns the set inverse of src.

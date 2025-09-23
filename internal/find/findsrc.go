@@ -82,3 +82,37 @@ func (s *findSrc) removeExcluded(
 	}
 	return excluded
 }
+
+func (s *findSrc) removeAllMatches(excluded []int, skipColumns utils.Set[int], patterns *terms) []int {
+	for col := range s.kvSrc.GetColumnCount() {
+		// if we have done a column keyed search, do not do general filter on that column
+		if !skipColumns.Contains(col) {
+			excluded = s.removeMatches(
+				excluded,
+				patterns,
+				col,
+			)
+		}
+	}
+	return excluded
+}
+
+// removeExcluded returns the rows which match pattern in src removed from excluded.
+// The elements of the excluded slice may shuffled in place and the slice shortened.
+func (s *findSrc) removeMatches(
+	excluded []int,
+	patterns *terms,
+	col int) []int {
+	i := 0
+	for i < len(excluded) {
+		strTxt := s.kvSrc.GetCell(excluded[i], col)
+		if patterns.matchValues(strTxt) { // on match, shuffle down last and pop
+			last := len(excluded) - 1
+			excluded[i] = excluded[last]
+			excluded = excluded[:last]
+		} else {
+			i++
+		}
+	}
+	return excluded
+}
