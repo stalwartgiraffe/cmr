@@ -55,8 +55,10 @@ type makeAppFn func(context.Context) app.AppErr
 // otel metrics, traces and logs exports
 func makeApp(ctx context.Context) app.AppErr {
 	const otelSchema = "cmr_cli"
-	return app.NewAppErr().
-		WithOtel(ctx, otelSchema)
+	return app.NewAppErr()
+		
+	//return app.NewAppErr().
+//		WithOtel(ctx, otelSchema)
 }
 
 type beginInterruptFn func(ctxCancel context.CancelFunc)

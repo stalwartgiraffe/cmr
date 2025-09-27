@@ -7,6 +7,7 @@ import (
 
 	"go.opentelemetry.io/otel/trace"
 
+	mocks "github.com/stalwartgiraffe/cmr/internal/app/fixtures"
 	"github.com/stalwartgiraffe/cmr/internal/otel"
 )
 
@@ -27,5 +28,10 @@ func (a *App) StartSpan(
 	opts ...trace.SpanStartOption) (
 	context.Context,
 	trace.Span) {
+
+	if a.Tracer == nil {
+		return ctx, &mocks.MockSpan{}
+	}
+
 	return a.Tracer.Start(ctx, spanName, opts...)
 }
