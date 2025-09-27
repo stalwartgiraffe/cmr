@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+// Project represents a GitLab project as per API_Entities_Project
+type Project struct {
+	// CLAUDE fill in the fields based on API_Entities_Project in openapi_v2.yaml
+}
 // Event represents a GitLab event as per API_Entities_Event
 type Event struct {
 	ID             int       `json:"id"`
@@ -22,6 +26,74 @@ type Event struct {
 	AuthorUsername *string   `json:"author_username,omitempty"`
 	Imported       bool      `json:"imported"`
 	ImportedFrom   string    `json:"imported_from"`
+}
+
+// UserBasic represents a GitLab user as per API_Entities_UserBasic
+type UserBasic struct {
+	ID           int    `json:"id"`
+	Username     string `json:"username"`
+	PublicEmail  string `json:"public_email,omitempty"`
+	Name         string `json:"name"`
+	State        string `json:"state"`
+	Locked       bool   `json:"locked"`
+	AvatarURL    string `json:"avatar_url,omitempty"`
+	AvatarPath   string `json:"avatar_path,omitempty"`
+}
+
+// MergeRequest represents a GitLab merge request as per API_Entities_MergeRequestBasic
+type MergeRequest struct {
+	ID                             int        `json:"id"`
+	IID                            int        `json:"iid"`
+	ProjectID                      int        `json:"project_id"`
+	Title                          string     `json:"title"`
+	Description                    string     `json:"description,omitempty"`
+	State                          string     `json:"state"`
+	CreatedAt                      time.Time  `json:"created_at"`
+	UpdatedAt                      time.Time  `json:"updated_at"`
+	MergedBy                       *UserBasic `json:"merged_by,omitempty"`
+	MergeUser                      *UserBasic `json:"merge_user,omitempty"`
+	MergedAt                       *string    `json:"merged_at,omitempty"`
+	ClosedBy                       *UserBasic `json:"closed_by,omitempty"`
+	ClosedAt                       *string    `json:"closed_at,omitempty"`
+	TitleHTML                      string     `json:"title_html,omitempty"`
+	DescriptionHTML                string     `json:"description_html,omitempty"`
+	TargetBranch                   string     `json:"target_branch"`
+	SourceBranch                   string     `json:"source_branch"`
+	UserNotesCount                 string     `json:"user_notes_count,omitempty"`
+	Upvotes                        string     `json:"upvotes,omitempty"`
+	Downvotes                      string     `json:"downvotes,omitempty"`
+	Author                         *UserBasic `json:"author,omitempty"`
+	Assignees                      *UserBasic `json:"assignees,omitempty"`
+	Assignee                       *UserBasic `json:"assignee,omitempty"`
+	Reviewers                      *UserBasic `json:"reviewers,omitempty"`
+	SourceProjectID                string     `json:"source_project_id,omitempty"`
+	TargetProjectID                string     `json:"target_project_id,omitempty"`
+	Labels                         string     `json:"labels,omitempty"`
+	Draft                          string     `json:"draft,omitempty"`
+	Imported                       string     `json:"imported,omitempty"`
+	ImportedFrom                   string     `json:"imported_from,omitempty"`
+	WorkInProgress                 string     `json:"work_in_progress,omitempty"`
+	MergeWhenPipelineSucceeds      string     `json:"merge_when_pipeline_succeeds,omitempty"`
+	MergeStatus                    string     `json:"merge_status,omitempty"`
+	DetailedMergeStatus            string     `json:"detailed_merge_status,omitempty"`
+	MergeAfter                     string     `json:"merge_after,omitempty"`
+	SHA                            string     `json:"sha,omitempty"`
+	MergeCommitSHA                 string     `json:"merge_commit_sha,omitempty"`
+	SquashCommitSHA                string     `json:"squash_commit_sha,omitempty"`
+	DiscussionLocked               string     `json:"discussion_locked,omitempty"`
+	ShouldRemoveSourceBranch       string     `json:"should_remove_source_branch,omitempty"`
+	ForceRemoveSourceBranch        string     `json:"force_remove_source_branch,omitempty"`
+	PreparedAt                     string     `json:"prepared_at,omitempty"`
+	AllowCollaboration             string     `json:"allow_collaboration,omitempty"`
+	AllowMaintainerToPush          string     `json:"allow_maintainer_to_push,omitempty"`
+	Reference                      string     `json:"reference,omitempty"`
+	WebURL                         string     `json:"web_url,omitempty"`
+	Squash                         string     `json:"squash,omitempty"`
+	SquashOnMerge                  string     `json:"squash_on_merge,omitempty"`
+	TaskCompletionStatus           string     `json:"task_completion_status,omitempty"`
+	HasConflicts                   string     `json:"has_conflicts,omitempty"`
+	BlockingDiscussionsResolved    string     `json:"blocking_discussions_resolved,omitempty"`
+	ApprovalsBeforeMerge           string     `json:"approvals_before_merge,omitempty"`
 }
 
 // EventsQueryParams represents the query parameters for the events endpoint
