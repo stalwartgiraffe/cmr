@@ -56,6 +56,16 @@ func SetupRouter(handler *Handler) *http.ServeMux {
 		}
 	}))
 
+	// Handle the GitLab API v4 groups merge requests endpoint: /api/v4/groups/{id}/merge_requests
+	mux.HandleFunc("/api/v4/groups/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			handler.HandleMergeRequests(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	}))
+
 	return mux
 }
 

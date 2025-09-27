@@ -99,3 +99,109 @@ func TestHandleEventsInvalidUserID(t *testing.T) {
 		t.Errorf("Expected status %d for invalid path, got %d", http.StatusBadRequest, resp.StatusCode)
 	}
 }
+
+func TestHandleMergeRequests(t *testing.T) {
+	// Create test server
+	server := NewServer()
+	defer server.Close()
+
+	// Test basic endpoint
+	resp, err := http.Get(fmt.Sprintf("%s/api/v4/groups/123/merge_requests", server.URL()))
+	if err != nil {
+		t.Fatalf("Failed to make request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, resp.StatusCode)
+	}
+
+	// Check content type
+	contentType := resp.Header.Get("Content-Type")
+	if contentType != "application/json" {
+		t.Errorf("Expected Content-Type application/json, got %s", contentType)
+	}
+
+	// Check pagination headers
+	if resp.Header.Get("X-Page") != "1" {
+		t.Errorf("Expected X-Page header to be 1, got %s", resp.Header.Get("X-Page"))
+	}
+
+	// Parse response
+	var mergeRequests []MergeRequest
+	if err := json.NewDecoder(resp.Body).Decode(&mergeRequests); err != nil {
+		t.Fatalf("Failed to decode response: %v", err)
+	}
+
+	// Verify we got merge requests
+	if len(mergeRequests) == 0 {
+		t.Error("Expected at least one merge request in response")
+	}
+
+	// Verify merge request structure
+	if len(mergeRequests) > 0 {
+		mr := mergeRequests[0]
+		if mr.ID == 0 {
+			t.Error("Expected merge request to have non-zero ID")
+		}
+		if mr.IID == 0 {
+			t.Error("Expected merge request to have non-zero IID")
+		}
+		if mr.Title == "" {
+			t.Error("Expected merge request to have title")
+		}
+		if mr.State == "" {
+			t.Error("Expected merge request to have state")
+		}
+		if mr.Author == nil {
+			t.Error("Expected merge request to have author")
+		}
+		if mr.CreatedAt.IsZero() {
+			t.Error("Expected merge request to have created_at timestamp")
+		}
+	}
+}
+
+func TestHandleMergeRequestsWithQueryParams(t *testing.T) {
+	server := NewServer()
+	defer server.Close()
+
+	// Test with query parameters
+	resp, err := http.Get(fmt.Sprintf("%s/api/v4/groups/123/merge_requests?state=opened&author_id=25&sort=asc", server.URL()))
+	if err != nil {
+		t.Fatalf("Failed to make request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("Expected status %d, got %d", http.StatusOK, resp.StatusCode)
+	}
+
+	var mergeRequests []MergeRequest
+	if err := json.NewDecoder(resp.Body).Decode(&mergeRequests); err != nil {
+		t.Fatalf("Failed to decode response: %v", err)
+	}
+
+	// With state=opened filter, we should get only opened merge requests
+	for _, mr := range mergeRequests {
+		if mr.State != "opened" {
+			t.Errorf("Expected only opened merge requests, got state: %s", mr.State)
+		}
+	}
+}
+
+func TestHandleMergeRequestsInvalidGroupID(t *testing.T) {
+	server := NewServer()
+	defer server.Close()
+
+	// Test invalid path (missing group ID)
+	resp, err := http.Get(fmt.Sprintf("%s/api/v4/groups/", server.URL()))
+	if err != nil {
+		t.Fatalf("Failed to make request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusBadRequest {
+		t.Errorf("Expected status %d for invalid path, got %d", http.StatusBadRequest, resp.StatusCode)
+	}
+}

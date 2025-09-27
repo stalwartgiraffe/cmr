@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -259,6 +260,40 @@ type EventsQueryParams struct {
 	Sort       string
 }
 
+// MergeRequestsQueryParams represents the query parameters for the merge requests endpoint
+type MergeRequestsQueryParams struct {
+	AuthorID                  *int       `json:"author_id,omitempty"`
+	AuthorUsername            string     `json:"author_username,omitempty"`
+	AssigneeID                *int       `json:"assignee_id,omitempty"`
+	AssigneeUsername          []string   `json:"assignee_username,omitempty"`
+	ReviewerUsername          string     `json:"reviewer_username,omitempty"`
+	ReviewerID                *int       `json:"reviewer_id,omitempty"`
+	Labels                    []string   `json:"labels,omitempty"`
+	Milestone                 string     `json:"milestone,omitempty"`
+	MyReactionEmoji           string     `json:"my_reaction_emoji,omitempty"`
+	State                     string     `json:"state,omitempty"`
+	OrderBy                   string     `json:"order_by,omitempty"`
+	Sort                      string     `json:"sort,omitempty"`
+	WithLabelsDetails         bool       `json:"with_labels_details,omitempty"`
+	WithMergeStatusRecheck    bool       `json:"with_merge_status_recheck,omitempty"`
+	CreatedAfter              *time.Time `json:"created_after,omitempty"`
+	CreatedBefore             *time.Time `json:"created_before,omitempty"`
+	UpdatedAfter              *time.Time `json:"updated_after,omitempty"`
+	UpdatedBefore             *time.Time `json:"updated_before,omitempty"`
+	View                      string     `json:"view,omitempty"`
+	Scope                     string     `json:"scope,omitempty"`
+	SourceBranch              string     `json:"source_branch,omitempty"`
+	SourceProjectID           *int       `json:"source_project_id,omitempty"`
+	TargetBranch              string     `json:"target_branch,omitempty"`
+	Search                    string     `json:"search,omitempty"`
+	In                        string     `json:"in,omitempty"`
+	WIP                       string     `json:"wip,omitempty"`
+	NotAuthorID               *int       `json:"not_author_id,omitempty"`
+	NotAuthorUsername         string     `json:"not_author_username,omitempty"`
+	NotAssigneeID             *int       `json:"not_assignee_id,omitempty"`
+	NotAssigneeUsername       []string   `json:"not_assignee_username,omitempty"`
+}
+
 type Handler struct {
 	service *Service
 }
@@ -270,9 +305,351 @@ func NewHandler(service *Service) *Handler {
 }
 
 func (h *Handler) HandleMergeRequests(w http.ResponseWriter, r *http.Request) {
-	// CLAUDE implement the handler for the endpoint
-    // "/api/v4/groups/{id}/merge_requests":
-	// in file openapi_v2.yaml. Follow same code structure as the function Handler.HandleEvents()
+	// Extract group ID from path parameter using regex
+	// Expected path: /api/v4/groups/{id}/merge_requests
+	re := regexp.MustCompile(`/api/v4/groups/([^/]+)/merge_requests`)
+	matches := re.FindStringSubmatch(r.URL.Path)
+	if len(matches) < 2 {
+		http.Error(w, "Group ID is required", http.StatusBadRequest)
+		return
+	}
+	groupID := matches[1]
+
+	// Parse query parameters
+	params, err := h.parseMergeRequestsQueryParams(r)
+	if err != nil {
+		http.Error(w, "Invalid query parameters: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// For now, return mock merge requests based on the API specification
+	// In a real implementation, this would call h.service.mergeRequests.GetGroupMergeRequests(groupID, params)
+	mergeRequests := h.generateMockMergeRequests(groupID, params)
+
+	w.Header().Set("Content-Type", "application/json")
+	// Add pagination headers like GitLab API
+	w.Header().Set("X-Page", "1")
+	w.Header().Set("X-Next-Page", "2")
+	w.Header().Set("X-Prev-Page", "0")
+	w.Header().Set("X-Total-Pages", "1")
+	w.Header().Set("X-Per-Page", "20")
+	w.Header().Set("X-Total", "3")
+	if err := json.NewEncoder(w).Encode(mergeRequests); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
+
+// parseMergeRequestsQueryParams parses the query parameters for the merge requests endpoint
+func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequestsQueryParams, error) {
+	params := &MergeRequestsQueryParams{
+		State:   "all",        // default
+		OrderBy: "created_at", // default
+		Sort:    "desc",       // default
+	}
+
+	// Parse author_id parameter
+	if authorIDStr := r.URL.Query().Get("author_id"); authorIDStr != "" {
+		if authorID, err := strconv.Atoi(authorIDStr); err == nil {
+			params.AuthorID = &authorID
+		}
+	}
+
+	// Parse author_username parameter
+	params.AuthorUsername = r.URL.Query().Get("author_username")
+
+	// Parse assignee_id parameter
+	if assigneeIDStr := r.URL.Query().Get("assignee_id"); assigneeIDStr != "" {
+		if assigneeID, err := strconv.Atoi(assigneeIDStr); err == nil {
+			params.AssigneeID = &assigneeID
+		}
+	}
+
+	// Parse assignee_username parameter (array)
+	if assigneeUsernames := r.URL.Query()["assignee_username"]; len(assigneeUsernames) > 0 {
+		params.AssigneeUsername = assigneeUsernames
+	}
+
+	// Parse reviewer_username parameter
+	params.ReviewerUsername = r.URL.Query().Get("reviewer_username")
+
+	// Parse reviewer_id parameter
+	if reviewerIDStr := r.URL.Query().Get("reviewer_id"); reviewerIDStr != "" {
+		if reviewerID, err := strconv.Atoi(reviewerIDStr); err == nil {
+			params.ReviewerID = &reviewerID
+		}
+	}
+
+	// Parse labels parameter (array)
+	if labels := r.URL.Query()["labels"]; len(labels) > 0 {
+		params.Labels = labels
+	}
+
+	// Parse milestone parameter
+	params.Milestone = r.URL.Query().Get("milestone")
+
+	// Parse my_reaction_emoji parameter
+	params.MyReactionEmoji = r.URL.Query().Get("my_reaction_emoji")
+
+	// Parse state parameter
+	if state := r.URL.Query().Get("state"); state != "" {
+		validStates := map[string]bool{
+			"opened": true, "closed": true, "locked": true, "merged": true, "all": true,
+		}
+		if validStates[state] {
+			params.State = state
+		}
+	}
+
+	// Parse order_by parameter
+	if orderBy := r.URL.Query().Get("order_by"); orderBy != "" {
+		validOrderBy := map[string]bool{
+			"created_at": true, "label_priority": true, "milestone_due": true,
+			"popularity": true, "priority": true, "title": true, "updated_at": true, "merged_at": true,
+		}
+		if validOrderBy[orderBy] {
+			params.OrderBy = orderBy
+		}
+	}
+
+	// Parse sort parameter
+	if sort := r.URL.Query().Get("sort"); sort == "asc" || sort == "desc" {
+		params.Sort = sort
+	}
+
+	// Parse boolean parameters
+	if withLabelsDetails := r.URL.Query().Get("with_labels_details"); withLabelsDetails == "true" {
+		params.WithLabelsDetails = true
+	}
+
+	if withMergeStatusRecheck := r.URL.Query().Get("with_merge_status_recheck"); withMergeStatusRecheck == "true" {
+		params.WithMergeStatusRecheck = true
+	}
+
+	// Parse datetime parameters
+	if createdAfterStr := r.URL.Query().Get("created_after"); createdAfterStr != "" {
+		if createdAfter, err := time.Parse(time.RFC3339, createdAfterStr); err == nil {
+			params.CreatedAfter = &createdAfter
+		}
+	}
+
+	if createdBeforeStr := r.URL.Query().Get("created_before"); createdBeforeStr != "" {
+		if createdBefore, err := time.Parse(time.RFC3339, createdBeforeStr); err == nil {
+			params.CreatedBefore = &createdBefore
+		}
+	}
+
+	if updatedAfterStr := r.URL.Query().Get("updated_after"); updatedAfterStr != "" {
+		if updatedAfter, err := time.Parse(time.RFC3339, updatedAfterStr); err == nil {
+			params.UpdatedAfter = &updatedAfter
+		}
+	}
+
+	if updatedBeforeStr := r.URL.Query().Get("updated_before"); updatedBeforeStr != "" {
+		if updatedBefore, err := time.Parse(time.RFC3339, updatedBeforeStr); err == nil {
+			params.UpdatedBefore = &updatedBefore
+		}
+	}
+
+	// Parse view parameter
+	if view := r.URL.Query().Get("view"); view == "simple" {
+		params.View = view
+	}
+
+	// Parse scope parameter
+	if scope := r.URL.Query().Get("scope"); scope != "" {
+		validScopes := map[string]bool{
+			"created-by-me": true, "assigned-to-me": true, "created_by_me": true,
+			"assigned_to_me": true, "reviews_for_me": true, "all": true,
+		}
+		if validScopes[scope] {
+			params.Scope = scope
+		}
+	}
+
+	// Parse other string parameters
+	params.SourceBranch = r.URL.Query().Get("source_branch")
+	params.TargetBranch = r.URL.Query().Get("target_branch")
+	params.Search = r.URL.Query().Get("search")
+	params.In = r.URL.Query().Get("in")
+
+	// Parse source_project_id parameter
+	if sourceProjectIDStr := r.URL.Query().Get("source_project_id"); sourceProjectIDStr != "" {
+		if sourceProjectID, err := strconv.Atoi(sourceProjectIDStr); err == nil {
+			params.SourceProjectID = &sourceProjectID
+		}
+	}
+
+	// Parse wip parameter
+	if wip := r.URL.Query().Get("wip"); wip == "yes" || wip == "no" {
+		params.WIP = wip
+	}
+
+	// Parse negated parameters
+	if notAuthorIDStr := r.URL.Query().Get("not[author_id]"); notAuthorIDStr != "" {
+		if notAuthorID, err := strconv.Atoi(notAuthorIDStr); err == nil {
+			params.NotAuthorID = &notAuthorID
+		}
+	}
+
+	params.NotAuthorUsername = r.URL.Query().Get("not[author_username]")
+
+	if notAssigneeIDStr := r.URL.Query().Get("not[assignee_id]"); notAssigneeIDStr != "" {
+		if notAssigneeID, err := strconv.Atoi(notAssigneeIDStr); err == nil {
+			params.NotAssigneeID = &notAssigneeID
+		}
+	}
+
+	if notAssigneeUsernames := r.URL.Query()["not[assignee_username]"]; len(notAssigneeUsernames) > 0 {
+		params.NotAssigneeUsername = notAssigneeUsernames
+	}
+
+	return params, nil
+}
+
+// generateMockMergeRequests generates mock merge requests for testing purposes
+func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequestsQueryParams) []MergeRequest {
+	// Generate mock merge requests based on the API specification
+	mergeRequests := []MergeRequest{
+		{
+			ID:          84,
+			IID:         14,
+			ProjectID:   4,
+			Title:       "Impedit et ut et dolores vero provident ullam est",
+			Description: "Repellendus impedit et vel velit dignissimos.",
+			State:       "opened",
+			CreatedAt:   time.Now().Add(-48 * time.Hour),
+			UpdatedAt:   time.Now().Add(-12 * time.Hour),
+			Author: &UserBasic{
+				ID:       25,
+				Username: "test_user",
+				Name:     "Test User",
+				State:    "active",
+			},
+			TargetBranch: "main",
+			SourceBranch: "feature-branch",
+			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/14",
+		},
+		{
+			ID:          85,
+			IID:         15,
+			ProjectID:   5,
+			Title:       "Add new feature for user management",
+			Description: "This MR adds comprehensive user management features.",
+			State:       "merged",
+			CreatedAt:   time.Now().Add(-72 * time.Hour),
+			UpdatedAt:   time.Now().Add(-24 * time.Hour),
+			Author: &UserBasic{
+				ID:       26,
+				Username: "developer",
+				Name:     "Developer User",
+				State:    "active",
+			},
+			MergedBy: &UserBasic{
+				ID:       27,
+				Username: "maintainer",
+				Name:     "Maintainer User",
+				State:    "active",
+			},
+			TargetBranch: "main",
+			SourceBranch: "user-management",
+			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/15",
+		},
+		{
+			ID:          86,
+			IID:         16,
+			ProjectID:   6,
+			Title:       "Fix critical security vulnerability",
+			Description: "Addresses CVE-2023-1234 security issue.",
+			State:       "closed",
+			CreatedAt:   time.Now().Add(-96 * time.Hour),
+			UpdatedAt:   time.Now().Add(-48 * time.Hour),
+			Author: &UserBasic{
+				ID:       28,
+				Username: "security_expert",
+				Name:     "Security Expert",
+				State:    "active",
+			},
+			TargetBranch: "main",
+			SourceBranch: "security-fix",
+			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/16",
+		},
+	}
+
+	// Apply filtering based on parameters
+	var filteredMergeRequests []MergeRequest
+	for _, mr := range mergeRequests {
+		// Filter by state
+		if params.State != "all" && mr.State != params.State {
+			continue
+		}
+
+		// Filter by author_id
+		if params.AuthorID != nil && mr.Author != nil && mr.Author.ID != *params.AuthorID {
+			continue
+		}
+
+		// Filter by author_username
+		if params.AuthorUsername != "" && mr.Author != nil && mr.Author.Username != params.AuthorUsername {
+			continue
+		}
+
+		// Filter by source_branch
+		if params.SourceBranch != "" && mr.SourceBranch != params.SourceBranch {
+			continue
+		}
+
+		// Filter by target_branch
+		if params.TargetBranch != "" && mr.TargetBranch != params.TargetBranch {
+			continue
+		}
+
+		// Filter by created_after
+		if params.CreatedAfter != nil && mr.CreatedAt.Before(*params.CreatedAfter) {
+			continue
+		}
+
+		// Filter by created_before
+		if params.CreatedBefore != nil && mr.CreatedAt.After(*params.CreatedBefore) {
+			continue
+		}
+
+		// Filter by updated_after
+		if params.UpdatedAfter != nil && mr.UpdatedAt.Before(*params.UpdatedAfter) {
+			continue
+		}
+
+		// Filter by updated_before
+		if params.UpdatedBefore != nil && mr.UpdatedAt.After(*params.UpdatedBefore) {
+			continue
+		}
+
+		// Filter by search in title and description
+		if params.Search != "" {
+			searchLower := strings.ToLower(params.Search)
+			titleMatch := strings.Contains(strings.ToLower(mr.Title), searchLower)
+			descMatch := strings.Contains(strings.ToLower(mr.Description), searchLower)
+
+			if params.In == "title" {
+				if !titleMatch {
+					continue
+				}
+			} else if params.In == "description" {
+				if !descMatch {
+					continue
+				}
+			} else {
+				// Default: search in both title and description
+				if !titleMatch && !descMatch {
+					continue
+				}
+			}
+		}
+
+		filteredMergeRequests = append(filteredMergeRequests, mr)
+	}
+
+	return filteredMergeRequests
 }
 
 func (h *Handler) HandleEvents(w http.ResponseWriter, r *http.Request) {
