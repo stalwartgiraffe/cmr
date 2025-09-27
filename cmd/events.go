@@ -98,10 +98,16 @@ type EventClient struct {
 }
 
 func NewEventClient(accessToken string) *EventClient {
+	return NewEventClientWithURL(accessToken,
+		"https://gitlab.indexexchange.com/",
+	)
+}
+
+func NewEventClientWithURL(accessToken string, baseUrl string) *EventClient {
 	const isVerbose = false
 	return &EventClient{
 		client: gitlab.NewClientWithParams(
-			"https://gitlab.indexexchange.com/",
+			baseUrl,
 			"api/v4/",
 			accessToken,
 			"xlab",
