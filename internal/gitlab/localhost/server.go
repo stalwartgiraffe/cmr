@@ -7,11 +7,10 @@ import (
 	"net/http/httptest"
 )
 
-// Integration test helper
+// Server local host server for integration testing
 type Server struct {
 	server  *httptest.Server
 	handler *Handler
-	//events  *EventsRepoMem
 }
 
 func NewServer() *Server {
@@ -19,9 +18,16 @@ func NewServer() *Server {
 	service := NewService(events)
 	handler := NewHandler(service)
 
-	return &Server{
+	s := &Server{
 		handler: handler,
 	}
+	s.Start()
+	return s
+}
+
+func (ts *Server) Start() {
+	router := SetupRouter(ts.handler)
+	ts.server = httptest.NewServer(router)
 }
 
 func (ts *Server) Close() {
@@ -32,13 +38,16 @@ func (ts *Server) URL() string {
 	return ts.server.URL
 }
 
+// SetupRouter creates the route handlers.
 // see the swagger doc
 // https://gitlab.com/gitlab-org/gitlab/-/tree/master
 // https://gitlab.com/gitlab-org/gitlab/-/blob/master/doc/api/openapi/openapi_v2.yaml
 // Router setup with middleware
 func SetupRouter(handler *Handler) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/events/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+
+	// Handle the GitLab API v4 events endpoint: /api/v4/users/{id}/events
+	mux.HandleFunc("/api/v4/users/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
 			handler.HandleEvents(w, r)
@@ -50,7 +59,7 @@ func SetupRouter(handler *Handler) *http.ServeMux {
 	return mux
 }
 
-// Simple logging middleware
+// LoggingMiddleware logs events simply
 func LoggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("%s %s", r.Method, r.URL.Path)
