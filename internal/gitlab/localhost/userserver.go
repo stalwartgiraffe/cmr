@@ -2,7 +2,6 @@
 package localhost
 
 import (
-	"log"
 	"net/http"
 	"net/http/httptest"
 )
@@ -11,7 +10,6 @@ import (
 type UserServer struct {
 	server  *httptest.Server
 	handler *UserHandler
-	repo    *InMemoryUserRepository
 }
 
 func NewUserServer() *UserServer {
@@ -24,7 +22,6 @@ func NewUserServer() *UserServer {
 	return &UserServer{
 		server:  server,
 		handler: handler,
-		repo:    repo,
 	}
 }
 
@@ -56,12 +53,4 @@ func SetupUserRouter(handler *UserHandler) *http.ServeMux {
 	}))
 
 	return mux
-}
-
-// Simple logging middleware
-func LoggingMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("%s %s", r.Method, r.URL.Path)
-		next(w, r)
-	}
 }

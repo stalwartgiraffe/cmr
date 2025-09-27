@@ -48,6 +48,18 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(createdUser)
 }
 
+
+func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := h.service.repo.List()
+	if err != nil {
+		http.Error(w, "Failed to list users", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+}
+
 func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	idStr := r.URL.Path[len("/users/"):]
 	id, err := strconv.Atoi(idStr)
@@ -64,15 +76,4 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(user)
-}
-
-func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := h.service.repo.List()
-	if err != nil {
-		http.Error(w, "Failed to list users", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(users)
 }
