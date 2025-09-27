@@ -68,6 +68,13 @@ func (h *Handler) HandleEvents(w http.ResponseWriter, r *http.Request) {
 	events := h.generateMockEvents(userID, params)
 
 	w.Header().Set("Content-Type", "application/json")
+	// parsePageCursor() requires these http headers
+	w.Header().Set("X-Page", "1")
+	w.Header().Set("X-Next-Page", "2")
+	w.Header().Set("X-Prev-Page", "0")
+	w.Header().Set("X-Total-Pages", "1")
+	w.Header().Set("X-Per-Page", "20")
+	w.Header().Set("X-Total", "3")
 	if err := json.NewEncoder(w).Encode(events); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
@@ -77,8 +84,8 @@ func (h *Handler) HandleEvents(w http.ResponseWriter, r *http.Request) {
 // parseEventsQueryParams parses the query parameters for the events endpoint
 func (h *Handler) parseEventsQueryParams(r *http.Request) (*EventsQueryParams, error) {
 	params := &EventsQueryParams{
-		Page:    1,   // default
-		PerPage: 20,  // default
+		Page:    1,      // default
+		PerPage: 20,     // default
 		Sort:    "desc", // default
 	}
 

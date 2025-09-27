@@ -22,7 +22,8 @@ func TestGetEvents(t *testing.T) {
 	accessToken := "local"
 	ec := NewEventClientWithURL(accessToken, server.URL())
 
-	route := "/api/v4/users/1/events"
+	//http://127.0.0.1:46067/api/v4//api/v4/users/1/events
+	route := "users/1/events"
 	recentEvents, err := ec.getEvents(
 		ctx,
 		app,
