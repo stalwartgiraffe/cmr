@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 )
 
 // Server local host server for integration testing
@@ -46,21 +47,38 @@ func (ts *Server) URL() string {
 func SetupRouter(handler *Handler) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	// Handle the GitLab API v4 events endpoint: /api/v4/users/{id}/events
-	mux.HandleFunc("/api/v4/users/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+	//"/api/v4/projects:
+	//"/api/v4/projects/{id} many endpoints
+	mux.HandleFunc("/api/v4/projects/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			handler.HandleEvents(w, r)
+			handler.GetProjects(w, r)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	}))
 
-	// Handle the GitLab API v4 groups merge requests endpoint: /api/v4/groups/{id}/merge_requests
+	// Handle the GitLab API v4 events endpoint: /api/v4/users/{id}/events
+	mux.HandleFunc("/api/v4/users/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			handler.GetEvents(w, r)
+		default:
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		}
+	}))
+
+	// Handle the GitLab API v4 groups endpoints: /api/v4/groups/{id}/merge_requests and /api/v4/groups/{id}/projects
 	mux.HandleFunc("/api/v4/groups/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			handler.HandleMergeRequests(w, r)
+			if strings.Contains(r.URL.Path, "/merge_requests") {
+				handler.GetGroupsMergeRequests(w, r)
+			} else if strings.Contains(r.URL.Path, "/projects") {
+				handler.GetGroupsProjects(w, r)
+			} else {
+				http.Error(w, "Not found", http.StatusNotFound)
+			}
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}

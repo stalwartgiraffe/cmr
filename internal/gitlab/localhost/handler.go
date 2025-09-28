@@ -262,36 +262,58 @@ type EventsQueryParams struct {
 
 // MergeRequestsQueryParams represents the query parameters for the merge requests endpoint
 type MergeRequestsQueryParams struct {
-	AuthorID                  *int       `json:"author_id,omitempty"`
-	AuthorUsername            string     `json:"author_username,omitempty"`
-	AssigneeID                *int       `json:"assignee_id,omitempty"`
-	AssigneeUsername          []string   `json:"assignee_username,omitempty"`
-	ReviewerUsername          string     `json:"reviewer_username,omitempty"`
-	ReviewerID                *int       `json:"reviewer_id,omitempty"`
-	Labels                    []string   `json:"labels,omitempty"`
-	Milestone                 string     `json:"milestone,omitempty"`
-	MyReactionEmoji           string     `json:"my_reaction_emoji,omitempty"`
-	State                     string     `json:"state,omitempty"`
-	OrderBy                   string     `json:"order_by,omitempty"`
-	Sort                      string     `json:"sort,omitempty"`
-	WithLabelsDetails         bool       `json:"with_labels_details,omitempty"`
-	WithMergeStatusRecheck    bool       `json:"with_merge_status_recheck,omitempty"`
-	CreatedAfter              *time.Time `json:"created_after,omitempty"`
-	CreatedBefore             *time.Time `json:"created_before,omitempty"`
-	UpdatedAfter              *time.Time `json:"updated_after,omitempty"`
-	UpdatedBefore             *time.Time `json:"updated_before,omitempty"`
-	View                      string     `json:"view,omitempty"`
-	Scope                     string     `json:"scope,omitempty"`
-	SourceBranch              string     `json:"source_branch,omitempty"`
-	SourceProjectID           *int       `json:"source_project_id,omitempty"`
-	TargetBranch              string     `json:"target_branch,omitempty"`
-	Search                    string     `json:"search,omitempty"`
-	In                        string     `json:"in,omitempty"`
-	WIP                       string     `json:"wip,omitempty"`
-	NotAuthorID               *int       `json:"not_author_id,omitempty"`
-	NotAuthorUsername         string     `json:"not_author_username,omitempty"`
-	NotAssigneeID             *int       `json:"not_assignee_id,omitempty"`
-	NotAssigneeUsername       []string   `json:"not_assignee_username,omitempty"`
+	AuthorID               *int       `json:"author_id,omitempty"`
+	AuthorUsername         string     `json:"author_username,omitempty"`
+	AssigneeID             *int       `json:"assignee_id,omitempty"`
+	AssigneeUsername       []string   `json:"assignee_username,omitempty"`
+	ReviewerUsername       string     `json:"reviewer_username,omitempty"`
+	ReviewerID             *int       `json:"reviewer_id,omitempty"`
+	Labels                 []string   `json:"labels,omitempty"`
+	Milestone              string     `json:"milestone,omitempty"`
+	MyReactionEmoji        string     `json:"my_reaction_emoji,omitempty"`
+	State                  string     `json:"state,omitempty"`
+	OrderBy                string     `json:"order_by,omitempty"`
+	Sort                   string     `json:"sort,omitempty"`
+	WithLabelsDetails      bool       `json:"with_labels_details,omitempty"`
+	WithMergeStatusRecheck bool       `json:"with_merge_status_recheck,omitempty"`
+	CreatedAfter           *time.Time `json:"created_after,omitempty"`
+	CreatedBefore          *time.Time `json:"created_before,omitempty"`
+	UpdatedAfter           *time.Time `json:"updated_after,omitempty"`
+	UpdatedBefore          *time.Time `json:"updated_before,omitempty"`
+	View                   string     `json:"view,omitempty"`
+	Scope                  string     `json:"scope,omitempty"`
+	SourceBranch           string     `json:"source_branch,omitempty"`
+	SourceProjectID        *int       `json:"source_project_id,omitempty"`
+	TargetBranch           string     `json:"target_branch,omitempty"`
+	Search                 string     `json:"search,omitempty"`
+	In                     string     `json:"in,omitempty"`
+	WIP                    string     `json:"wip,omitempty"`
+	NotAuthorID            *int       `json:"not_author_id,omitempty"`
+	NotAuthorUsername      string     `json:"not_author_username,omitempty"`
+	NotAssigneeID          *int       `json:"not_assignee_id,omitempty"`
+	NotAssigneeUsername    []string   `json:"not_assignee_username,omitempty"`
+}
+
+// ProjectsQueryParams represents the query parameters for the projects endpoint
+type ProjectsQueryParams struct {
+	Archived                 *bool  `json:"archived,omitempty"`
+	Visibility               string `json:"visibility,omitempty"`
+	Search                   string `json:"search,omitempty"`
+	OrderBy                  string `json:"order_by,omitempty"`
+	Sort                     string `json:"sort,omitempty"`
+	Simple                   bool   `json:"simple,omitempty"`
+	Owned                    bool   `json:"owned,omitempty"`
+	Starred                  bool   `json:"starred,omitempty"`
+	WithIssuesEnabled        bool   `json:"with_issues_enabled,omitempty"`
+	WithMergeRequestsEnabled bool   `json:"with_merge_requests_enabled,omitempty"`
+	WithShared               bool   `json:"with_shared,omitempty"`
+	IncludeSubgroups         bool   `json:"include_subgroups,omitempty"`
+	IncludeAncestorGroups    bool   `json:"include_ancestor_groups,omitempty"`
+	MinAccessLevel           *int   `json:"min_access_level,omitempty"`
+	Page                     int    `json:"page,omitempty"`
+	PerPage                  int    `json:"per_page,omitempty"`
+	WithCustomAttributes     bool   `json:"with_custom_attributes,omitempty"`
+	WithSecurityReports      bool   `json:"with_security_reports,omitempty"`
 }
 
 type Handler struct {
@@ -304,7 +326,398 @@ func NewHandler(service *Service) *Handler {
 	}
 }
 
-func (h *Handler) HandleMergeRequests(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
+	// Extract group ID from path parameter using regex
+	// Expected path: /api/v4/projects
+	/*
+		re := regexp.MustCompile(`/api/v4/projects/([^/]+)`)
+		matches := re.FindStringSubmatch(r.URL.Path)
+		if len(matches) < 2 {
+			http.Error(w, "Group ID is required", http.StatusBadRequest)
+			return
+		}
+		projectID := matches[1]
+	*/
+
+	// Parse query parameters
+	params, err := h.parseProjectsQueryParams(r)
+	if err != nil {
+		http.Error(w, "Invalid query parameters: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// For now, return mock projects based on the API specification
+	// In a real implementation, this would call h.service.projects.GetGroupProjects(groupID, params)
+	projects := h.generateMockProjects(params)
+
+	w.Header().Set("Content-Type", "application/json")
+	// Add pagination headers like GitLab API
+	w.Header().Set("X-Page", strconv.Itoa(params.Page))
+	w.Header().Set("X-Next-Page", strconv.Itoa(params.Page+1))
+	w.Header().Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
+	w.Header().Set("X-Total-Pages", "1")
+	w.Header().Set("X-Per-Page", strconv.Itoa(params.PerPage))
+	w.Header().Set("X-Total", strconv.Itoa(len(projects)))
+	if err := json.NewEncoder(w).Encode(projects); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
+
+func (h *Handler) GetGroupsProjects(w http.ResponseWriter, r *http.Request) {
+	// Extract group ID from path parameter using regex
+	// Expected path: /api/v4/groups/{id}/projects
+	/*
+		re := regexp.MustCompile(`/api/v4/groups/([^/]+)/projects`)
+		matches := re.FindStringSubmatch(r.URL.Path)
+		if len(matches) < 2 {
+			http.Error(w, "Group ID is required", http.StatusBadRequest)
+			return
+		}
+		groupID := matches[1]
+	*/
+
+	// Parse query parameters
+	params, err := h.parseProjectsQueryParams(r)
+	if err != nil {
+		http.Error(w, "Invalid query parameters: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// For now, return mock projects based on the API specification
+	// In a real implementation, this would call h.service.projects.GetGroupProjects(groupID, params)
+	projects := h.generateMockProjects(params)
+
+	w.Header().Set("Content-Type", "application/json")
+	// Add pagination headers like GitLab API
+	w.Header().Set("X-Page", strconv.Itoa(params.Page))
+	w.Header().Set("X-Next-Page", strconv.Itoa(params.Page+1))
+	w.Header().Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
+	w.Header().Set("X-Total-Pages", "1")
+	w.Header().Set("X-Per-Page", strconv.Itoa(params.PerPage))
+	w.Header().Set("X-Total", strconv.Itoa(len(projects)))
+	if err := json.NewEncoder(w).Encode(projects); err != nil {
+		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		return
+	}
+}
+
+// parseProjectsQueryParams parses the query parameters for the projects endpoint
+func (h *Handler) parseProjectsQueryParams(r *http.Request) (*ProjectsQueryParams, error) {
+	params := &ProjectsQueryParams{
+		OrderBy:                  "created_at", // default
+		Sort:                     "desc",       // default
+		Simple:                   false,        // default
+		Owned:                    false,        // default
+		Starred:                  false,        // default
+		WithIssuesEnabled:        false,        // default
+		WithMergeRequestsEnabled: false,        // default
+		WithShared:               true,         // default
+		IncludeSubgroups:         false,        // default
+		IncludeAncestorGroups:    false,        // default
+		Page:                     1,            // default
+		PerPage:                  20,           // default
+		WithCustomAttributes:     false,        // default
+		WithSecurityReports:      false,        // default
+	}
+
+	// Parse archived parameter
+	if archivedStr := r.URL.Query().Get("archived"); archivedStr != "" {
+		if archived, err := strconv.ParseBool(archivedStr); err == nil {
+			params.Archived = &archived
+		}
+	}
+
+	// Parse visibility parameter
+	if visibility := r.URL.Query().Get("visibility"); visibility != "" {
+		validVisibilities := map[string]bool{
+			"private": true, "internal": true, "public": true,
+		}
+		if validVisibilities[visibility] {
+			params.Visibility = visibility
+		}
+	}
+
+	// Parse search parameter
+	params.Search = r.URL.Query().Get("search")
+
+	// Parse order_by parameter
+	if orderBy := r.URL.Query().Get("order_by"); orderBy != "" {
+		validOrderBy := map[string]bool{
+			"id": true, "name": true, "path": true, "created_at": true,
+			"updated_at": true, "last_activity_at": true, "similarity": true, "star_count": true,
+		}
+		if validOrderBy[orderBy] {
+			params.OrderBy = orderBy
+		}
+	}
+
+	// Parse sort parameter
+	if sort := r.URL.Query().Get("sort"); sort == "asc" || sort == "desc" {
+		params.Sort = sort
+	}
+
+	// Parse simple parameter
+	if simpleStr := r.URL.Query().Get("simple"); simpleStr == "true" {
+		params.Simple = true
+	}
+
+	// Parse owned parameter
+	if ownedStr := r.URL.Query().Get("owned"); ownedStr == "true" {
+		params.Owned = true
+	}
+
+	// Parse starred parameter
+	if starredStr := r.URL.Query().Get("starred"); starredStr == "true" {
+		params.Starred = true
+	}
+
+	// Parse with_issues_enabled parameter
+	if withIssuesStr := r.URL.Query().Get("with_issues_enabled"); withIssuesStr == "true" {
+		params.WithIssuesEnabled = true
+	}
+
+	// Parse with_merge_requests_enabled parameter
+	if withMergeRequestsStr := r.URL.Query().Get("with_merge_requests_enabled"); withMergeRequestsStr == "true" {
+		params.WithMergeRequestsEnabled = true
+	}
+
+	// Parse with_shared parameter
+	if withSharedStr := r.URL.Query().Get("with_shared"); withSharedStr == "false" {
+		params.WithShared = false
+	}
+
+	// Parse include_subgroups parameter
+	if includeSubgroupsStr := r.URL.Query().Get("include_subgroups"); includeSubgroupsStr == "true" {
+		params.IncludeSubgroups = true
+	}
+
+	// Parse include_ancestor_groups parameter
+	if includeAncestorGroupsStr := r.URL.Query().Get("include_ancestor_groups"); includeAncestorGroupsStr == "true" {
+		params.IncludeAncestorGroups = true
+	}
+
+	// Parse min_access_level parameter
+	if minAccessLevelStr := r.URL.Query().Get("min_access_level"); minAccessLevelStr != "" {
+		if minAccessLevel, err := strconv.Atoi(minAccessLevelStr); err == nil {
+			validAccessLevels := map[int]bool{
+				10: true, 15: true, 20: true, 30: true, 40: true, 50: true,
+			}
+			if validAccessLevels[minAccessLevel] {
+				params.MinAccessLevel = &minAccessLevel
+			}
+		}
+	}
+
+	// Parse page parameter
+	if pageStr := r.URL.Query().Get("page"); pageStr != "" {
+		if page, err := strconv.Atoi(pageStr); err == nil && page > 0 {
+			params.Page = page
+		}
+	}
+
+	// Parse per_page parameter
+	if perPageStr := r.URL.Query().Get("per_page"); perPageStr != "" {
+		if perPage, err := strconv.Atoi(perPageStr); err == nil && perPage > 0 {
+			params.PerPage = perPage
+		}
+	}
+
+	// Parse with_custom_attributes parameter
+	if withCustomAttributesStr := r.URL.Query().Get("with_custom_attributes"); withCustomAttributesStr == "true" {
+		params.WithCustomAttributes = true
+	}
+
+	// Parse with_security_reports parameter
+	if withSecurityReportsStr := r.URL.Query().Get("with_security_reports"); withSecurityReportsStr == "true" {
+		params.WithSecurityReports = true
+	}
+
+	return params, nil
+}
+
+// generateMockProjects generates mock projects for testing purposes
+func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
+	// Generate mock projects based on the API specification
+	projects := []Project{
+		{
+			ID:                       25,
+			Name:                     "gitlab-foss",
+			NameWithNamespace:        "GitLab.org / gitlab-foss",
+			Path:                     "gitlab-foss",
+			PathWithNamespace:        "gitlab-org/gitlab-foss",
+			Description:              "GitLab Community Edition",
+			CreatedAt:                time.Now().Add(-365 * 24 * time.Hour),
+			UpdatedAt:                time.Now().Add(-24 * time.Hour),
+			LastActivityAt:           time.Now().Add(-12 * time.Hour),
+			DefaultBranch:            "main",
+			TagList:                  []string{"ruby", "rails", "git"},
+			Topics:                   []string{"git", "version-control", "collaboration"},
+			SSHURLToRepo:             "git@gitlab.example.com:gitlab-org/gitlab-foss.git",
+			HTTPURLToRepo:            "https://gitlab.example.com/gitlab-org/gitlab-foss.git",
+			WebURL:                   "https://gitlab.example.com/gitlab-org/gitlab-foss",
+			ReadmeURL:                "https://gitlab.example.com/gitlab-org/gitlab-foss/-/blob/main/README.md",
+			AvatarURL:                "https://gitlab.example.com/uploads/project/avatar/25/gitlab_logo.png",
+			StarCount:                2345,
+			ForksCount:               589,
+			Visibility:               "public",
+			IssuesEnabled:            true,
+			MergeRequestsEnabled:     true,
+			WikiEnabled:              true,
+			JobsEnabled:              true,
+			SnippetsEnabled:          true,
+			ContainerRegistryEnabled: true,
+			EmptyRepo:                false,
+			Archived:                 false,
+			Owner: &UserBasic{
+				ID:       1,
+				Username: "root",
+				Name:     "Administrator",
+				State:    "active",
+			},
+		},
+		{
+			ID:                       30,
+			Name:                     "awesome-project",
+			NameWithNamespace:        "GitLab.org / awesome-project",
+			Path:                     "awesome-project",
+			PathWithNamespace:        "gitlab-org/awesome-project",
+			Description:              "An awesome project for demonstration",
+			CreatedAt:                time.Now().Add(-180 * 24 * time.Hour),
+			UpdatedAt:                time.Now().Add(-48 * time.Hour),
+			LastActivityAt:           time.Now().Add(-24 * time.Hour),
+			DefaultBranch:            "develop",
+			TagList:                  []string{"javascript", "nodejs", "react"},
+			Topics:                   []string{"frontend", "web", "javascript"},
+			SSHURLToRepo:             "git@gitlab.example.com:gitlab-org/awesome-project.git",
+			HTTPURLToRepo:            "https://gitlab.example.com/gitlab-org/awesome-project.git",
+			WebURL:                   "https://gitlab.example.com/gitlab-org/awesome-project",
+			ReadmeURL:                "https://gitlab.example.com/gitlab-org/awesome-project/-/blob/develop/README.md",
+			StarCount:                125,
+			ForksCount:               34,
+			Visibility:               "internal",
+			IssuesEnabled:            true,
+			MergeRequestsEnabled:     true,
+			WikiEnabled:              false,
+			JobsEnabled:              true,
+			SnippetsEnabled:          false,
+			ContainerRegistryEnabled: false,
+			EmptyRepo:                false,
+			Archived:                 false,
+			Owner: &UserBasic{
+				ID:       2,
+				Username: "developer",
+				Name:     "Developer User",
+				State:    "active",
+			},
+		},
+		{
+			ID:                       45,
+			Name:                     "archived-legacy",
+			NameWithNamespace:        "GitLab.org / archived-legacy",
+			Path:                     "archived-legacy",
+			PathWithNamespace:        "gitlab-org/archived-legacy",
+			Description:              "Legacy project that has been archived",
+			CreatedAt:                time.Now().Add(-730 * 24 * time.Hour),
+			UpdatedAt:                time.Now().Add(-365 * 24 * time.Hour),
+			LastActivityAt:           time.Now().Add(-365 * 24 * time.Hour),
+			DefaultBranch:            "master",
+			TagList:                  []string{"legacy", "deprecated"},
+			SSHURLToRepo:             "git@gitlab.example.com:gitlab-org/archived-legacy.git",
+			HTTPURLToRepo:            "https://gitlab.example.com/gitlab-org/archived-legacy.git",
+			WebURL:                   "https://gitlab.example.com/gitlab-org/archived-legacy",
+			StarCount:                5,
+			ForksCount:               1,
+			Visibility:               "private",
+			IssuesEnabled:            false,
+			MergeRequestsEnabled:     false,
+			WikiEnabled:              false,
+			JobsEnabled:              false,
+			SnippetsEnabled:          false,
+			ContainerRegistryEnabled: false,
+			EmptyRepo:                false,
+			Archived:                 true,
+			Owner: &UserBasic{
+				ID:       1,
+				Username: "root",
+				Name:     "Administrator",
+				State:    "active",
+			},
+		},
+	}
+
+	// Apply filtering based on parameters
+	var filteredProjects []Project
+	for _, project := range projects {
+		// Filter by archived status
+		if params.Archived != nil && project.Archived != *params.Archived {
+			continue
+		}
+
+		// Filter by visibility
+		if params.Visibility != "" && project.Visibility != params.Visibility {
+			continue
+		}
+
+		// Filter by search in name and description
+		if params.Search != "" {
+			searchLower := strings.ToLower(params.Search)
+			nameMatch := strings.Contains(strings.ToLower(project.Name), searchLower)
+			descMatch := strings.Contains(strings.ToLower(project.Description), searchLower)
+			if !nameMatch && !descMatch {
+				continue
+			}
+		}
+
+		// Filter by issues enabled
+		if params.WithIssuesEnabled && !project.IssuesEnabled {
+			continue
+		}
+
+		// Filter by merge requests enabled
+		if params.WithMergeRequestsEnabled && !project.MergeRequestsEnabled {
+			continue
+		}
+
+		// Apply simple mode (return only basic fields)
+		if params.Simple {
+			filteredProject := Project{
+				ID:         project.ID,
+				Name:       project.Name,
+				Path:       project.Path,
+				WebURL:     project.WebURL,
+				Visibility: project.Visibility, // Include visibility for filtering validation
+			}
+			filteredProjects = append(filteredProjects, filteredProject)
+		} else {
+			filteredProjects = append(filteredProjects, project)
+		}
+	}
+
+	// Apply pagination
+	start := (params.Page - 1) * params.PerPage
+	end := start + params.PerPage
+
+	if start >= len(filteredProjects) {
+		return []Project{}
+	}
+
+	if end > len(filteredProjects) {
+		end = len(filteredProjects)
+	}
+
+	return filteredProjects[start:end]
+}
+
+// max returns the maximum of two integers
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request) {
 	// Extract group ID from path parameter using regex
 	// Expected path: /api/v4/groups/{id}/merge_requests
 	re := regexp.MustCompile(`/api/v4/groups/([^/]+)/merge_requests`)
@@ -652,7 +1065,7 @@ func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequest
 	return filteredMergeRequests
 }
 
-func (h *Handler) HandleEvents(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 	// Extract user ID from path parameter using regex
 	// Expected path: /api/v4/users/{id}/events
 	re := regexp.MustCompile(`/api/v4/users/([^/]+)/events`)

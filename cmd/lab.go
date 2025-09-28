@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"os"
 	"sync"
@@ -27,12 +29,12 @@ func NewLabCommand(app App, cfg *CmdConfig) *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			RunLab(app, cmd)
+			runLabCmd(app, cmd)
 		},
 	}
 }
 
-func RunLab(app App, cmd *cobra.Command) {
+func runLabCmd(app App, cmd *cobra.Command) {
 	ctx := cmd.Context()
 	ctx, span := app.StartSpan(ctx, "RunLab")
 	defer span.End()
@@ -45,7 +47,7 @@ func RunLab(app App, cmd *cobra.Command) {
 	}
 
 	isVerbose := true
-	client := gitlab.NewClientWithParams(
+	baseURL := gitlab.NewClientWithParams(
 		"https://gitlab.indexexchange.com/",
 		"api/v4/",
 		accessToken,
@@ -61,7 +63,7 @@ func RunLab(app App, cmd *cobra.Command) {
 	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDualApp[[]gitlab.ProjectModel](
 		ctx,
 		app,
-		client,
+		baseURL,
 		firstQueries,
 		totalPagesLimit,
 	)
@@ -105,6 +107,68 @@ func RunLab(app App, cmd *cobra.Command) {
 		return
 	}
 	fmt.Println("done reading")
+}
+
+type ProjectsClient struct {
+	client *gitlab.Client
+}
+
+func NewProjectsClient(accessToken string, baseURL string) *ProjectsClient {
+	return &ProjectsClient{
+		client: NewGitlabClientWithURL(accessToken, baseURL),
+	}
+}
+
+func (pc *ProjectsClient) getProjects(
+	ctx context.Context,
+	app App,
+) (map[int]gitlab.ProjectModel, error) {
+	const startPage = 1
+
+	firstQueries := make(chan gitlab.UrlQuery)
+	totalPagesLimit := 1000
+	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDualApp[[]gitlab.ProjectModel](
+		ctx,
+		app,
+		pc.client,
+		firstQueries,
+		totalPagesLimit,
+	)
+	errorsFan := []<-chan error{}
+	errorsFan = append(errorsFan, gatherProjectErrs)
+
+	firstQueries <- *gitlab.NewPageQuery(
+		"projects/",
+		startPage,
+	)
+	close(firstQueries)
+	transformCap := 5
+	projectResults := gitlab.TransformToOne(
+		projectCalls,
+		transformCap,
+		func(c gitlab.CallNoError[[]gitlab.ProjectModel]) []gitlab.ProjectModel {
+			return c.Val
+		})
+
+	var wg sync.WaitGroup
+	wg.Add(2)
+	var errs error
+	go func() {
+		defer wg.Done()
+		for e := range gitlab.FanIn(errorsFan) {
+			errs = errors.Join(errs, e)
+		}
+	}()
+	projectsMap := make(map[int]gitlab.ProjectModel)
+	go func() {
+		defer wg.Done()
+		for p := range projectResults {
+			projectsMap[p.ID] = p
+		}
+	}()
+
+	wg.Wait()
+	return projectsMap, errs
 }
 
 func loadGitlabAccessToken() (string, error) {

@@ -47,7 +47,9 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 				return
 			}
 
-			ec := NewEventClient(accessToken)
+			ec := NewEventClient(accessToken,
+				"https://gitlab.indexexchange.com/",
+			)
 			filepath := "ignore/my_recent_events.yaml"
 			route := "events/"
 			myEvents, err := ec.updateRecentEvents(cmdCtx, app, cancel, filepath, route)

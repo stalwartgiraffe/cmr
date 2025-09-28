@@ -55,7 +55,9 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 		return
 	}
 
-	ec := NewEventClient(accessToken)
+	ec := NewEventClient(accessToken,
+		"https://gitlab.indexexchange.com/",
+	)
 	app.Println("start updating recentEvents")
 	events, err := ec.updateRecentEvents(ctx, app, cancel, filepath, route)
 	if err != nil {
@@ -74,49 +76,17 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	appTableRun(content, cancel)
 }
 
-func getEvents(
-	ctx context.Context,
-	app App,
-	cancel context.CancelFunc,
-	route string,
-	afterThisDate string,
-) (
-	gitlab.EventMap,
-	error,
-) {
-	var err error
-	accessToken, err := loadGitlabAccessToken()
-	if err != nil {
-		return nil, err
-	}
-	ec := NewEventClient(accessToken)
-	return ec.getEvents(ctx, app, cancel, route, afterThisDate)
-}
-
-type EventClient struct {
+type EventsClientt struct {
 	client *gitlab.Client
 }
 
-func NewEventClient(accessToken string) *EventClient {
-	return NewEventClientWithURL(accessToken,
-		"https://gitlab.indexexchange.com/",
-	)
-}
-
-func NewEventClientWithURL(accessToken string, baseUrl string) *EventClient {
-	const isVerbose = false
-	return &EventClient{
-		client: gitlab.NewClientWithParams(
-			baseUrl,
-			"api/v4/",
-			accessToken,
-			"xlab",
-			isVerbose,
-		),
+func NewEventClient(accessToken string, baseURL string) *EventsClientt {
+	return &EventsClientt{
+		client: NewGitlabClientWithURL(accessToken, baseURL),
 	}
 }
 
-func (ec *EventClient) updateRecentEvents(
+func (ec *EventsClientt) updateRecentEvents(
 	ctx context.Context,
 	app App,
 	cancel context.CancelFunc,
@@ -185,7 +155,7 @@ func verifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 	return nil
 }
 
-func (ec *EventClient) getEvents(
+func (ec *EventsClientt) getEvents(
 	ctx context.Context,
 	app App,
 	_ context.CancelFunc,
