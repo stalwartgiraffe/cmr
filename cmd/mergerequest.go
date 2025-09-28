@@ -15,7 +15,7 @@ import (
 	tw "github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
-	"github.com/stalwartgiraffe/cmr/restclient"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 )
 
 func NewMergeRequestCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
@@ -75,14 +75,9 @@ type MergeRequestClient struct {
 }
 
 func NewMergeRequestClient(authToken string) *MergeRequestClient {
-	const isVerbose = false
 	return &MergeRequestClient{
-		client: gitlab.NewClientWithParams(
-			"https://gitlab.indexexchange.com/",
-			"api/v4/",
-			authToken,
-			"xlab",
-			isVerbose,
+		client: gitlab.NewClient(
+			rc.WithAuthToken(authToken),
 		),
 	}
 }
@@ -166,20 +161,20 @@ func (mrc *MergeRequestClient) getMergeRequests(
 
 func unmarshalMergeRequestModel(
 	ctx context.Context,
-	app restclient.App,
+	app rc.App,
 	resp *resty.Response,
 ) (*[]gitlab.MergeRequestModel, error) {
 	_, span := app.StartSpan(ctx, "unmarshalMergeRequestModel")
 	defer span.End()
 
 	if resp == nil {
-		return nil, restclient.NewFailureResponse("Response object was nil", resp)
+		return nil, rc.NewFailureResponse("Response object was nil", resp)
 	}
 	if resp.IsError() {
-		return nil, restclient.NewFailureResponse("ResponseBody="+string(resp.Body()), resp)
+		return nil, rc.NewFailureResponse("ResponseBody="+string(resp.Body()), resp)
 	}
 	if !resp.IsSuccess() {
-		return nil, restclient.NewFailureResponse("Response object had failure status", resp)
+		return nil, rc.NewFailureResponse("Response object had failure status", resp)
 	}
 
 	return unmarshalModels(app, resp.Body())

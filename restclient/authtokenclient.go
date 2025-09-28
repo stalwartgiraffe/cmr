@@ -27,6 +27,7 @@ type AuthTokenClient struct {
 	authToken string // the manually managed bearer token.
 	isVerbose bool
 	isDebug   bool
+	headers   map[string]string
 }
 
 func NewWithParams(
@@ -34,71 +35,103 @@ func NewWithParams(
 	api string,
 	authToken string,
 	userAgent string,
-	isVerbose bool) *AuthTokenClient {
-	return NewWithClient(
-		newClientAdapter(),
-		baseURL,
-		api,
-		authToken,
-		userAgent,
-		isVerbose)
-}
-
-func NewWithClient(
-	client Client,
-	baseURL string,
-	api string,
-	authToken string,
-	userAgent string,
-	isVerbose bool) *AuthTokenClient {
-	// Note that by default the resty.Client uses a golang CookieJar.
-	// The cookie jar manager the session cookies
-	// https://pkg.go.dev/net/http/cookiejar
+	isVerbose bool,
+) *AuthTokenClient {
+	client := newClientAdapter()
 	c := &AuthTokenClient{
 		client:    client,
 		baseURL:   baseURL,
 		userAgent: userAgent,
 		api:       api,
-		authToken: authToken,
 		isVerbose: isVerbose,
+		headers:   make(map[string]string),
+
+		// Note that by default the resty.Client uses a golang CookieJar.
+		// The cookie jar manager the session cookies
+		// https://pkg.go.dev/net/http/cookiejar
+		authToken: authToken,
 	}
-	c.SetClient(client)
 	return c
 }
 
-func (c *AuthTokenClient) SetAPI(api string) {
-	c.api = api
+type Option func(*AuthTokenClient)
+
+func WithBaseURL(baseURL string) Option {
+	return func(c *AuthTokenClient) {
+		c.baseURL = baseURL
+	}
 }
 
-func (c *AuthTokenClient) SetAuthToken(authToken string) {
-	c.authToken = authToken
+func WithAPI(api string) Option {
+	return func(c *AuthTokenClient) {
+		c.api = api
+	}
 }
 
-func (c *AuthTokenClient) SetIsVerbose(isVerbose bool) {
-	c.isVerbose = isVerbose
+func WithAuthToken(authToken string) Option {
+	return func(c *AuthTokenClient) {
+		c.authToken = authToken
+	}
 }
 
-func (c *AuthTokenClient) SetIsDebug(isDebug bool) {
-	c.isDebug = isDebug
+func WithIsVerbose(isVerbose bool) Option {
+	return func(c *AuthTokenClient) {
+		c.isVerbose = isVerbose
+	}
 }
 
-func (c *AuthTokenClient) SetClient(client Client) {
-	c.client = client
-	c.SetBaseURL(c.baseURL)
-	c.SetUserAgent(c.userAgent)
-	c.SetHeader("ix-custom", "testix")
+func WithIsDebug(isDebug bool) Option {
+	return func(c *AuthTokenClient) {
+		c.isDebug = isDebug
+	}
 }
 
-func (c *AuthTokenClient) SetBaseURL(baseURL string) {
-	c.client.SetBaseURL(baseURL)
+func WithUserAgent(userAgent string) Option {
+	return func(c *AuthTokenClient) {
+		c.userAgent = userAgent
+	}
 }
 
-func (c *AuthTokenClient) SetUserAgent(userAgent string) {
-	c.client.SetHeader("User-Agent", userAgent)
+func WithHeader(k, v string) Option {
+	return func(c *AuthTokenClient) {
+		c.headers[k] = v
+	}
 }
 
-func (c *AuthTokenClient) SetHeader(k, v string) {
-	c.client.SetHeader(k, v)
+func WithClient(client Client) Option {
+	return func(c *AuthTokenClient) {
+		if client == nil {
+			panic("WithClient passed nil client")
+		}
+
+		c.client = client
+		if len(c.baseURL) < 1 {
+			panic("baseURL not set")
+		}
+		c.client.SetBaseURL(c.baseURL)
+		if len(c.userAgent) < 1 {
+			panic("userAgent not set")
+		}
+		if 0 < len(c.userAgent) {
+			c.client.SetHeader("User-Agent", c.userAgent)
+		}
+
+		for k, v := range c.headers {
+			c.client.SetHeader(k, v)
+		}
+	}
+}
+
+func ConnectClient(opts ...Option) *AuthTokenClient {
+	c := &AuthTokenClient{}
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	if c.client == nil {
+		WithClient(newClientAdapter())(c)
+	}
+	return c
 }
 
 type App interface {

@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/stalwartgiraffe/cmr/internal/gitlab"
+// "github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
+/*
 func NewGitlabClientWithURL(authToken string, baseURL string) *gitlab.Client {
 	//const isVerbose = false
 	const isVerbose = true
@@ -13,11 +14,14 @@ func NewGitlabClientWithURL(authToken string, baseURL string) *gitlab.Client {
 // TODO simplify NewClientWithParams to use functional options
 
 func NewGitlabClientWithParams(authToken string, baseURL string, isVerbose bool) *gitlab.Client {
-	return gitlab.NewClientWithParams(
+	c := gitlab.NewClientWithParams(
 		baseURL,
 		"api/v4/",
 		authToken,
 		"xlab",
 		isVerbose,
 	)
+
+	return c
 }
+*/

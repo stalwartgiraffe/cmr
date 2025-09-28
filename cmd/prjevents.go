@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/stalwartgiraffe/cmr/internal/utils"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 )
 
 func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *cobra.Command {
@@ -46,8 +47,9 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 				return
 			}
 
-			ec := NewEventClient(authToken,
-				"https://gitlab.indexexchange.com/",
+			ec := NewEventsClient(
+				rc.WithBaseURL("https://gitlab.indexexchange.com/"),
+				rc.WithAuthToken(authToken),
 			)
 			filepath := "ignore/my_recent_events.yaml"
 			route := "events/"

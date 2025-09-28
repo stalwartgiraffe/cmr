@@ -12,6 +12,7 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/internal/xr"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 )
 
 // NewLabCommand initializes the command.
@@ -45,8 +46,10 @@ func runLabCmd(app App, cmd *cobra.Command) {
 		return
 	}
 
-	baseURL := "https://gitlab.indexexchange.com/"
-	client := NewProjectsClient(authToken, baseURL)
+	client := NewProjectsClient(
+		rc.WithBaseURL("https://gitlab.indexexchange.com/"),
+		rc.WithAuthToken(authToken),
+	)
 	projects, errs := client.getProjects(
 		ctx,
 		app)
@@ -68,11 +71,19 @@ type ProjectsClient struct {
 	client *gitlab.Client
 }
 
+func NewProjectsClient(overrides ...rc.Option) *ProjectsClient {
+	return &ProjectsClient{
+		client: gitlab.NewClient(overrides...),
+	}
+}
+
+/*
 func NewProjectsClient(authToken string, baseURL string) *ProjectsClient {
 	return &ProjectsClient{
 		client: NewGitlabClientWithParams(authToken, baseURL, true),
 	}
 }
+*/
 
 func (pc *ProjectsClient) getProjects(
 	ctx context.Context,

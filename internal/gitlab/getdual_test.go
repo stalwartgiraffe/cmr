@@ -13,7 +13,7 @@ import (
 
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
-	"github.com/stalwartgiraffe/cmr/restclient"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 
 	appfixtures "github.com/stalwartgiraffe/cmr/internal/app/fixtures"
 )
@@ -32,16 +32,16 @@ func makeClient(
 	accessToken := "looksligit"
 	userAgent := "cmr"
 	isVerbose := false
-	client := NewClientWithRest(
-		restclient.NewClientMock(
+	client := NewClient(
+		rc.WithBaseURL(baseURL),
+		rc.WithAPI(api),
+		rc.WithAuthToken(accessToken),
+		rc.WithUserAgent(userAgent),
+		rc.WithIsVerbose(isVerbose),
+		rc.WithClient(rc.NewClientMock(
 			haveResponses,
 			haveErr,
-		),
-		baseURL,
-		api,
-		accessToken,
-		userAgent,
-		isVerbose,
+		)),
 	)
 	Expect(client).ToNot(BeNil())
 	return client

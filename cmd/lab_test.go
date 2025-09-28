@@ -8,17 +8,20 @@ import (
 
 	"github.com/stalwartgiraffe/cmr/internal/app/fixtures"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab/localhost"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 )
 
 func TestGetProjects(t *testing.T) {
 	server := localhost.NewServer()
 	defer server.Close()
-	app := fixtures.NewApp()
+	client := NewProjectsClient(
+		rc.WithBaseURL(server.URL()),
+		rc.WithAuthToken("local"),
+	)
 	ctx, cancel := context.WithCancel(context.Background())
 	_ = cancel
-	accessToken := "local"
-	client := NewProjectsClient(accessToken, server.URL())
-	projects,errs := client.getProjects(
+	app := fixtures.NewApp()
+	projects, errs := client.getProjects(
 		ctx,
 		app)
 

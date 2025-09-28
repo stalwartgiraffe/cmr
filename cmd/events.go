@@ -14,7 +14,7 @@ import (
 	tw "github.com/stalwartgiraffe/cmr/internal/tviewwrapper"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 	"github.com/stalwartgiraffe/cmr/kam"
-	"github.com/stalwartgiraffe/cmr/restclient"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 	"github.com/stalwartgiraffe/cmr/withstack"
 )
 
@@ -55,8 +55,9 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 		return
 	}
 
-	ec := NewEventClient(authToken,
-		"https://gitlab.indexexchange.com/",
+	ec := NewEventsClient(
+		rc.WithBaseURL("https://gitlab.indexexchange.com/"),
+		rc.WithAuthToken(authToken),
 	)
 	app.Println("start updating recentEvents")
 	events, err := ec.updateRecentEvents(ctx, app, cancel, filepath, route)
@@ -76,17 +77,34 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	appTableRun(content, cancel)
 }
 
-type EventsClientt struct {
+type EventsClient struct {
 	client *gitlab.Client
 }
 
-func NewEventClient(authToken string, baseURL string) *EventsClientt {
-	return &EventsClientt{
-		client: NewGitlabClientWithURL(authToken, baseURL),
+func NewEventsClient(overrides ...rc.Option) *EventsClient {
+	return &EventsClient{
+		client: gitlab.NewClient(overrides...),
 	}
 }
 
-func (ec *EventsClientt) updateRecentEvents(
+/*
+func NewEventsClient(authToken string, baseURL string) *EventsClient {
+	return &EventsClient{
+		client: NewGitlabClientWithURL(authToken, baseURL),
+
+
+	c := gitlab.NewClientWithParams(
+		baseURL,
+		"api/v4/",
+		authToken,
+		"xlab",
+		isVerbose,
+	)
+	}
+}
+*/
+
+func (ec *EventsClient) updateRecentEvents(
 	ctx context.Context,
 	app App,
 	cancel context.CancelFunc,
@@ -112,20 +130,20 @@ func (ec *EventsClientt) updateRecentEvents(
 
 func unmarshalEventModel(
 	ctx context.Context,
-	app restclient.App,
+	app rc.App,
 	resp *resty.Response,
 ) (*[]gitlab.EventModel, error) {
 	_, span := app.StartSpan(ctx, "unmarshalEventModel")
 	defer span.End()
 
 	if resp == nil {
-		return nil, restclient.NewFailureResponse("Response object was nil", resp)
+		return nil, rc.NewFailureResponse("Response object was nil", resp)
 	}
 	if resp.IsError() {
-		return nil, restclient.NewFailureResponse("ResponseBody="+string(resp.Body()), resp)
+		return nil, rc.NewFailureResponse("ResponseBody="+string(resp.Body()), resp)
 	}
 	if !resp.IsSuccess() {
-		return nil, restclient.NewFailureResponse("Response object had failure status", resp)
+		return nil, rc.NewFailureResponse("Response object had failure status", resp)
 	}
 
 	var em gitlab.EventModelSlice
@@ -155,7 +173,7 @@ func verifyAllFieldsExpected(data []byte, names map[string]struct{}) error {
 	return nil
 }
 
-func (ec *EventsClientt) getEvents(
+func (ec *EventsClient) getEvents(
 	ctx context.Context,
 	app App,
 	_ context.CancelFunc,
