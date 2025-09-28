@@ -27,7 +27,6 @@ func NewMergeRequestCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) 
 			return NoArgs(args)
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-
 			runMergeRequestCmd(app, cancel, cmd)
 		},
 	}
@@ -39,7 +38,6 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 
 	filepath := "ignore/my_recent_merge_request.yaml"
 	route := "merge_requests/"
-	_ = route
 	var err error
 	authToken, err := loadGitlabAuthToken()
 
@@ -50,11 +48,13 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 		return
 	}
 
-	mrc := NewMergeRequestClient(authToken)
-	_ = mrc
+	client := NewMergeRequestClient(
+		rc.WithBaseURL("https://gitlab.indexexchange.com/"),
+		rc.WithAuthToken(authToken),
+		rc.WithIsVerbose(true),
+	)
 	app.Println("start updating recentEvents")
-	//requests, err := mrc.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
-	requests, err := gitlab.NewMergeRequestMapFromYaml(filepath)
+	requests, err := client.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
 	app.Printf("we got events %d", len(requests))
 	if err != nil {
 		utils.Redln(err)
@@ -74,11 +74,9 @@ type MergeRequestClient struct {
 	client *gitlab.Client
 }
 
-func NewMergeRequestClient(authToken string) *MergeRequestClient {
+func NewMergeRequestClient(overrides ...rc.Option) *MergeRequestClient {
 	return &MergeRequestClient{
-		client: gitlab.NewClient(
-			rc.WithAuthToken(authToken),
-		),
+		client: gitlab.NewClient(overrides...),
 	}
 }
 

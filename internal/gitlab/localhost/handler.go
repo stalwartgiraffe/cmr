@@ -1068,13 +1068,15 @@ func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequest
 func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 	// Extract user ID from path parameter using regex
 	// Expected path: /api/v4/users/{id}/events
-	re := regexp.MustCompile(`/api/v4/users/([^/]+)/events`)
-	matches := re.FindStringSubmatch(r.URL.Path)
-	if len(matches) < 2 {
-		http.Error(w, "User ID is required", http.StatusBadRequest)
-		return
-	}
-	userID := matches[1]
+	/*
+		re := regexp.MustCompile(`/api/v4/users/([^/]+)/events`)
+		matches := re.FindStringSubmatch(r.URL.Path)
+		if len(matches) < 2 {
+			http.Error(w, "User ID is required", http.StatusBadRequest)
+			return
+		}
+		userID := matches[1]
+	*/
 
 	// Parse query parameters
 	params, err := h.parseEventsQueryParams(r)
@@ -1085,7 +1087,7 @@ func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 
 	// For now, return mock events based on the API specification
 	// In a real implementation, this would call h.service.events.GetUserEvents(userID, params)
-	events := h.generateMockEvents(userID, params)
+	events := h.generateMockEvents(params)
 
 	w.Header().Set("Content-Type", "application/json")
 	// parsePageCursor() requires these http headers
@@ -1159,7 +1161,7 @@ func (h *Handler) parseEventsQueryParams(r *http.Request) (*EventsQueryParams, e
 }
 
 // generateMockEvents generates mock events for testing purposes
-func (h *Handler) generateMockEvents(userID string, params *EventsQueryParams) []Event {
+func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
 	// Generate mock events based on the API specification
 	events := []Event{
 		{

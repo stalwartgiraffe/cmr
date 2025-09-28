@@ -7,9 +7,7 @@ import (
 	"sort"
 
 	"github.com/TwiN/go-color"
-	easyjson "github.com/mailru/easyjson"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
-	"github.com/stalwartgiraffe/cmr/withstack"
 	"golang.org/x/exp/maps"
 )
 
@@ -64,18 +62,5 @@ func (m MergeRequestMap) WriteToYamlFile(filepath string) error {
 	sort.Slice(requests, func(i, j int) bool {
 		return requests[i].ID > requests[j].ID
 	})
-
-	file, err := os.Create(filepath)
-	if err != nil {
-		return withstack.Errorf("%w", err)
-	}
-	defer file.Close()
-
-	ss := MergeRequestSlice(requests)
-	if bb, err := easyjson.Marshal(ss); err != nil {
-		return err
-	} else {
-		const permissions os.FileMode = 0644
-		return os.WriteFile(filepath, bb, permissions)
-	}
+	return utils.WriteToYamlFile(filepath, requests)
 }

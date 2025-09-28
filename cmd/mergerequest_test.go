@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"embed"
 	"io"
 	"testing"
@@ -8,7 +9,29 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"github.com/stalwartgiraffe/cmr/internal/app"
+	"github.com/stalwartgiraffe/cmr/internal/app/fixtures"
+	"github.com/stalwartgiraffe/cmr/internal/gitlab/localhost"
+	rc "github.com/stalwartgiraffe/cmr/restclient"
 )
+
+func TestGetMergeRequests(t *testing.T) {
+	server := localhost.NewServer()
+	defer server.Close()
+	//http://127.0.0.1:46067/api/v4/merge_requests/"
+	client := NewMergeRequestClient(rc.WithBaseURL(server.URL()))
+	app := fixtures.NewApp()
+	ctx, cancel := context.WithCancel(context.Background())
+	route := "merge_requests/"
+	lastDateStr := "2025-01-01"
+	requests, err := client.getMergeRequests(
+		ctx,
+		app,
+		cancel,
+		route,
+		lastDateStr)
+	require.NoError(t, err)
+	require.NotNil(t, requests)
+}
 
 func TestLastNIndex(t *testing.T) {
 	tests := []struct {
@@ -245,7 +268,6 @@ func TestUnmarshalModels(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, models)
 }
-
 
 //go:embed data/merge_requests.json
 var loadTestsFS embed.FS

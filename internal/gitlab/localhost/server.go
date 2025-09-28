@@ -58,8 +58,8 @@ func SetupRouter(handler *Handler) *http.ServeMux {
 		}
 	}))
 
-	// Handle the GitLab API v4 events endpoint: /api/v4/users/{id}/events
-	mux.HandleFunc("/api/v4/users/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
+	// Handle the GitLab API v4 events endpoint: /api/v4/events
+	mux.HandleFunc("/api/v4/", LoggingMiddleware(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
 			handler.GetEvents(w, r)

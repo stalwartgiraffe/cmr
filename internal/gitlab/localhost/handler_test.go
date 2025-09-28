@@ -94,27 +94,6 @@ func TestHandleEventsWithQueryParams(t *testing.T) {
 	}
 }
 
-func TestHandleEventsInvalidUserID(t *testing.T) {
-	server := NewServer()
-	defer server.Close()
-
-	// Test invalid path (missing user ID)
-	resp, err := http.Get(fmt.Sprintf("%s/api/v4/users/", server.URL()))
-	if err != nil {
-		t.Fatalf("Failed to make request: %v", err)
-	}
-	defer func() {
-		err := resp.Body.Close()
-		if err != nil {
-			t.Fatal(err)
-		}
-	}()
-
-	if resp.StatusCode != http.StatusBadRequest {
-		t.Errorf("Expected status %d for invalid path, got %d", http.StatusBadRequest, resp.StatusCode)
-	}
-}
-
 func TestHandleMergeRequests(t *testing.T) {
 	// Create test server
 	server := NewServer()
