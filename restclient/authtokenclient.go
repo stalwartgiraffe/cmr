@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httputil"
-	"net/url"
 	"strings"
 
 	"github.com/TwiN/go-color"
@@ -19,6 +18,88 @@ import (
 var (
 	rstClr = color.Purple
 )
+
+type AuthTokenClient struct {
+	client    Client
+	baseURL   string
+	userAgent string
+	api       string
+	authToken string // the manually managed bearer token.
+	isVerbose bool
+	isDebug   bool
+}
+
+func NewWithParams(
+	baseURL string,
+	api string,
+	authToken string,
+	userAgent string,
+	isVerbose bool) *AuthTokenClient {
+	return NewWithClient(
+		newClientAdapter(),
+		baseURL,
+		api,
+		authToken,
+		userAgent,
+		isVerbose)
+}
+
+func NewWithClient(
+	client Client,
+	baseURL string,
+	api string,
+	authToken string,
+	userAgent string,
+	isVerbose bool) *AuthTokenClient {
+	// Note that by default the resty.Client uses a golang CookieJar.
+	// The cookie jar manager the session cookies
+	// https://pkg.go.dev/net/http/cookiejar
+	c := &AuthTokenClient{
+		client:    client,
+		baseURL:   baseURL,
+		userAgent: userAgent,
+		api:       api,
+		authToken: authToken,
+		isVerbose: isVerbose,
+	}
+	c.SetClient(client)
+	return c
+}
+
+func (c *AuthTokenClient) SetAPI(api string) {
+	c.api = api
+}
+
+func (c *AuthTokenClient) SetAuthToken(authToken string) {
+	c.authToken = authToken
+}
+
+func (c *AuthTokenClient) SetIsVerbose(isVerbose bool) {
+	c.isVerbose = isVerbose
+}
+
+func (c *AuthTokenClient) SetIsDebug(isDebug bool) {
+	c.isDebug = isDebug
+}
+
+func (c *AuthTokenClient) SetClient(client Client) {
+	c.client = client
+	c.SetBaseURL(c.baseURL)
+	c.SetUserAgent(c.userAgent)
+	c.SetHeader("ix-custom", "testix")
+}
+
+func (c *AuthTokenClient) SetBaseURL(baseURL string) {
+	c.client.SetBaseURL(baseURL)
+}
+
+func (c *AuthTokenClient) SetUserAgent(userAgent string) {
+	c.client.SetHeader("User-Agent", userAgent)
+}
+
+func (c *AuthTokenClient) SetHeader(k, v string) {
+	c.client.SetHeader(k, v)
+}
 
 type App interface {
 	Tracer
@@ -40,67 +121,13 @@ type Logger interface {
 	Println(v ...any)
 }
 
-type AuthTokenClient struct {
-	Client    Client
-	API       string
-	AuthToken string // the manually managed bearer token.
-	IsVerbose bool
-	IsDebug   bool
-}
-
-func NewWithParams(
-	baseURL string,
-	api string,
-	authToken string,
-	userAgent string,
-	isVerbose bool) *AuthTokenClient {
-
-	client := newClientAdapter()
-	return NewWithClient(
-		client,
-		baseURL,
-		api,
-		authToken,
-		userAgent,
-		isVerbose)
-}
-
-func NewWithClient(
-	client Client,
-	baseURL string,
-	api string,
-	authToken string,
-	userAgent string,
-	isVerbose bool) *AuthTokenClient {
-
-	// Note that by default the resty.Client uses a golang CookieJar.
-	// The cookie jar manager the session cookies
-	// https://pkg.go.dev/net/http/cookiejar
-	tokenClient := AuthTokenClient{
-		Client:    client,
-		API:       api,
-		AuthToken: authToken,
-		IsVerbose: isVerbose,
-	}
-	tokenClient.Client.SetBaseURL(baseURL)
-	tokenClient.Client.SetHeader("User-Agent", userAgent)
-	tokenClient.Client.SetHeader("ix-custom", "testix")
-	return &tokenClient
-}
-
-func (c *AuthTokenClient) WithAPI(api string) *AuthTokenClient {
-	wrap := *c
-	wrap.API = api
-	return &wrap
-}
-
-func (c *AuthTokenClient) BaseApiPath() string {
-	s, err := url.JoinPath(c.Client.GetBaseURL(), c.API)
-	if err != nil {
-		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.API, err))
-	}
-	return s
-}
+//func (c *AuthTokenClient) BaseApiPath() string {
+// 	s, err := url.JoinPath(c.Client.GetBaseURL(), c.API)
+// 	if err != nil {
+// 		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.API, err))
+// 	}
+// 	return s
+// }
 
 // Generic member functions are not natively support in Go1.19
 // see https://github.com/golang/go/issues/49085
@@ -127,11 +154,11 @@ func getResponse(
 	}
 	span.SetAttributes(attributes...)
 
-	r := tokenClient.Client.Request()
+	r := tokenClient.client.Request()
 	r.SetContext(ctx).
 		SetHeader("Accept", accept)
-	if tokenClient.AuthToken != "" {
-		r = r.SetAuthToken(tokenClient.AuthToken)
+	if tokenClient.authToken != "" {
+		r = r.SetAuthToken(tokenClient.authToken)
 	}
 	if queries != "" {
 		r = r.SetQueryString(queries)
@@ -139,7 +166,7 @@ func getResponse(
 
 	// TODO safely join the paths here
 	// https://stackoverflow.com/questions/34668012/combine-url-paths-with-path-join
-	resp, err := r.Get(tokenClient.API + path)
+	resp, err := r.Get(tokenClient.api + path)
 	if err != nil {
 		return resp, withstack.Errorf("Path error:%w", err)
 	}
@@ -195,7 +222,7 @@ func Get[RespT any](ctx context.Context,
 	if err != nil {
 		return nil, err
 	}
-	if tokenClient.IsVerbose {
+	if tokenClient.isVerbose {
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
 	}
 	resp.Header()
@@ -218,7 +245,7 @@ func GetWithHeader[RespT any](
 	if err != nil {
 		return nil, nil, err
 	}
-	if tokenClient.IsVerbose {
+	if tokenClient.isVerbose {
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
 	}
 	r, err := Unmarshal[RespT](resp)
@@ -245,7 +272,7 @@ func GetWithUnmarshal[RespT any](ctx context.Context,
 	if err != nil {
 		return nil, nil, err
 	}
-	if tokenClient.IsVerbose {
+	if tokenClient.isVerbose {
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
 	}
 	r, err := unmarshal(ctx, app, resp)
@@ -267,15 +294,15 @@ const (
 )
 
 func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
-	r := tokenClient.Client.Request().
+	r := tokenClient.client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")
-	if tokenClient.AuthToken != "" {
-		r = r.SetAuthToken(tokenClient.AuthToken)
+	if tokenClient.authToken != "" {
+		r = r.SetAuthToken(tokenClient.authToken)
 	}
 
 	rb := r.SetBody(b)
-	p := tokenClient.API + path
+	p := tokenClient.api + path
 	var err error
 	var resp *resty.Response
 	switch op {
@@ -298,9 +325,9 @@ func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *Auth
 		return nil, withstack.Errorf("POST error:%w", err)
 	}
 
-	if tokenClient.IsVerbose {
+	if tokenClient.isVerbose {
 		fmt.Println(color.Ize(rstClr, SprintRequestQuiet(resp)))
-		if tokenClient.IsDebug {
+		if tokenClient.isDebug {
 			cookies := resp.Cookies()
 			for _, c := range cookies {
 				fmt.Println(color.Ize(rstClr, fmt.Sprintf("%+v", *c)))
@@ -331,21 +358,21 @@ func Patch[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClie
 }
 
 func PostReturnCookies[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, []*http.Cookie, error) {
-	r := tokenClient.Client.Request().
+	r := tokenClient.client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")
-	if tokenClient.AuthToken != "" {
-		r = r.SetAuthToken(tokenClient.AuthToken)
+	if tokenClient.authToken != "" {
+		r = r.SetAuthToken(tokenClient.authToken)
 	}
 
 	resp, err := r.
 		SetBody(b).
-		Post(tokenClient.API + path)
+		Post(tokenClient.api + path)
 	if err != nil {
 		return nil, nil, withstack.Errorf("POST error:%w", err)
 	}
 
-	if tokenClient.IsVerbose {
+	if tokenClient.isVerbose {
 
 		fmt.Println(color.Ize(color.Cyan, SprintRequestQuiet(resp)))
 		cookies := resp.Cookies()

@@ -5,7 +5,8 @@ import (
 )
 
 func NewGitlabClientWithURL(authToken string, baseURL string) *gitlab.Client {
-	const isVerbose = false
+	//const isVerbose = false
+	const isVerbose = true
 	return NewGitlabClientWithParams(authToken, baseURL, isVerbose)
 }
 
