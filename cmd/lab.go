@@ -7,7 +7,6 @@ import (
 	"os"
 	"sync"
 
-	"github.com/TwiN/go-color"
 	"github.com/spf13/cobra"
 
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
@@ -46,63 +45,19 @@ func runLabCmd(app App, cmd *cobra.Command) {
 		return
 	}
 
-	isVerbose := true
-	baseURL := gitlab.NewClientWithParams(
-		"https://gitlab.indexexchange.com/",
-		"api/v4/",
-		accessToken,
-		"xlab",
-		isVerbose,
-	)
-
-	const startPage = 1
-
-	firstQueries := make(chan gitlab.UrlQuery)
-	totalPagesLimit := 1000
-	//totalPagesLimit := 1
-	projectCalls, gatherProjectErrs := gitlab.GatherPageCallsDualApp[[]gitlab.ProjectModel](
+	baseURL := "https://gitlab.indexexchange.com/"
+	client := NewProjectsClient(accessToken, baseURL)
+	projects, errs := client.getProjects(
 		ctx,
-		app,
-		baseURL,
-		firstQueries,
-		totalPagesLimit,
-	)
-	errorsFan := []<-chan error{}
-	errorsFan = append(errorsFan, gatherProjectErrs)
+		app)
 
-	firstQueries <- *gitlab.NewPageQuery(
-		"projects/",
-		startPage,
-	)
-	close(firstQueries)
-	transformCap := 5
-	projectResults := gitlab.TransformToOne(
-		projectCalls,
-		transformCap,
-		func(c gitlab.CallNoError[[]gitlab.ProjectModel]) []gitlab.ProjectModel {
-			return c.Val
-		})
+	if errs != nil {
+		utils.Redln(errs)
+		return
+	}
 
-	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		for e := range gitlab.FanIn(errorsFan) {
-			fmt.Println(color.Ize(color.Red, e.Error()))
-		}
-	}()
-	projectsMap := make(map[int]gitlab.ProjectModel)
-	go func() {
-		defer wg.Done()
-		for p := range projectResults {
-			projectsMap[p.ID] = p
-		}
-	}()
-
-	wg.Wait()
-
-	fmt.Println("num projects", len(projectsMap))
-	if err := utils.WriteToYamlFile("ignore/projects.yaml", utils.ToSortedSlice(projectsMap)); err != nil {
+	fmt.Println("num projects", len(projects))
+	if err := utils.WriteToYamlFile("ignore/projects.yaml", utils.ToSortedSlice(projects)); err != nil {
 		utils.Redln(err)
 		return
 	}
@@ -115,7 +70,7 @@ type ProjectsClient struct {
 
 func NewProjectsClient(accessToken string, baseURL string) *ProjectsClient {
 	return &ProjectsClient{
-		client: NewGitlabClientWithURL(accessToken, baseURL),
+		client: NewGitlabClientWithParams(accessToken, baseURL, true),
 	}
 }
 

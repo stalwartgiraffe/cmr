@@ -15,6 +15,8 @@ type Client struct {
 	TokenClient *restclient.TokenClient
 }
 
+// TODO implement functional options
+
 func NewClient(accessToken string, isVerbose bool) *Client {
 	return NewClientWithParams(
 		"https://gitlab.com/",
@@ -41,6 +43,7 @@ func NewClientWithParams(
 		),
 	}
 }
+
 func NewClientWithRest(
 	restClient restclient.Client,
 	baseURL string,
