@@ -40,7 +40,7 @@ type Logger interface {
 	Println(v ...any)
 }
 
-type TokenClient struct {
+type AuthTokenClient struct {
 	Client    Client
 	API       string
 	AuthToken string // the manually managed bearer token.
@@ -48,12 +48,12 @@ type TokenClient struct {
 	IsDebug   bool
 }
 
-func New(
+func NewWithParams(
 	baseURL string,
 	api string,
 	authToken string,
 	userAgent string,
-	isVerbose bool) *TokenClient {
+	isVerbose bool) *AuthTokenClient {
 
 	client := newClientAdapter()
 	return NewWithClient(
@@ -71,12 +71,12 @@ func NewWithClient(
 	api string,
 	authToken string,
 	userAgent string,
-	isVerbose bool) *TokenClient {
+	isVerbose bool) *AuthTokenClient {
 
 	// Note that by default the resty.Client uses a golang CookieJar.
 	// The cookie jar manager the session cookies
 	// https://pkg.go.dev/net/http/cookiejar
-	tokenClient := TokenClient{
+	tokenClient := AuthTokenClient{
 		Client:    client,
 		API:       api,
 		AuthToken: authToken,
@@ -88,13 +88,13 @@ func NewWithClient(
 	return &tokenClient
 }
 
-func (c *TokenClient) WithAPI(api string) *TokenClient {
+func (c *AuthTokenClient) WithAPI(api string) *AuthTokenClient {
 	wrap := *c
 	wrap.API = api
 	return &wrap
 }
 
-func (c *TokenClient) BaseApiPath() string {
+func (c *AuthTokenClient) BaseApiPath() string {
 	s, err := url.JoinPath(c.Client.GetBaseURL(), c.API)
 	if err != nil {
 		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.API, err))
@@ -107,7 +107,7 @@ func (c *TokenClient) BaseApiPath() string {
 func getResponse(
 	ctx context.Context,
 	app App,
-	tokenClient *TokenClient,
+	tokenClient *AuthTokenClient,
 	path string,
 	queries string) (
 	*resty.Response,
@@ -186,7 +186,7 @@ func SprintResponse(resp *resty.Response) string {
 
 func Get[RespT any](ctx context.Context,
 	app App,
-	tokenClient *TokenClient,
+	tokenClient *AuthTokenClient,
 	path string,
 	query string) (
 	*RespT, error,
@@ -205,7 +205,7 @@ func Get[RespT any](ctx context.Context,
 func GetWithHeader[RespT any](
 	ctx context.Context,
 	app App,
-	tokenClient *TokenClient,
+	tokenClient *AuthTokenClient,
 	path string,
 	queries string) (
 	*RespT, http.Header,
@@ -230,7 +230,7 @@ func GetWithHeader[RespT any](
 
 func GetWithUnmarshal[RespT any](ctx context.Context,
 	app App,
-	tokenClient *TokenClient,
+	tokenClient *AuthTokenClient,
 	path string,
 	queries string,
 	unmarshal func(context.Context, App, *resty.Response) (*RespT, error),
@@ -266,7 +266,7 @@ const (
 	PATCH
 )
 
-func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	r := tokenClient.Client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")
@@ -310,27 +310,27 @@ func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *Toke
 	return Unmarshal[RespT](resp)
 }
 
-func Head[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Head[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, HEAD, tokenClient, path, b)
 }
-func Post[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Post[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, POST, tokenClient, path, b)
 }
 
-func Put[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Put[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, PUT, tokenClient, path, b)
 }
-func Delete[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Delete[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, DELETE, tokenClient, path, b)
 }
-func Options[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Options[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, OPTIONS, tokenClient, path, b)
 }
-func Patch[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, error) {
+func Patch[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, error) {
 	return Update[BodyT, RespT](ctx, PATCH, tokenClient, path, b)
 }
 
-func PostReturnCookies[BodyT any, RespT any](ctx context.Context, tokenClient *TokenClient, path string, b *BodyT) (*RespT, []*http.Cookie, error) {
+func PostReturnCookies[BodyT any, RespT any](ctx context.Context, tokenClient *AuthTokenClient, path string, b *BodyT) (*RespT, []*http.Cookie, error) {
 	r := tokenClient.Client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")

@@ -12,7 +12,7 @@ import (
 )
 
 type Client struct {
-	TokenClient *restclient.TokenClient
+	client *restclient.AuthTokenClient
 }
 
 // TODO implement functional options
@@ -34,7 +34,7 @@ func NewClientWithParams(
 	userAgent string,
 	isVerbose bool) *Client {
 	return &Client{
-		TokenClient: restclient.New(
+		client: restclient.NewWithParams(
 			baseURL,
 			api,
 			authToken,
@@ -53,7 +53,7 @@ func NewClientWithRest(
 	isVerbose bool) *Client {
 
 	return &Client{
-		TokenClient: restclient.NewWithClient(
+		client: restclient.NewWithClient(
 			restClient,
 			baseURL,
 			api,
@@ -69,7 +69,7 @@ func (c *Client) Get(ctx context.Context, app App, q UrlQuery) (kam.JSONValue, h
 }
 
 func (c *Client) GetPathParams(ctx context.Context, app App, path string, params kam.Map) (kam.JSONValue, http.Header, error) {
-	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, app, c.TokenClient, path, params.ToQueryParameters())
+	v, header, err := restclient.GetWithHeader[kam.JSONValue](ctx, app, c.client, path, params.ToQueryParameters())
 	if err != nil {
 		return kam.JSONValue{}, nil, err
 	}
@@ -87,7 +87,7 @@ func GetWithHeader[RespT any](
 	params kam.Map) (
 	*RespT,
 	http.Header, error) {
-	return restclient.GetWithHeader[RespT](ctx, app, c.TokenClient, path, params.ToQueryParameters())
+	return restclient.GetWithHeader[RespT](ctx, app, c.client, path, params.ToQueryParameters())
 }
 
 func GetWithUnmarshal[RespT any](
@@ -101,7 +101,7 @@ func GetWithUnmarshal[RespT any](
 	return restclient.GetWithUnmarshal[RespT](
 		ctx,
 		app,
-		c.TokenClient,
+		c.client,
 		path,
 		params.ToQueryParameters(),
 		unmarshal,
