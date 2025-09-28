@@ -87,23 +87,6 @@ func NewEventsClient(overrides ...rc.Option) *EventsClient {
 	}
 }
 
-/*
-func NewEventsClient(authToken string, baseURL string) *EventsClient {
-	return &EventsClient{
-		client: NewGitlabClientWithURL(authToken, baseURL),
-
-
-	c := gitlab.NewClientWithParams(
-		baseURL,
-		"api/v4/",
-		authToken,
-		"xlab",
-		isVerbose,
-	)
-	}
-}
-*/
-
 func (ec *EventsClient) updateRecentEvents(
 	ctx context.Context,
 	app App,

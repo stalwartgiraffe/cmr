@@ -30,30 +30,6 @@ type AuthTokenClient struct {
 	headers   map[string]string
 }
 
-func NewWithParams(
-	baseURL string,
-	api string,
-	authToken string,
-	userAgent string,
-	isVerbose bool,
-) *AuthTokenClient {
-	client := newClientAdapter()
-	c := &AuthTokenClient{
-		client:    client,
-		baseURL:   baseURL,
-		userAgent: userAgent,
-		api:       api,
-		isVerbose: isVerbose,
-		headers:   make(map[string]string),
-
-		// Note that by default the resty.Client uses a golang CookieJar.
-		// The cookie jar manager the session cookies
-		// https://pkg.go.dev/net/http/cookiejar
-		authToken: authToken,
-	}
-	return c
-}
-
 type Option func(*AuthTokenClient)
 
 func WithBaseURL(baseURL string) Option {
@@ -103,7 +79,6 @@ func WithClient(client Client) Option {
 		if client == nil {
 			panic("WithClient passed nil client")
 		}
-
 		c.client = client
 		if len(c.baseURL) < 1 {
 			panic("baseURL not set")
@@ -153,14 +128,6 @@ type Logger interface {
 	Print(v ...any)
 	Println(v ...any)
 }
-
-//func (c *AuthTokenClient) BaseApiPath() string {
-// 	s, err := url.JoinPath(c.Client.GetBaseURL(), c.API)
-// 	if err != nil {
-// 		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.API, err))
-// 	}
-// 	return s
-// }
 
 // Generic member functions are not natively support in Go1.19
 // see https://github.com/golang/go/issues/49085

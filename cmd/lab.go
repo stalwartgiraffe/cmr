@@ -77,14 +77,6 @@ func NewProjectsClient(overrides ...rc.Option) *ProjectsClient {
 	}
 }
 
-/*
-func NewProjectsClient(authToken string, baseURL string) *ProjectsClient {
-	return &ProjectsClient{
-		client: NewGitlabClientWithParams(authToken, baseURL, true),
-	}
-}
-*/
-
 func (pc *ProjectsClient) getProjects(
 	ctx context.Context,
 	app App,

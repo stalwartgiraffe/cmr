@@ -19,7 +19,6 @@ func NewClient(overrides ...rc.Option) *Client {
 	opts := []rc.Option{
 		rc.WithBaseURL( "https://gitlab.indexexchange.com/"),
 		rc.WithAPI("api/v4/"),
-		rc.WithAuthToken("local"),
 		rc.WithUserAgent("xlab"),
 		rc.WithIsVerbose(false),
 	}

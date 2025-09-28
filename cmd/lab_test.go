@@ -14,10 +14,7 @@ import (
 func TestGetProjects(t *testing.T) {
 	server := localhost.NewServer()
 	defer server.Close()
-	client := NewProjectsClient(
-		rc.WithBaseURL(server.URL()),
-		rc.WithAuthToken("local"),
-	)
+	client := NewProjectsClient(rc.WithBaseURL(server.URL()))
 	ctx, cancel := context.WithCancel(context.Background())
 	_ = cancel
 	app := fixtures.NewApp()
