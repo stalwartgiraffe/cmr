@@ -26,9 +26,13 @@ type EventModel struct {
 	Author *AuthorModel `json:"author,omitempty"`
 	Note   *Note        `json:"note,omitempty"`
 
-	Imported     omitnull.Val[bool]          `json:"imported,omitempty"`
-	ImportedFrom omitnull.Val[string]        `json:"imported_from,omitempty"`
-	PushData     omitnull.Val[PushDataModel] `json:"push_data,omitempty"`
+	Imported     omitnull.Val[bool]   `json:"imported,omitempty"`
+	ImportedFrom omitnull.Val[string] `json:"imported_from,omitempty"`
+
+	// this does not round trip, use raw pointer
+	//	panic: unsupported Scan, storing driver.Value
+	//PushData     omitnull.Val[PushDataModel] `json:"push_data,omitempty"`
+	PushData *PushDataModel `json:"push_data,omitempty"`
 }
 
 type PushDataModel struct {
@@ -40,6 +44,12 @@ type PushDataModel struct {
 	Ref         string `json:"ref"`
 	CommitTitle string `json:"commit_title"`
 }
+
+// fix
+//	panic: unsupported Scan, storing driver.Value
+//func (p *PushDataModel) MarshalText() (text []byte, err error) {
+//	return []byte(p.String()), nil
+//}
 
 //easyjson:json
 type EventModelSlice []EventModel

@@ -127,9 +127,14 @@ func NewEventContents() []EventModelContent {
 		{
 			title: "PushData",
 			cell: func(e *gitlab.EventModel, _ map[int]gitlab.ProjectModel) string {
-				if p, ok := e.PushData.Get(); ok {
-					return p.String()
+				if e.PushData != nil {
+					return e.PushData.String()
 				}
+
+				// can not use omitnull
+				//if p, ok := e.PushData.Get(); ok {
+				//	return p.String()
+				//}
 				return ""
 			},
 		},

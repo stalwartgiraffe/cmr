@@ -58,6 +58,7 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 	ec := NewEventsClient(
 		rc.WithBaseURL("https://gitlab.indexexchange.com/"),
 		rc.WithAuthToken(authToken),
+		rc.WithIsVerbose(true),
 	)
 	app.Println("start updating recentEvents")
 	events, err := ec.updateRecentEvents(ctx, app, cancel, filepath, route)

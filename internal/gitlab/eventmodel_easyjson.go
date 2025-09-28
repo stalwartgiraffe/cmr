@@ -271,8 +271,14 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in *jlexer
 				in.AddError((out.ImportedFrom).UnmarshalJSON(data))
 			}
 		case "push_data":
-			if data := in.Raw(); in.Ok() {
-				in.AddError((out.PushData).UnmarshalJSON(data))
+			if in.IsNull() {
+				in.Skip()
+				out.PushData = nil
+			} else {
+				if out.PushData == nil {
+					out.PushData = new(PushDataModel)
+				}
+				(*out.PushData).UnmarshalEasyJSON(in)
 			}
 		default:
 			in.SkipRecursive()
@@ -368,10 +374,10 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab2(out *jwrit
 		out.RawString(prefix)
 		out.Raw((in.ImportedFrom).MarshalJSON())
 	}
-	if true {
+	if in.PushData != nil {
 		const prefix string = ",\"push_data\":"
 		out.RawString(prefix)
-		out.Raw((in.PushData).MarshalJSON())
+		(*in.PushData).MarshalEasyJSON(out)
 	}
 	out.RawByte('}')
 }

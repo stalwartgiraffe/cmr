@@ -79,7 +79,6 @@ func (a *AuthorModel) String() string {
 	// omit
 	// a.AvatarURL
 	// a.WebURL
-
 }
 
 /*
