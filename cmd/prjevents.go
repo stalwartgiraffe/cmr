@@ -40,14 +40,13 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 
 			cmdCtx := cmd.Context()
 
-			// start := time.Now()
-			accessToken, err := loadGitlabAccessToken()
+			authToken, err := loadGitlabAuthToken()
 			if err != nil {
 				utils.Redln(err)
 				return
 			}
 
-			ec := NewEventClient(accessToken,
+			ec := NewEventClient(authToken,
 				"https://gitlab.indexexchange.com/",
 			)
 			filepath := "ignore/my_recent_events.yaml"

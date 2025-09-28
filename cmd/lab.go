@@ -39,14 +39,14 @@ func runLabCmd(app App, cmd *cobra.Command) {
 	defer span.End()
 
 	var err error
-	accessToken, err := loadGitlabAccessToken()
+	authToken, err := loadGitlabAuthToken()
 	if err != nil {
 		utils.Redln(err)
 		return
 	}
 
 	baseURL := "https://gitlab.indexexchange.com/"
-	client := NewProjectsClient(accessToken, baseURL)
+	client := NewProjectsClient(authToken, baseURL)
 	projects, errs := client.getProjects(
 		ctx,
 		app)
@@ -68,9 +68,9 @@ type ProjectsClient struct {
 	client *gitlab.Client
 }
 
-func NewProjectsClient(accessToken string, baseURL string) *ProjectsClient {
+func NewProjectsClient(authToken string, baseURL string) *ProjectsClient {
 	return &ProjectsClient{
-		client: NewGitlabClientWithParams(accessToken, baseURL, true),
+		client: NewGitlabClientWithParams(authToken, baseURL, true),
 	}
 }
 
@@ -126,7 +126,7 @@ func (pc *ProjectsClient) getProjects(
 	return projectsMap, errs
 }
 
-func loadGitlabAccessToken() (string, error) {
+func loadGitlabAuthToken() (string, error) {
 	token := os.Getenv("GIT_LAB_ACCESS_TOKEN")
 	if token != "" {
 		return token, nil
@@ -153,5 +153,5 @@ func loadGitlabAccessToken() (string, error) {
 	if token != "" {
 		return token, nil
 	}
-	return "", fmt.Errorf("error: empty accessToken")
+	return "", fmt.Errorf("error: empty authToken")
 }

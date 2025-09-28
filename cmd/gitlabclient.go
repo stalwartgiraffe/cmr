@@ -4,18 +4,18 @@ import (
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 )
 
-func NewGitlabClientWithURL(accessToken string, baseURL string) *gitlab.Client {
+func NewGitlabClientWithURL(authToken string, baseURL string) *gitlab.Client {
 	const isVerbose = false
-	return NewGitlabClientWithParams(accessToken, baseURL, isVerbose)
+	return NewGitlabClientWithParams(authToken, baseURL, isVerbose)
 }
 
 // TODO simplify NewClientWithParams to use functional options
 
-func NewGitlabClientWithParams(accessToken string, baseURL string, isVerbose bool) *gitlab.Client {
+func NewGitlabClientWithParams(authToken string, baseURL string, isVerbose bool) *gitlab.Client {
 	return gitlab.NewClientWithParams(
 		baseURL,
 		"api/v4/",
-		accessToken,
+		authToken,
 		"xlab",
 		isVerbose,
 	)

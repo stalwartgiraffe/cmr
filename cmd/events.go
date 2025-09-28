@@ -49,13 +49,13 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 
 	filepath := "ignore/my_recent_events.yaml"
 	route := "events/"
-	accessToken, err := loadGitlabAccessToken()
+	authToken, err := loadGitlabAuthToken()
 	if err != nil {
 		utils.Redln(err)
 		return
 	}
 
-	ec := NewEventClient(accessToken,
+	ec := NewEventClient(authToken,
 		"https://gitlab.indexexchange.com/",
 	)
 	app.Println("start updating recentEvents")
@@ -80,9 +80,9 @@ type EventsClientt struct {
 	client *gitlab.Client
 }
 
-func NewEventClient(accessToken string, baseURL string) *EventsClientt {
+func NewEventClient(authToken string, baseURL string) *EventsClientt {
 	return &EventsClientt{
-		client: NewGitlabClientWithURL(accessToken, baseURL),
+		client: NewGitlabClientWithURL(authToken, baseURL),
 	}
 }
 

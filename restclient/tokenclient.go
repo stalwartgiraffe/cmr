@@ -41,17 +41,17 @@ type Logger interface {
 }
 
 type TokenClient struct {
-	Client      Client
-	Api         string
-	AccessToken string // the manually managed bearer token.
-	IsVerbose   bool
-	IsDebug     bool
+	Client    Client
+	API       string
+	AuthToken string // the manually managed bearer token.
+	IsVerbose bool
+	IsDebug   bool
 }
 
 func New(
 	baseURL string,
 	api string,
-	accessToken string,
+	authToken string,
 	userAgent string,
 	isVerbose bool) *TokenClient {
 
@@ -60,7 +60,7 @@ func New(
 		client,
 		baseURL,
 		api,
-		accessToken,
+		authToken,
 		userAgent,
 		isVerbose)
 }
@@ -69,7 +69,7 @@ func NewWithClient(
 	client Client,
 	baseURL string,
 	api string,
-	accessToken string,
+	authToken string,
 	userAgent string,
 	isVerbose bool) *TokenClient {
 
@@ -77,10 +77,10 @@ func NewWithClient(
 	// The cookie jar manager the session cookies
 	// https://pkg.go.dev/net/http/cookiejar
 	tokenClient := TokenClient{
-		Client:      client,
-		Api:         api,
-		AccessToken: accessToken,
-		IsVerbose:   isVerbose,
+		Client:    client,
+		API:       api,
+		AuthToken: authToken,
+		IsVerbose: isVerbose,
 	}
 	tokenClient.Client.SetBaseURL(baseURL)
 	tokenClient.Client.SetHeader("User-Agent", userAgent)
@@ -90,14 +90,14 @@ func NewWithClient(
 
 func (c *TokenClient) WithAPI(api string) *TokenClient {
 	wrap := *c
-	wrap.Api = api
+	wrap.API = api
 	return &wrap
 }
 
 func (c *TokenClient) BaseApiPath() string {
-	s, err := url.JoinPath(c.Client.GetBaseURL(), c.Api)
+	s, err := url.JoinPath(c.Client.GetBaseURL(), c.API)
 	if err != nil {
-		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.Api, err))
+		panic(fmt.Sprintf("Failed to join base URL %s with API %s: %v	", c.Client.GetBaseURL(), c.API, err))
 	}
 	return s
 }
@@ -130,8 +130,8 @@ func getResponse(
 	r := tokenClient.Client.Request()
 	r.SetContext(ctx).
 		SetHeader("Accept", accept)
-	if tokenClient.AccessToken != "" {
-		r = r.SetAuthToken(tokenClient.AccessToken)
+	if tokenClient.AuthToken != "" {
+		r = r.SetAuthToken(tokenClient.AuthToken)
 	}
 	if queries != "" {
 		r = r.SetQueryString(queries)
@@ -139,7 +139,7 @@ func getResponse(
 
 	// TODO safely join the paths here
 	// https://stackoverflow.com/questions/34668012/combine-url-paths-with-path-join
-	resp, err := r.Get(tokenClient.Api + path)
+	resp, err := r.Get(tokenClient.API + path)
 	if err != nil {
 		return resp, withstack.Errorf("Path error:%w", err)
 	}
@@ -270,12 +270,12 @@ func Update[BodyT any, RespT any](ctx context.Context, op int, tokenClient *Toke
 	r := tokenClient.Client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")
-	if tokenClient.AccessToken != "" {
-		r = r.SetAuthToken(tokenClient.AccessToken)
+	if tokenClient.AuthToken != "" {
+		r = r.SetAuthToken(tokenClient.AuthToken)
 	}
 
 	rb := r.SetBody(b)
-	p := tokenClient.Api + path
+	p := tokenClient.API + path
 	var err error
 	var resp *resty.Response
 	switch op {
@@ -334,13 +334,13 @@ func PostReturnCookies[BodyT any, RespT any](ctx context.Context, tokenClient *T
 	r := tokenClient.Client.Request().
 		SetContext(ctx).
 		SetHeader("Accept", "application/json")
-	if tokenClient.AccessToken != "" {
-		r = r.SetAuthToken(tokenClient.AccessToken)
+	if tokenClient.AuthToken != "" {
+		r = r.SetAuthToken(tokenClient.AuthToken)
 	}
 
 	resp, err := r.
 		SetBody(b).
-		Post(tokenClient.Api + path)
+		Post(tokenClient.API + path)
 	if err != nil {
 		return nil, nil, withstack.Errorf("POST error:%w", err)
 	}

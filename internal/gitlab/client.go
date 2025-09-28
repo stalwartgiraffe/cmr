@@ -17,11 +17,11 @@ type Client struct {
 
 // TODO implement functional options
 
-func NewClient(accessToken string, isVerbose bool) *Client {
+func NewClient(authToken string, isVerbose bool) *Client {
 	return NewClientWithParams(
 		"https://gitlab.com/",
 		"api/v4/",
-		accessToken,
+		authToken,
 		"xlab",
 		isVerbose,
 	)
@@ -30,14 +30,14 @@ func NewClient(accessToken string, isVerbose bool) *Client {
 func NewClientWithParams(
 	baseURL string,
 	api string,
-	accessToken string,
+	authToken string,
 	userAgent string,
 	isVerbose bool) *Client {
 	return &Client{
 		TokenClient: restclient.New(
 			baseURL,
 			api,
-			accessToken,
+			authToken,
 			userAgent,
 			isVerbose,
 		),
@@ -48,7 +48,7 @@ func NewClientWithRest(
 	restClient restclient.Client,
 	baseURL string,
 	api string,
-	accessToken string,
+	authToken string,
 	userAgent string,
 	isVerbose bool) *Client {
 
@@ -57,7 +57,7 @@ func NewClientWithRest(
 			restClient,
 			baseURL,
 			api,
-			accessToken,
+			authToken,
 			userAgent,
 			isVerbose,
 		),

@@ -41,17 +41,16 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 	route := "merge_requests/"
 	_ = route
 	var err error
-	// start := time.Now()
-	accessToken, err := loadGitlabAccessToken()
+	authToken, err := loadGitlabAuthToken()
 
-	app.Println("we got accessToken")
+	app.Println("we got authToken")
 
 	if err != nil {
 		utils.Redln(err)
 		return
 	}
 
-	mrc := NewMergeRequestClient(accessToken)
+	mrc := NewMergeRequestClient(authToken)
 	_ = mrc
 	app.Println("start updating recentEvents")
 	//requests, err := mrc.updateRecentMergeRequest(ctx, app, cancel, filepath, route)
@@ -75,13 +74,13 @@ type MergeRequestClient struct {
 	client *gitlab.Client
 }
 
-func NewMergeRequestClient(accessToken string) *MergeRequestClient {
+func NewMergeRequestClient(authToken string) *MergeRequestClient {
 	const isVerbose = false
 	return &MergeRequestClient{
 		client: gitlab.NewClientWithParams(
 			"https://gitlab.indexexchange.com/",
 			"api/v4/",
-			accessToken,
+			authToken,
 			"xlab",
 			isVerbose,
 		),
