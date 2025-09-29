@@ -181,6 +181,10 @@ func unmarshalMergeRequestModel(
 func unmarshalModels(app App, jsonBlob []byte) (
 	*[]gitlab.MergeRequestModel,
 	error) {
+	jsonTxt := string(jsonBlob) 
+	if 0 < len(jsonTxt) { 
+		fmt.Println(len(jsonTxt))
+	}
 	lexer := jlexer.Lexer{Data: jsonBlob}
 	var em gitlab.MergeRequestModelSlice
 

@@ -17,11 +17,11 @@ import (
 func TestGetMergeRequests(t *testing.T) {
 	server := localhost.NewServer()
 	defer server.Close()
-	//http://127.0.0.1:46067/api/v4/merge_requests/"
+	//http://127.0.0.1:46067/api/v4/merge_requests"
 	client := NewMergeRequestClient(rc.WithBaseURL(server.URL()))
 	app := fixtures.NewApp()
 	ctx, cancel := context.WithCancel(context.Background())
-	route := "merge_requests/"
+	route := "merge_requests"
 	lastDateStr := "2025-01-01"
 	requests, err := client.getMergeRequests(
 		ctx,
@@ -31,6 +31,11 @@ func TestGetMergeRequests(t *testing.T) {
 		lastDateStr)
 	require.NoError(t, err)
 	require.NotNil(t, requests)
+	for k, r := range requests { 
+		require.Equal(t, k, r.ID)
+		require.NotNil(t, r.Author)
+		require.Equal(t, r.Author.Username, "merge_user")
+	}
 }
 
 func TestLastNIndex(t *testing.T) {

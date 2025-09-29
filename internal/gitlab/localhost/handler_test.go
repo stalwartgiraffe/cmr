@@ -13,7 +13,7 @@ func TestHandleEvents(t *testing.T) {
 	defer server.Close()
 
 	// Test basic endpoint
-	resp, err := http.Get(fmt.Sprintf("%s/api/v4/users/123/events", server.URL()))
+	resp, err := http.Get(fmt.Sprintf("%s/api/v4/events", server.URL()))
 	if err != nil {
 		t.Fatalf("Failed to make request: %v", err)
 	}
@@ -68,7 +68,7 @@ func TestHandleEventsWithQueryParams(t *testing.T) {
 	defer server.Close()
 
 	// Test with query parameters
-	resp, err := http.Get(fmt.Sprintf("%s/api/v4/users/123/events?page=1&per_page=2&action=closed&target_type=Issue", server.URL()))
+	resp, err := http.Get(fmt.Sprintf("%s/api/v4/events?page=1&per_page=2&action=closed&target_type=Issue", server.URL()))
 	if err != nil {
 		t.Fatalf("Failed to make request: %v", err)
 	}

@@ -3,7 +3,6 @@ package localhost
 import (
 	"encoding/json"
 	"net/http"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -249,10 +248,15 @@ type MergeRequest struct {
 	ApprovalsBeforeMerge        string     `json:"approvals_before_merge,omitempty"`
 }
 
+type PageQueryParams struct {
+	Page    int `json:"page,omitempty"`
+	PerPage int `json:"per_page,omitempty"`
+}
+
 // EventsQueryParams represents the query parameters for the events endpoint
 type EventsQueryParams struct {
-	Page       int
-	PerPage    int
+	PageQueryParams
+
 	Action     string
 	TargetType string
 	Before     *time.Time
@@ -262,6 +266,8 @@ type EventsQueryParams struct {
 
 // MergeRequestsQueryParams represents the query parameters for the merge requests endpoint
 type MergeRequestsQueryParams struct {
+	PageQueryParams
+
 	AuthorID               *int       `json:"author_id,omitempty"`
 	AuthorUsername         string     `json:"author_username,omitempty"`
 	AssigneeID             *int       `json:"assignee_id,omitempty"`
@@ -296,6 +302,8 @@ type MergeRequestsQueryParams struct {
 
 // ProjectsQueryParams represents the query parameters for the projects endpoint
 type ProjectsQueryParams struct {
+	PageQueryParams
+
 	Archived                 *bool  `json:"archived,omitempty"`
 	Visibility               string `json:"visibility,omitempty"`
 	Search                   string `json:"search,omitempty"`
@@ -310,8 +318,6 @@ type ProjectsQueryParams struct {
 	IncludeSubgroups         bool   `json:"include_subgroups,omitempty"`
 	IncludeAncestorGroups    bool   `json:"include_ancestor_groups,omitempty"`
 	MinAccessLevel           *int   `json:"min_access_level,omitempty"`
-	Page                     int    `json:"page,omitempty"`
-	PerPage                  int    `json:"per_page,omitempty"`
 	WithCustomAttributes     bool   `json:"with_custom_attributes,omitempty"`
 	WithSecurityReports      bool   `json:"with_security_reports,omitempty"`
 }
@@ -327,18 +333,6 @@ func NewHandler(service *Service) *Handler {
 }
 
 func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
-	// Extract group ID from path parameter using regex
-	// Expected path: /api/v4/projects
-	/*
-		re := regexp.MustCompile(`/api/v4/projects/([^/]+)`)
-		matches := re.FindStringSubmatch(r.URL.Path)
-		if len(matches) < 2 {
-			http.Error(w, "Group ID is required", http.StatusBadRequest)
-			return
-		}
-		projectID := matches[1]
-	*/
-
 	// Parse query parameters
 	params, err := h.parseProjectsQueryParams(r)
 	if err != nil {
@@ -350,14 +344,7 @@ func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
 	// In a real implementation, this would call h.service.projects.GetGroupProjects(groupID, params)
 	projects := h.generateMockProjects(params)
 
-	w.Header().Set("Content-Type", "application/json")
-	// Add pagination headers like GitLab API
-	w.Header().Set("X-Page", strconv.Itoa(params.Page))
-	w.Header().Set("X-Next-Page", strconv.Itoa(params.Page+1))
-	w.Header().Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
-	w.Header().Set("X-Total-Pages", "1")
-	w.Header().Set("X-Per-Page", strconv.Itoa(params.PerPage))
-	w.Header().Set("X-Total", strconv.Itoa(len(projects)))
+	setOnePagedHeaders(len(projects), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
@@ -366,17 +353,17 @@ func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) GetGroupsProjects(w http.ResponseWriter, r *http.Request) {
 	// Extract group ID from path parameter using regex
-	// Expected path: /api/v4/groups/{id}/projects
+	// Expected path:
+	// Handle the GitLab API v4 groups endpoints:l/api/v4/groups/{id}/projects
 	/*
-		re := regexp.MustCompile(`/api/v4/groups/([^/]+)/projects`)
+		re := regexp.MustCompile(`/api/v4/groups/([^/]+)`)
 		matches := re.FindStringSubmatch(r.URL.Path)
 		if len(matches) < 2 {
 			http.Error(w, "Group ID is required", http.StatusBadRequest)
 			return
 		}
-		groupID := matches[1]
+		projectID := matches[1]
 	*/
-
 	// Parse query parameters
 	params, err := h.parseProjectsQueryParams(r)
 	if err != nil {
@@ -388,14 +375,7 @@ func (h *Handler) GetGroupsProjects(w http.ResponseWriter, r *http.Request) {
 	// In a real implementation, this would call h.service.projects.GetGroupProjects(groupID, params)
 	projects := h.generateMockProjects(params)
 
-	w.Header().Set("Content-Type", "application/json")
-	// Add pagination headers like GitLab API
-	w.Header().Set("X-Page", strconv.Itoa(params.Page))
-	w.Header().Set("X-Next-Page", strconv.Itoa(params.Page+1))
-	w.Header().Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
-	w.Header().Set("X-Total-Pages", "1")
-	w.Header().Set("X-Per-Page", strconv.Itoa(params.PerPage))
-	w.Header().Set("X-Total", strconv.Itoa(len(projects)))
+	setOnePagedHeaders(len(projects), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
@@ -405,6 +385,10 @@ func (h *Handler) GetGroupsProjects(w http.ResponseWriter, r *http.Request) {
 // parseProjectsQueryParams parses the query parameters for the projects endpoint
 func (h *Handler) parseProjectsQueryParams(r *http.Request) (*ProjectsQueryParams, error) {
 	params := &ProjectsQueryParams{
+		PageQueryParams: PageQueryParams{
+			Page:    1,  // default
+			PerPage: 20, // default
+		},
 		OrderBy:                  "created_at", // default
 		Sort:                     "desc",       // default
 		Simple:                   false,        // default
@@ -415,8 +399,6 @@ func (h *Handler) parseProjectsQueryParams(r *http.Request) (*ProjectsQueryParam
 		WithShared:               true,         // default
 		IncludeSubgroups:         false,        // default
 		IncludeAncestorGroups:    false,        // default
-		Page:                     1,            // default
-		PerPage:                  20,           // default
 		WithCustomAttributes:     false,        // default
 		WithSecurityReports:      false,        // default
 	}
@@ -718,16 +700,6 @@ func max(a, b int) int {
 }
 
 func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request) {
-	// Extract group ID from path parameter using regex
-	// Expected path: /api/v4/groups/{id}/merge_requests
-	re := regexp.MustCompile(`/api/v4/groups/([^/]+)/merge_requests`)
-	matches := re.FindStringSubmatch(r.URL.Path)
-	if len(matches) < 2 {
-		http.Error(w, "Group ID is required", http.StatusBadRequest)
-		return
-	}
-	groupID := matches[1]
-
 	// Parse query parameters
 	params, err := h.parseMergeRequestsQueryParams(r)
 	if err != nil {
@@ -737,16 +709,9 @@ func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request)
 
 	// For now, return mock merge requests based on the API specification
 	// In a real implementation, this would call h.service.mergeRequests.GetGroupMergeRequests(groupID, params)
-	mergeRequests := h.generateMockMergeRequests(groupID, params)
+	mergeRequests := h.generateMockMergeRequests(params)
 
-	w.Header().Set("Content-Type", "application/json")
-	// Add pagination headers like GitLab API
-	w.Header().Set("X-Page", "1")
-	w.Header().Set("X-Next-Page", "2")
-	w.Header().Set("X-Prev-Page", "0")
-	w.Header().Set("X-Total-Pages", "1")
-	w.Header().Set("X-Per-Page", "20")
-	w.Header().Set("X-Total", "3")
+	setOnePagedHeaders(len(mergeRequests), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(mergeRequests); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
@@ -756,6 +721,10 @@ func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request)
 // parseMergeRequestsQueryParams parses the query parameters for the merge requests endpoint
 func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequestsQueryParams, error) {
 	params := &MergeRequestsQueryParams{
+		PageQueryParams: PageQueryParams{
+			Page:    1,  // default
+			PerPage: 20, // default
+		},
 		State:   "all",        // default
 		OrderBy: "created_at", // default
 		Sort:    "desc",       // default
@@ -921,7 +890,7 @@ func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequests
 }
 
 // generateMockMergeRequests generates mock merge requests for testing purposes
-func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequestsQueryParams) []MergeRequest {
+func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) []MergeRequest {
 	// Generate mock merge requests based on the API specification
 	mergeRequests := []MergeRequest{
 		{
@@ -935,8 +904,8 @@ func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequest
 			UpdatedAt:   time.Now().Add(-12 * time.Hour),
 			Author: &UserBasic{
 				ID:       25,
-				Username: "test_user",
-				Name:     "Test User",
+				Username: "merge_user",
+				Name:     "merge user",
 				State:    "active",
 			},
 			TargetBranch: "main",
@@ -954,8 +923,8 @@ func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequest
 			UpdatedAt:   time.Now().Add(-24 * time.Hour),
 			Author: &UserBasic{
 				ID:       26,
-				Username: "developer",
-				Name:     "Developer User",
+				Username: "merge_user",
+				Name:     "merge user",
 				State:    "active",
 			},
 			MergedBy: &UserBasic{
@@ -979,8 +948,8 @@ func (h *Handler) generateMockMergeRequests(groupID string, params *MergeRequest
 			UpdatedAt:   time.Now().Add(-48 * time.Hour),
 			Author: &UserBasic{
 				ID:       28,
-				Username: "security_expert",
-				Name:     "Security Expert",
+				Username: "merge_user",
+				Name:     "merge user",
 				State:    "active",
 			},
 			TargetBranch: "main",
@@ -1089,26 +1058,49 @@ func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 	// In a real implementation, this would call h.service.events.GetUserEvents(userID, params)
 	events := h.generateMockEvents(params)
 
-	w.Header().Set("Content-Type", "application/json")
-	// parsePageCursor() requires these http headers
-	w.Header().Set("X-Page", "1")
-	w.Header().Set("X-Next-Page", "2")
-	w.Header().Set("X-Prev-Page", "0")
-	w.Header().Set("X-Total-Pages", "1")
-	w.Header().Set("X-Per-Page", "20")
-	w.Header().Set("X-Total", "3")
+	setOnePagedHeaders(len(events), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(events); err != nil {
 		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 		return
 	}
 }
 
+// setOnePagedHeaders returns just a single page, ignoring query params
+//
+// we are assume all the items fit in a single page
+// but is actually controlled by Page and PerPage query param
+// so this actually not returning fully valid paging behavor
+// TODO - implement fully paged cursor through the service
+func setOnePagedHeaders(total int, params PageQueryParams, header http.Header) {
+	header.Set("Content-Type", "application/json")
+	// force a single page
+	header.Set("X-Page", "1")
+	header.Set("X-Next-Page", "2")
+	header.Set("X-Prev-Page", "0")
+	header.Set("X-Per-Page", strconv.Itoa(params.PerPage))
+	if params.PerPage < total {
+		panic("count of collection exceeds PerPage")
+	}
+	/*
+		// actual pagination headers would need to spilt the collection
+		header.Set("X-Page", strconv.Itoa(params.Page))
+		header.Set("X-Next-Page", strconv.Itoa(params.Page+1))
+		header.Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
+		header.Set("X-Per-Page", strconv.Itoa(params.PerPage))
+	*/
+
+	header.Set("X-Total-Pages", "1")
+	header.Set("X-Total", strconv.Itoa(total))
+}
+
 // parseEventsQueryParams parses the query parameters for the events endpoint
 func (h *Handler) parseEventsQueryParams(r *http.Request) (*EventsQueryParams, error) {
 	params := &EventsQueryParams{
-		Page:    1,      // default
-		PerPage: 20,     // default
-		Sort:    "desc", // default
+		PageQueryParams: PageQueryParams{
+			Page:    1,  // default
+			PerPage: 20, // default
+		},
+		Sort: "desc", // default
 	}
 
 	// Parse page parameter
@@ -1174,7 +1166,7 @@ func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
 			AuthorID:       25,
 			TargetTitle:    stringPtr("Public project search field"),
 			CreatedAt:      time.Now().Add(-24 * time.Hour),
-			AuthorUsername: stringPtr("test_user"),
+			AuthorUsername: stringPtr("event_user"),
 			Imported:       false,
 			ImportedFrom:   "none",
 		},
@@ -1188,7 +1180,7 @@ func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
 			AuthorID:       25,
 			TargetTitle:    stringPtr("Add new feature"),
 			CreatedAt:      time.Now().Add(-12 * time.Hour),
-			AuthorUsername: stringPtr("test_user"),
+			AuthorUsername: stringPtr("event_user"),
 			Imported:       false,
 			ImportedFrom:   "none",
 		},
@@ -1202,7 +1194,7 @@ func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
 			AuthorID:       25,
 			TargetTitle:    stringPtr("main"),
 			CreatedAt:      time.Now().Add(-6 * time.Hour),
-			AuthorUsername: stringPtr("test_user"),
+			AuthorUsername: stringPtr("event_user"),
 			Imported:       false,
 			ImportedFrom:   "none",
 		},

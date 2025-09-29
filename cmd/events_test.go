@@ -27,4 +27,8 @@ func TestGetEvents(t *testing.T) {
 		lastDateStr)
 	require.NoError(t, err)
 	require.NotNil(t, recentEvents)
+	for k, e := range recentEvents {
+		require.Equal(t, k, e.ID)
+		require.Equal(t, "event_user", e.AuthorUsername)
+	}
 }
