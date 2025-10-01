@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync"
+
+	"github.com/brianvoe/gofakeit/v7"
 )
 
 // Server local host server for integration testing
@@ -14,10 +17,17 @@ type Server struct {
 	handler *Handler
 }
 
+var serverOnce sync.Once
+
 func NewServer() *Server {
 	events := NewEventsRepoMem()
 	service := NewService(events)
 	handler := NewHandler(service)
+
+	// globally fix the fake generator seed for reproducible test data
+	serverOnce.Do(func() {
+		gofakeit.Seed(42)
+	})
 
 	s := &Server{
 		handler: handler,

@@ -8,7 +8,6 @@ import (
 )
 
 func TestHandleEvents(t *testing.T) {
-	// Create test server
 	server := NewServer()
 	defer server.Close()
 
@@ -39,6 +38,8 @@ func TestHandleEvents(t *testing.T) {
 	if err := json.NewDecoder(resp.Body).Decode(&events); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
+
+	//spew.Dump(events)
 
 	// Verify we got events
 	if len(events) == 0 {
@@ -348,4 +349,3 @@ func TestHandleProjectsArchivedFilter(t *testing.T) {
 		}
 	}
 }
-
