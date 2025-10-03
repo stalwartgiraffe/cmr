@@ -1,0 +1,112 @@
+[
+  {
+    "id": 187576,
+    "iid": 3604,
+    "project_id": 2520,
+    "title": "feat: dynamically calculated time allotted after demand [ARCH3-12205]",
+    "description": "# Changes\n\n[Component test coverage report](https://nexus3.indexexchange.com/repository/exchange-node/supply/component_test_coverage_reports/allotted_post_demand_ARCH3-12205/report.html) - shows portions of production code not yet covered by the component tests.\n\n## How to review this change\n\nread code and test in gauntlet \n\n# [Merge Request Checklist v0.3](https://nomix.gpages.indexexchange.com/engineering/policy/merge-request-checklist/)\n\n## Code evaluation\n- [x] Code is written to adhere to [Code Evaluation Guidelines](https://confluence.indexexchange.com/display/QD/Code+Quality)\n\n## Merge quality\n- [x] I am confident these changes will lead to the expected outcomes and not have any negative downstream impacts, through testing in production-like environments and a strong understanding of the material\n- [x] [System testing](https://nomix.gpages.indexexchange.com/engineering/edge/policy/testing/#system-tests) \u0026 [component testing](https://nomix.gpages.indexexchange.com/engineering/policy/code-quality/#integration-testing) are updated as needed to cover new logic\n- [x] Follow up work (e.g technical debt, clean up, missing functionality) has been logged and linked in Jira\n- [x] Changes have not introduced any new third party software unless licensed under MIT, Apache or BSD family\n- [x] Changes reflect the requirements and acceptance criteria in the linked Jira\n\n## Useful Links\n[ADR checklist](https://nomix.gpages.indexexchange.com/engineering/policy/ADR-checklist/)\n\n[Exceptions](https://confluence.indexexchange.com/display/QD/Exception+Management)\n\n[MR Guidelines](https://nomix.gpages.indexexchange.com/engineering/policy/merge-requests/)\n\n[Traceability Policy](https://nomix.gpages.indexexchange.com/engineering/policy/traceability/)",
+    "state": "merged",
+    "created_at": "2025-04-17T11:53:30.148-04:00",
+    "updated_at": "2025-04-30T11:49:34.159-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-04-30T11:49:32.692-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "main",
+    "source_branch": "allotted_post_demand_ARCH3-12205",
+    "user_notes_count": 29,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [
+      {
+        "id": 458,
+        "username": "fan.jiang",
+        "name": "Fan Jiang",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/458/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/fan.jiang"
+      }
+    ],
+    "source_project_id": 2520,
+    "target_project_id": 2520,
+    "labels": [
+      "Jalapenos",
+      "Ready for Review"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "b9e0bb2b7a86e3aab166710a3ecdea611d118447",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "b637d458bcad583985a023767db89bca88a83c27",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!3604",
+    "references": {
+      "short": "!3604",
+      "relative": "!3604",
+      "full": "exchange-node/supply!3604"
+    },
+    "web_url": "https://gitlab.indexexchange.com/exchange-node/supply/-/merge_requests/3604",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 6,
+      "completed_count": 6
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

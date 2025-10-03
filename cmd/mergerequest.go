@@ -3,7 +3,6 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -149,10 +148,6 @@ func (mrc *MergeRequestClient) getMergeRequests(
 
 	requestsMap := gitlab.MergeRequestMap{}
 	for s := range mrCalls {
-		if 0 < countModel {
-			return requestsMap, nil
-		}
-
 		if s.Error != nil {
 			return nil, s.Error
 		}
@@ -191,21 +186,12 @@ func unmarshalModels(app App, jsonBlob []byte) (
 	error) {
 
 	prettyJson, err := utils.PrettyJSON(jsonBlob)
-	if err != nil {
+	if err == nil {
 		exampleName := fmt.Sprintf("internal/gitlab/localhost/api/merge_request_examples/merge_request_%03d.json", countModel)
 		countModel++
 		utils.WriteStringToFile(exampleName, prettyJson)
 	}
 
-	jsonTxt := string(jsonBlob)
-	if 0 < len(jsonTxt) {
-		jsonTxt := string(jsonBlob)
-		fmt.Println(len(jsonTxt))
-		m := 4271
-		s := string(jsonBlob[m-100 : m+100])
-		fmt.Println(s)
-		os.WriteFile("/tmp/blob.json", jsonBlob, 0644)
-	}
 	lexer := jlexer.Lexer{Data: jsonBlob}
 	var em gitlab.MergeRequestModelSlice
 

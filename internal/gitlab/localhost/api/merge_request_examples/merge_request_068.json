@@ -1,0 +1,102 @@
+[
+  {
+    "id": 192579,
+    "iid": 11651,
+    "project_id": 3429,
+    "title": "chore: take reporting id for allotted tmax experiment [ARCH3-12719]",
+    "description": "## Merging this MR will automatically deploy, requiring feature verification\n\n## Checklist\n\n\u003e This MR cannot pass review or be merged until this checklist is complete:\n\n### Configuration\n\n- [ ] Configuration is well structured, maintainable, extensible, and easy to understand\n\n### Merge quality\n\n- [ ] Changes, where appropriate are aligned with an associated deployment plan described in the JIRA ticket\n- [ ] Where technical debt has been introduced, an approved Technical Debt JIRA ticket been linked to this JIRA\n\n### Policy adherence\n\n- [ ] Configuration conforms to the [Feature Toggle Policy](https://nomix.gpages.indexexchange.com/engineering/policy/feature-toggle/)\n- [ ] Changes adhere to the [Deployment Policy](https://nomix.gpages.indexexchange.com/engineering/policy/deployment/) including feature verification steps\n- [ ] This merge complies with our [MR Guidelines](https://nomix.gpages.indexexchange.com/engineering/policy/merge-requests/)\n- [ ] Changes adhere to all global and pillar policies in [Nomix](https://nomix.gpages.indexexchange.com/engineering/)\n- [ ] Changes have been assessed against the [ADR checklist](https://nomix.gpages.indexexchange.com/engineering/policy/ADR-checklist/)\n- [ ] All changes reflect the Requirements and Acceptance Criteria in the linked JIRA as per our [Traceability Policy](https://nomix.gpages.indexexchange.com/engineering/policy/traceability/)\n- [ ] Where configuration does not adhere to guidance, an approved [Exception](https://nomix.gpages.indexexchange.com/engineering/process/exceptions/) is attached to the JIRA ticket\n\n## Context / Value of Change\n\nenable reporting for allotted tmax experiment\n\n## How to review this change\n\nread the json",
+    "state": "merged",
+    "created_at": "2025-06-11T16:27:35.670-04:00",
+    "updated_at": "2025-06-12T15:14:26.892-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-06-12T15:14:26.137-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "main",
+    "source_branch": "allotted_tmax_for_pdc_ARCH3-12719",
+    "user_notes_count": 0,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [],
+    "source_project_id": 3429,
+    "target_project_id": 3429,
+    "labels": [
+      "Jalapenos"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "a78d2df0a715f6a43267bbe8dffaae3c190c932b",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "a2ba6a72b4a8addec67b712f084c6f0eea9591ee",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!11651",
+    "references": {
+      "short": "!11651",
+      "relative": "!11651",
+      "full": "exchange-node/feature-toggles/features!11651"
+    },
+    "web_url": "https://gitlab.indexexchange.com/exchange-node/feature-toggles/features/-/merge_requests/11651",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 10,
+      "completed_count": 0
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

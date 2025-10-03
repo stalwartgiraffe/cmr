@@ -1,0 +1,102 @@
+[
+  {
+    "id": 200501,
+    "iid": 1842,
+    "project_id": 2608,
+    "title": "chore: book one host for emair cb experiment [ARCH3-13301]",
+    "description": "",
+    "state": "merged",
+    "created_at": "2025-09-09T13:36:55.462-04:00",
+    "updated_at": "2025-09-09T13:45:29.961-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-09-09T13:45:29.344-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "master",
+    "source_branch": "emair_cb_001_ARCH3-13301",
+    "user_notes_count": 0,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [],
+    "source_project_id": 2608,
+    "target_project_id": 2608,
+    "labels": [
+      "Jalapenos"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "0afa39fcf0e7a5e0c4f3b378c1074d4899a1240a",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "7ea85b5c909e6dc89d095fb4054b0d6e92ad19e8",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!1842",
+    "references": {
+      "short": "!1842",
+      "relative": "!1842",
+      "full": "platform-tools/experiment-booker!1842"
+    },
+    "web_url": "https://gitlab.indexexchange.com/platform-tools/experiment-booker/-/merge_requests/1842",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 0,
+      "completed_count": 0
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

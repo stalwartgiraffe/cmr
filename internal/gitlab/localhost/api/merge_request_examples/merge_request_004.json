@@ -1,0 +1,102 @@
+[
+  {
+    "id": 202711,
+    "iid": 12502,
+    "project_id": 3429,
+    "title": "chore: activate two host [ARCH3-13442]",
+    "description": "## Merging this MR will automatically deploy, requiring feature verification\n\n## Checklist\n\n\u003e This MR cannot pass review or be merged until this checklist is complete:\n\n### Configuration\n\n- [ ] Configuration is well structured, maintainable, extensible, and easy to understand\n\n### Merge quality\n\n- [ ] Changes, where appropriate are aligned with an associated deployment plan described in the JIRA ticket\n- [ ] Where technical debt has been introduced, an approved Technical Debt JIRA ticket been linked to this JIRA\n\n### Policy adherence\n\n- [ ] Configuration conforms to the [Feature Toggle Policy](https://nomix.gpages.indexexchange.com/engineering/policy/feature-toggle/)\n- [ ] Changes adhere to the [Deployment Policy](https://nomix.gpages.indexexchange.com/engineering/policy/deployment/) including feature verification steps\n- [ ] This merge complies with our [MR Guidelines](https://nomix.gpages.indexexchange.com/engineering/policy/merge-requests/)\n- [ ] Changes adhere to all global and pillar policies in [Nomix](https://nomix.gpages.indexexchange.com/engineering/)\n- [ ] Changes have been assessed against the [ADR checklist](https://nomix.gpages.indexexchange.com/engineering/policy/ADR-checklist/)\n- [ ] All changes reflect the Requirements and Acceptance Criteria in the linked JIRA as per our [Traceability Policy](https://nomix.gpages.indexexchange.com/engineering/policy/traceability/)\n- [ ] Where configuration does not adhere to guidance, an approved [Exception](https://nomix.gpages.indexexchange.com/engineering/process/exceptions/) is attached to the JIRA ticket\n\n## Context / Value of Change \n\nexperiment to verify additional billing validation\n\n## How to review this change\n\n\u003e REPLACE ME: In order to facilitate review, it's convenient to give guidelines for your reviewers.\n\u003e Here are some suggestions:\n\u003e - Suggest an order for reading the code (where to start, what to focus on)\n\u003e - Explain technical details that might not be obvious\n\u003e - Refer to some external resources (other commits, docs, ...)\n\u003e - Point out part of the code/design that might be interesting/important to review (parts you are not sure about)\n\u003e - Explain some decisions you made that you think that might surprise reviewers",
+    "state": "merged",
+    "created_at": "2025-10-01T15:42:37.562-04:00",
+    "updated_at": "2025-10-01T15:46:07.613-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-10-01T15:46:07.023-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "main",
+    "source_branch": "experiment_valid_create_dimensions_004_ARCH3-13442",
+    "user_notes_count": 0,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [],
+    "source_project_id": 3429,
+    "target_project_id": 3429,
+    "labels": [
+      "Jalapenos"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "88d8cc84334eb6b43c88b9f2083ddacd7682cb4e",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "88d8cc84334eb6b43c88b9f2083ddacd7682cb4e",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!12502",
+    "references": {
+      "short": "!12502",
+      "relative": "!12502",
+      "full": "exchange-node/feature-toggles/features!12502"
+    },
+    "web_url": "https://gitlab.indexexchange.com/exchange-node/feature-toggles/features/-/merge_requests/12502",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 10,
+      "completed_count": 0
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

@@ -59,7 +59,7 @@ type MergeRequestModel struct {
 	TaskCompletionStatus        *TaskCompletionStatusModel `json:"task_completion_status"`
 	HasConflicts                bool                       `json:"has_conflicts"`
 	BlockingDiscussionsResolved bool                       `json:"blocking_discussions_resolved"`
-	ApprovalsBeforeMerge        opt.Bool                   `json:"approvals_before_merge,omitempty"`
+	ApprovalsBeforeMerge        opt.Int                    `json:"approvals_before_merge,omitempty"`
 }
 
 // comment

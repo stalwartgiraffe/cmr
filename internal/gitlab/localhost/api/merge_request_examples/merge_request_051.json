@@ -1,0 +1,95 @@
+[
+  {
+    "id": 194697,
+    "iid": 665,
+    "project_id": 5514,
+    "title": "chore: add go runtime metrics [ARCH3-12788]",
+    "description": "After running the associated review job(s), find your content here: [add_go_metrics_ARCH3-12788](https://grafana-stg.indexexchange.com/dashboards/f/merge-requests/add_go_metrics_ARCH3-12788)",
+    "state": "closed",
+    "created_at": "2025-07-07T12:05:39.761-04:00",
+    "updated_at": "2025-07-07T12:59:25.497-04:00",
+    "merged_by": null,
+    "merge_user": null,
+    "merged_at": null,
+    "closed_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "closed_at": "2025-07-07T12:59:25.642-04:00",
+    "target_branch": "main",
+    "source_branch": "add_go_metrics_ARCH3-12788",
+    "user_notes_count": 0,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [],
+    "source_project_id": 5514,
+    "target_project_id": 5514,
+    "labels": [
+      "Jalapenos"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_approved",
+    "sha": "db5e989b38f5ba99909905195aeca8a2d7b88e56",
+    "merge_commit_sha": null,
+    "squash_commit_sha": null,
+    "discussion_locked": null,
+    "should_remove_source_branch": null,
+    "force_remove_source_branch": true,
+    "reference": "!665",
+    "references": {
+      "short": "!665",
+      "relative": "!665",
+      "full": "observability/grafana-automation/grafana-dashboards!665"
+    },
+    "web_url": "https://gitlab.indexexchange.com/observability/grafana-automation/grafana-dashboards/-/merge_requests/665",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 0,
+      "completed_count": 0
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

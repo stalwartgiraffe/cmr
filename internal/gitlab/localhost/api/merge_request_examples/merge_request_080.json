@@ -1,0 +1,112 @@
+[
+  {
+    "id": 192134,
+    "iid": 624,
+    "project_id": 5514,
+    "title": "chore: add latency row to demand charts [ARCH3-12656]",
+    "description": "add four latency panels to the demand grafana dashboard.",
+    "state": "merged",
+    "created_at": "2025-06-05T16:05:18.982-04:00",
+    "updated_at": "2025-06-09T14:37:33.943-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-06-09T14:37:33.249-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "main",
+    "source_branch": "duration_percentiles_ARCH3-12656",
+    "user_notes_count": 2,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [
+      {
+        "id": 1264,
+        "username": "tejaswi.bm",
+        "name": "Tejaswi BM",
+        "state": "active",
+        "avatar_url": null,
+        "web_url": "https://gitlab.indexexchange.com/tejaswi.bm"
+      }
+    ],
+    "source_project_id": 5514,
+    "target_project_id": 5514,
+    "labels": [
+      "Jalapenos",
+      "Ready for Review"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": false,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "0a63983738693c1b52b72de07d88a132f55980b6",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "a42bd2963e4a319c256a970f10e420b4ae19e619",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!624",
+    "references": {
+      "short": "!624",
+      "relative": "!624",
+      "full": "observability/grafana-automation/grafana-dashboards!624"
+    },
+    "web_url": "https://gitlab.indexexchange.com/observability/grafana-automation/grafana-dashboards/-/merge_requests/624",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 0,
+      "completed_count": 0
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]

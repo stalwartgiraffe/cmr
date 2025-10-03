@@ -1,0 +1,349 @@
+openapi: 3.0.0
+info:
+  title: GitLab Merge Request API
+  version: 1.0.0
+
+paths: {}
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - name
+        - state
+        - web_url
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 734
+        username:
+          type: string
+          example: karl.meissner
+        name:
+          type: string
+          example: Karl Meissner
+        state:
+          type: string
+          enum:
+            - active
+            - blocked
+            - deactivated
+          example: active
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png
+        web_url:
+          type: string
+          format: uri
+          example: https://gitlab.indexexchange.com/karl.meissner
+
+    References:
+      type: object
+      required:
+        - short
+        - relative
+        - full
+      properties:
+        short:
+          type: string
+          example: "!12511"
+        relative:
+          type: string
+          example: "!12511"
+        full:
+          type: string
+          example: exchange-node/feature-toggles/features!12511
+
+    TimeStats:
+      type: object
+      required:
+        - time_estimate
+        - total_time_spent
+      properties:
+        time_estimate:
+          type: integer
+          format: int32
+          example: 0
+        total_time_spent:
+          type: integer
+          format: int32
+          example: 0
+        human_time_estimate:
+          type: string
+          nullable: true
+          example: null
+        human_total_time_spent:
+          type: string
+          nullable: true
+          example: null
+
+    TaskCompletionStatus:
+      type: object
+      required:
+        - count
+        - completed_count
+      properties:
+        count:
+          type: integer
+          format: int32
+          example: 10
+        completed_count:
+          type: integer
+          format: int32
+          example: 0
+
+    MergeRequest:
+      type: object
+      required:
+        - id
+        - iid
+        - project_id
+        - title
+        - description
+        - state
+        - created_at
+        - updated_at
+        - target_branch
+        - source_branch
+        - user_notes_count
+        - upvotes
+        - downvotes
+        - author
+        - assignees
+        - reviewers
+        - source_project_id
+        - target_project_id
+        - labels
+        - draft
+        - work_in_progress
+        - merge_when_pipeline_succeeds
+        - merge_status
+        - detailed_merge_status
+        - sha
+        - force_remove_source_branch
+        - reference
+        - references
+        - web_url
+        - time_stats
+        - squash
+        - squash_on_merge
+        - task_completion_status
+        - has_conflicts
+        - blocking_discussions_resolved
+      properties:
+        id:
+          type: integer
+          format: int32
+          example: 202832
+        iid:
+          type: integer
+          format: int32
+          example: 12511
+        project_id:
+          type: integer
+          format: int32
+          example: 3429
+        title:
+          type: string
+          example: "chore: validate billing on eight hosts [ARCH3-13442]"
+        description:
+          type: string
+          example: "## Merging this MR will automatically deploy, requiring feature verification"
+        state:
+          type: string
+          enum:
+            - opened
+            - closed
+            - merged
+            - locked
+          example: merged
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-02T13:25:31.269-04:00"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-10-02T13:32:23.750-04:00"
+        merged_by:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          nullable: true
+        merge_user:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          nullable: true
+        merged_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-10-02T13:32:23.795-04:00"
+        closed_by:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          nullable: true
+        closed_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        target_branch:
+          type: string
+          example: main
+        source_branch:
+          type: string
+          example: experiment_valid_create_dimensions_005_ARCH3-13442
+        user_notes_count:
+          type: integer
+          format: int32
+          example: 0
+        upvotes:
+          type: integer
+          format: int32
+          example: 0
+        downvotes:
+          type: integer
+          format: int32
+          example: 0
+        author:
+          $ref: '#/components/schemas/User'
+        assignees:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          example:
+            - id: 734
+              username: karl.meissner
+              name: Karl Meissner
+              state: active
+              avatar_url: https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png
+              web_url: https://gitlab.indexexchange.com/karl.meissner
+        assignee:
+          allOf:
+            - $ref: '#/components/schemas/User'
+          nullable: true
+        reviewers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+          example: []
+        source_project_id:
+          type: integer
+          format: int32
+          example: 3429
+        target_project_id:
+          type: integer
+          format: int32
+          example: 3429
+        labels:
+          type: array
+          items:
+            type: string
+          example:
+            - Jalapenos
+        draft:
+          type: boolean
+          example: false
+        work_in_progress:
+          type: boolean
+          example: false
+        milestone:
+          type: object
+          nullable: true
+          example: null
+        merge_when_pipeline_succeeds:
+          type: boolean
+          example: true
+        merge_status:
+          type: string
+          enum:
+            - can_be_merged
+            - cannot_be_merged
+            - unchecked
+            - checking
+            - cannot_be_merged_recheck
+          example: can_be_merged
+        detailed_merge_status:
+          type: string
+          enum:
+            - blocked_status
+            - broken_status
+            - checking
+            - ci_must_pass
+            - ci_still_running
+            - discussions_not_resolved
+            - draft_status
+            - external_status_checks
+            - mergeable
+            - not_approved
+            - not_open
+            - policies_denied
+            - unchecked
+          example: not_open
+        sha:
+          type: string
+          pattern: '^[0-9a-f]{40}$'
+          example: 3e3b4af33db2206a5c3d4600ecff6d834aeed314
+        merge_commit_sha:
+          type: string
+          pattern: '^[0-9a-f]{40}$'
+          nullable: true
+          example: null
+        squash_commit_sha:
+          type: string
+          pattern: '^[0-9a-f]{40}$'
+          nullable: true
+          example: 3e3b4af33db2206a5c3d4600ecff6d834aeed314
+        discussion_locked:
+          type: boolean
+          nullable: true
+          example: null
+        should_remove_source_branch:
+          type: boolean
+          nullable: true
+          example: true
+        force_remove_source_branch:
+          type: boolean
+          example: true
+        reference:
+          type: string
+          pattern: '^!\d+$'
+          example: "!12511"
+        references:
+          $ref: '#/components/schemas/References'
+        web_url:
+          type: string
+          format: uri
+          example: https://gitlab.indexexchange.com/exchange-node/feature-toggles/features/-/merge_requests/12511
+        time_stats:
+          $ref: '#/components/schemas/TimeStats'
+        squash:
+          type: boolean
+          example: true
+        squash_on_merge:
+          type: boolean
+          example: true
+        task_completion_status:
+          $ref: '#/components/schemas/TaskCompletionStatus'
+        has_conflicts:
+          type: boolean
+          example: false
+        blocking_discussions_resolved:
+          type: boolean
+          example: true
+        approvals_before_merge:
+          type: integer
+          format: int32
+          nullable: true
+          example: null
+
+    MergeRequestList:
+      type: array
+      items:
+        $ref: '#/components/schemas/MergeRequest'

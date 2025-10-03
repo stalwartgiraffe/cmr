@@ -1,0 +1,128 @@
+[
+  {
+    "id": 190797,
+    "iid": 670,
+    "project_id": 5700,
+    "title": "chore: add vast accessor to dsp cache [ARCH3-12565]",
+    "description": "# Changes\n\n## How to review this change\n\nadd accessor for Vast protocol data from the DSP provider\n\n# [Merge Request Checklist v0.3](https://nomix.gpages.indexexchange.com/engineering/policy/merge-request-checklist/)\n\n## Code evaluation\n- [x] Code is written to adhere to [Code Evaluation Guidelines](https://confluence.indexexchange.com/display/QD/Code+Quality)\n\n## Merge quality\n- [x] I am confident these changes will lead to the expected outcomes and not have any negative downstream impacts, through testing in production-like environments and a strong understanding of the material\n- [x] [System testing](https://nomix.gpages.indexexchange.com/engineering/edge/policy/testing/#system-tests) \u0026 [component testing](https://nomix.gpages.indexexchange.com/engineering/policy/code-quality/#integration-testing) are updated as needed to cover new logic\n- [x] Follow up work (e.g technical debt, clean up, missing functionality) has been logged and linked in Jira\n- [x] Changes have not introduced any new third party software unless licensed under MIT, Apache or BSD family\n- [x] Changes reflect the requirements and acceptance criteria in the linked Jira\n\n## Useful Links\n[ADR checklist](https://nomix.gpages.indexexchange.com/engineering/policy/ADR-checklist/)\n\n[Exceptions](https://confluence.indexexchange.com/display/QD/Exception+Management)\n\n[MR Guidelines](https://nomix.gpages.indexexchange.com/engineering/policy/merge-requests/)\n\n[Traceability Policy](https://nomix.gpages.indexexchange.com/engineering/policy/traceability/)",
+    "state": "merged",
+    "created_at": "2025-05-22T15:43:40.624-04:00",
+    "updated_at": "2025-05-29T10:30:05.521-04:00",
+    "merged_by": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merge_user": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "merged_at": "2025-05-29T10:30:05.646-04:00",
+    "closed_by": null,
+    "closed_at": null,
+    "target_branch": "main",
+    "source_branch": "add_vast_accessor_ARCH3-12565",
+    "user_notes_count": 7,
+    "upvotes": 0,
+    "downvotes": 0,
+    "author": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "assignees": [
+      {
+        "id": 734,
+        "username": "karl.meissner",
+        "name": "Karl Meissner",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+      }
+    ],
+    "assignee": {
+      "id": 734,
+      "username": "karl.meissner",
+      "name": "Karl Meissner",
+      "state": "active",
+      "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/734/avatar.png",
+      "web_url": "https://gitlab.indexexchange.com/karl.meissner"
+    },
+    "reviewers": [
+      {
+        "id": 4,
+        "username": "adam.wong",
+        "name": "Adam Wong",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/4/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/adam.wong"
+      },
+      {
+        "id": 16,
+        "username": "daniel.shanker",
+        "name": "Daniel Shanker",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/16/spiderman-logo.jpg",
+        "web_url": "https://gitlab.indexexchange.com/daniel.shanker"
+      },
+      {
+        "id": 489,
+        "username": "jonathan.melcher",
+        "name": "Jonathan Melcher",
+        "state": "active",
+        "avatar_url": "https://gitlab.indexexchange.com/uploads/-/system/user/avatar/489/avatar.png",
+        "web_url": "https://gitlab.indexexchange.com/jonathan.melcher"
+      }
+    ],
+    "source_project_id": 5700,
+    "target_project_id": 5700,
+    "labels": [
+      "Jalapenos",
+      "Ready for Review"
+    ],
+    "draft": false,
+    "work_in_progress": false,
+    "milestone": null,
+    "merge_when_pipeline_succeeds": true,
+    "merge_status": "can_be_merged",
+    "detailed_merge_status": "not_open",
+    "sha": "114274190ba745d7cb9a4a5a37d4cef8d124a3f9",
+    "merge_commit_sha": null,
+    "squash_commit_sha": "69459ea85ad791582d7c415cb3c80d54798539fe",
+    "discussion_locked": null,
+    "should_remove_source_branch": true,
+    "force_remove_source_branch": true,
+    "reference": "!670",
+    "references": {
+      "short": "!670",
+      "relative": "!670",
+      "full": "exchange-node/rules/monorepo!670"
+    },
+    "web_url": "https://gitlab.indexexchange.com/exchange-node/rules/monorepo/-/merge_requests/670",
+    "time_stats": {
+      "time_estimate": 0,
+      "total_time_spent": 0,
+      "human_time_estimate": null,
+      "human_total_time_spent": null
+    },
+    "squash": true,
+    "squash_on_merge": true,
+    "task_completion_status": {
+      "count": 6,
+      "completed_count": 6
+    },
+    "has_conflicts": false,
+    "blocking_discussions_resolved": true,
+    "approvals_before_merge": null
+  }
+]
