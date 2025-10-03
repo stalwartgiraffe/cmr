@@ -17,7 +17,7 @@ import (
 
 type Handler struct {
 	service  *Service
-	requests []MergeRequestV0
+	requests []MergeRequest
 }
 
 func NewHandler(service *Service) *Handler {
@@ -253,7 +253,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: true,
 			EmptyRepo:                false,
 			Archived:                 false,
-			Owner: &UserBasicV0{
+			Owner: &UserBasic{
 				ID:       1,
 				Username: "root",
 				Name:     "Administrator",
@@ -288,7 +288,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: false,
 			EmptyRepo:                false,
 			Archived:                 false,
-			Owner: &UserBasicV0{
+			Owner: &UserBasic{
 				ID:       2,
 				Username: "developer",
 				Name:     "Developer User",
@@ -321,7 +321,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: false,
 			EmptyRepo:                false,
 			Archived:                 true,
-			Owner: &UserBasicV0{
+			Owner: &UserBasic{
 				ID:       1,
 				Username: "root",
 				Name:     "Administrator",
@@ -598,11 +598,11 @@ func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequests
 }
 
 // generateMockMergeRequests generates mock merge requests for testing purposes
-func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParamsV0) ([]MergeRequestV0, error) {
+func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParamsV0) ([]MergeRequest, error) {
 	if h.requests == nil {
-		requests := []MergeRequestV0{}
+		requests := []MergeRequest{}
 		for range 75 {
-			request := new(MergeRequestV0)
+			request := new(MergeRequest)
 			err := gofakeit.Struct(request)
 			if err != nil {
 				return nil, withstack.Errorf("Unmarshal error:%w", err)
@@ -614,7 +614,7 @@ func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParamsV0) 
 	}
 
 	// Apply filtering based on parameters
-	matches := make([]MergeRequestV0, 0, len(h.requests))
+	matches := make([]MergeRequest, 0, len(h.requests))
 	for _, mr := range h.requests {
 		// Filter by state
 		if params.State != "all" && mr.State != params.State {

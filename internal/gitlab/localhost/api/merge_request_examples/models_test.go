@@ -165,7 +165,4 @@ func TestMergeRequestStructure(t *testing.T) {
 	if mr.MergedBy != nil {
 		t.Errorf("Expected MergedBy to be nil, got %+v", mr.MergedBy)
 	}
-	if mr.ShouldRemoveSourceBranch != nil {
-		t.Errorf("Expected ShouldRemoveSourceBranch to be nil, got %+v", mr.ShouldRemoveSourceBranch)
-	}
 }

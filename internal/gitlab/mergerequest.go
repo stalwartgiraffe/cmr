@@ -36,7 +36,7 @@ type MergeRequestModel struct {
 	Labels                      []string             `json:"labels"`
 	Draft                       bool                 `json:"draft"`
 	WorkInProgress              bool                 `json:"work_in_progress"`
-	Milestone                   omitnull.Val[string] `json:"milestone,omitempty"`
+	Milestone                   *Milestone           `json:"milestone"`
 	MergeWhenPipelineSucceeds   bool                 `json:"merge_when_pipeline_succeeds"`
 	MergeStatus                 string               `json:"merge_status"`
 	DetailedMergeStatus         string               `json:"detailed_merge_status"`
@@ -77,4 +77,20 @@ type TimeStatsModel struct {
 type UserBasic struct {
 	Count          int `json:"count"`
 	CompletedCount int `json:"completed_count"`
+}
+
+type Milestone struct {
+	ID          int                  `json:"id"`
+	Iid         int                  `json:"iid"`
+	GroupID     omitnull.Val[int]    `json:"group_id"`
+	ProjectID   omitnull.Val[int]    `json:"project_id"`
+	CreatedAt   Time                 `json:"created_at"`
+	DueDate     Time                 `json:"due_date"`
+	StartDate   Time                 `json:"start_date"`
+	UpdateAt    Time                 `json:"updated_at"`
+	Expired     omitnull.Val[bool]   `json:"expired"`
+	Title       omitnull.Val[string] `json:"title"`
+	Description omitnull.Val[string] `json:"description"`
+	State       omitnull.Val[string] `json:"state"`
+	WebURL      omitnull.Val[string] `json:"web_url"`
 }

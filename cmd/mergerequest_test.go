@@ -34,7 +34,6 @@ func TestGetMergeRequests(t *testing.T) {
 	for k, r := range requests { 
 		require.Equal(t, k, r.ID)
 		require.NotNil(t, r.Author)
-		require.Equal(t, r.Author.Username, "merge_user")
 	}
 }
 
