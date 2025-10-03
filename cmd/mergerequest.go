@@ -128,8 +128,7 @@ func (mrc *MergeRequestClient) getMergeRequests(
 
 	// see https://docs.gitlab.com/ee/api/events.html
 	const startPage = 1
-	//const per_page = 200
-	const per_page = 1
+	const per_page = 200
 	firstQueries <- gitlab.UrlQuery{
 		Path: route,
 		Params: kam.Map{
