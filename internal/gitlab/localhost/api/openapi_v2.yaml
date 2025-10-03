@@ -51852,7 +51852,9 @@ definitions:
       assignee:
         "$ref": "#/definitions/API_Entities_UserBasic"
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       merge_requests_count:
         type: string
       upvotes:
@@ -52343,11 +52345,17 @@ definitions:
       source_branch:
         type: string
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       upvotes:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       downvotes:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       author:
         "$ref": "#/definitions/API_Entities_UserBasic"
       assignees:
@@ -52363,9 +52371,9 @@ definitions:
       labels:
         type: string
       draft:
-        type: string
+        type: boolean
       imported:
-        type: string
+        type: boolean
       imported_from:
         type: string
         example: bitbucket
@@ -52388,7 +52396,7 @@ definitions:
       squash_commit_sha:
         type: string
       discussion_locked:
-        type: string
+        type: boolean
       should_remove_source_branch:
         type: string
       force_remove_source_branch:
@@ -60399,7 +60407,9 @@ definitions:
       assignee:
         "$ref": "#/definitions/API_Entities_UserBasic"
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       merge_requests_count:
         type: string
       upvotes:
@@ -60566,7 +60576,9 @@ definitions:
       assignee:
         "$ref": "#/definitions/API_Entities_UserBasic"
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       merge_requests_count:
         type: string
       upvotes:
@@ -61390,6 +61402,8 @@ definitions:
         "$ref": "#/definitions/API_Entities_UserBasic"
       merged_at:
         type: string
+        format: date-time
+        example: '2022-11-14T17:22:01.470Z'
       closed_by:
         "$ref": "#/definitions/API_Entities_UserBasic"
       closed_at:
@@ -61403,7 +61417,9 @@ definitions:
       source_branch:
         type: string
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       upvotes:
         type: string
       downvotes:
@@ -61417,11 +61433,30 @@ definitions:
       reviewers:
         "$ref": "#/definitions/API_Entities_UserBasic"
       source_project_id:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       target_project_id:
-        type: string
-      labels:
-        type: string
+        type: integer
+        format: int32
+        example: 14
+      labels: 
+        type: array
+        items: 
+          type: object
+          properties: 
+            0: 
+              type: string
+              example: extra_work
+            1: 
+              type: string
+              example: enable_net
+            2: 
+              type: string
+              example: validate_tests
+        example: [
+          foo
+        ]
       draft:
         type: string
       imported:
@@ -61590,7 +61625,9 @@ definitions:
       source_branch:
         type: string
       user_notes_count:
-        type: string
+        type: integer
+        format: int32
+        example: 14
       upvotes:
         type: string
       downvotes:

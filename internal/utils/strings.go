@@ -1,13 +1,16 @@
 package utils
 
 import (
+	"bytes"
+	"encoding/json"
 	"os"
 	"sort"
 	"strings"
 
-	"github.com/stalwartgiraffe/cmr/withstack"
 	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v2"
+
+	"github.com/stalwartgiraffe/cmr/withstack"
 )
 
 func YamlString(v any) string {
@@ -27,6 +30,19 @@ func WriteToYamlFile[T any](path string, t T) error {
 
 	encoder := yaml.NewEncoder(file)
 	return encoder.Encode(t)
+}
+
+func WriteStringToFile(filepath string, content string) error {
+    return os.WriteFile(filepath, []byte(content), 0644)
+}
+
+func PrettyJSON(data []byte) (string, error) {
+	var buf bytes.Buffer
+	err := json.Indent(&buf, data, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }
 
 func ReadFromYamlFile[T any](path string, t *T) error {

@@ -2,24 +2,33 @@ package localhost
 
 import (
 	"encoding/json"
-	"fmt"
+	"math"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v7"
-	"github.com/davecgh/go-spew/spew"
+
+	"github.com/stalwartgiraffe/cmr/internal/utils"
+	"github.com/stalwartgiraffe/cmr/withstack"
 )
 
 type Handler struct {
-	service *Service
+	service  *Service
+	requests []MergeRequest
 }
 
 func NewHandler(service *Service) *Handler {
 	return &Handler{
 		service: service,
 	}
+}
+
+func (*Handler) OnServerError(w http.ResponseWriter, msg string, err error) {
+	utils.Redln(msg, "\n", err.Error())
+	http.Error(w, msg, http.StatusInternalServerError)
 }
 
 func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +45,7 @@ func (h *Handler) GetProjects(w http.ResponseWriter, r *http.Request) {
 
 	setOnePagedHeaders(len(projects), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		h.OnServerError(w, "Failed to encode response", err)
 		return
 	}
 }
@@ -54,7 +63,7 @@ func (h *Handler) GetGroupsProjects(w http.ResponseWriter, r *http.Request) {
 
 	setOnePagedHeaders(len(projects), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(projects); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		h.OnServerError(w, "Failed to encode response", err)
 		return
 	}
 }
@@ -92,6 +101,8 @@ func (h *Handler) parseProjectsQueryParams(r *http.Request) (*ProjectsQueryParam
 		WithCustomAttributes:     false,        // default
 		WithSecurityReports:      false,        // default
 	}
+
+	parsePageParams(r.URL.Query(), &params.PageQueryParams)
 
 	// Parse archived parameter
 	if archivedStr := r.URL.Query().Get("archived"); archivedStr != "" {
@@ -399,12 +410,16 @@ func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request)
 	}
 
 	// For now, return mock merge requests based on the API specification
-	// In a real implementation, this would call h.service.mergeRequests.GetGroupMergeRequests(groupID, params)
-	mergeRequests := h.generateMockMergeRequests(params)
+	// In a real implementation, this would call h.service.requests.GetGroupMergeRequests(groupID, params)
+	requests, err := h.generateMockMergeRequests(params)
+	if err != nil {
+		h.OnServerError(w, "Failed to generate response", err)
+		return
+	}
 
-	setOnePagedHeaders(len(mergeRequests), params.PageQueryParams, w.Header())
-	if err := json.NewEncoder(w).Encode(mergeRequests); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+	setOnePagedHeaders(len(requests), params.PageQueryParams, w.Header())
+	if err := json.NewEncoder(w).Encode(requests); err != nil {
+		h.OnServerError(w, "Failed to encode response", err)
 		return
 	}
 }
@@ -420,6 +435,8 @@ func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequests
 		OrderBy: "created_at", // default
 		Sort:    "desc",       // default
 	}
+
+	parsePageParams(r.URL.Query(), &params.PageQueryParams)
 
 	// Parse author_id parameter
 	if authorIDStr := r.URL.Query().Get("author_id"); authorIDStr != "" {
@@ -581,77 +598,24 @@ func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequests
 }
 
 // generateMockMergeRequests generates mock merge requests for testing purposes
-func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) []MergeRequest {
-	// Generate mock merge requests based on the API specification
-	mergeRequests := []MergeRequest{
-		{
-			ID:          84,
-			IID:         14,
-			ProjectID:   4,
-			Title:       "Impedit et ut et dolores vero provident ullam est",
-			Description: "Repellendus impedit et vel velit dignissimos.",
-			State:       "opened",
-			CreatedAt:   time.Now().Add(-48 * time.Hour),
-			UpdatedAt:   time.Now().Add(-12 * time.Hour),
-			Author: &UserBasic{
-				ID:       25,
-				Username: "merge_user",
-				Name:     "merge user",
-				State:    "active",
-			},
-			TargetBranch: "main",
-			SourceBranch: "feature-branch",
-			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/14",
-		},
-		{
-			ID:          85,
-			IID:         15,
-			ProjectID:   5,
-			Title:       "Add new feature for user management",
-			Description: "This MR adds comprehensive user management features.",
-			State:       "merged",
-			CreatedAt:   time.Now().Add(-72 * time.Hour),
-			UpdatedAt:   time.Now().Add(-24 * time.Hour),
-			Author: &UserBasic{
-				ID:       26,
-				Username: "merge_user",
-				Name:     "merge user",
-				State:    "active",
-			},
-			MergedBy: &UserBasic{
-				ID:       27,
-				Username: "maintainer",
-				Name:     "Maintainer User",
-				State:    "active",
-			},
-			TargetBranch: "main",
-			SourceBranch: "user-management",
-			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/15",
-		},
-		{
-			ID:          86,
-			IID:         16,
-			ProjectID:   6,
-			Title:       "Fix critical security vulnerability",
-			Description: "Addresses CVE-2023-1234 security issue.",
-			State:       "closed",
-			CreatedAt:   time.Now().Add(-96 * time.Hour),
-			UpdatedAt:   time.Now().Add(-48 * time.Hour),
-			Author: &UserBasic{
-				ID:       28,
-				Username: "merge_user",
-				Name:     "merge user",
-				State:    "active",
-			},
-			TargetBranch: "main",
-			SourceBranch: "security-fix",
-			WebURL:       "https://gitlab.example.com/group/project/-/merge_requests/16",
-		},
+func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) ([]MergeRequest, error) {
+	if h.requests == nil {
+		requests := []MergeRequest{}
+		for range 75 {
+			request := new(MergeRequest)
+			err := gofakeit.Struct(request)
+			if err != nil {
+				return nil, withstack.Errorf("Unmarshal error:%w", err)
+			}
+			requests = append(requests, *request)
+		}
+
+		h.requests = requests
 	}
 
 	// Apply filtering based on parameters
-	var filteredMergeRequests []MergeRequest
-	for _, mr := range mergeRequests {
+	matches := make([]MergeRequest, 0, len(h.requests))
+	for _, mr := range h.requests {
 		// Filter by state
 		if params.State != "all" && mr.State != params.State {
 			continue
@@ -719,10 +683,10 @@ func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) []
 			}
 		}
 
-		filteredMergeRequests = append(filteredMergeRequests, mr)
+		matches = append(matches, mr)
 	}
 
-	return filteredMergeRequests
+	return matches, nil
 }
 
 func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
@@ -735,11 +699,15 @@ func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 
 	// For now, return mock events based on the API specification
 	// In a real implementation, this would call h.service.events.GetUserEvents(userID, params)
-	events := h.generateMockEvents(params)
+	events, err := h.generateMockEvents(params)
+	if err != nil {
+		h.OnServerError(w, "Failed to generate response", err)
+		return
+	}
 
 	setOnePagedHeaders(len(events), params.PageQueryParams, w.Header())
 	if err := json.NewEncoder(w).Encode(events); err != nil {
-		http.Error(w, "Failed to encode response", http.StatusInternalServerError)
+		h.OnServerError(w, "Failed to encode response", err)
 		return
 	}
 }
@@ -753,22 +721,16 @@ func (h *Handler) GetEvents(w http.ResponseWriter, r *http.Request) {
 func setOnePagedHeaders(total int, params PageQueryParams, header http.Header) {
 	header.Set("Content-Type", "application/json")
 	// force a single page
-	header.Set("X-Page", "1")
-	header.Set("X-Next-Page", "2")
-	header.Set("X-Prev-Page", "0")
 	header.Set("X-Per-Page", strconv.Itoa(params.PerPage))
-	if params.PerPage < total {
-		panic("count of collection exceeds PerPage")
-	}
-	/*
-		// actual pagination headers would need to spilt the collection
-		header.Set("X-Page", strconv.Itoa(params.Page))
-		header.Set("X-Next-Page", strconv.Itoa(params.Page+1))
-		header.Set("X-Prev-Page", strconv.Itoa(max(0, params.Page-1)))
-		header.Set("X-Per-Page", strconv.Itoa(params.PerPage))
-	*/
 
-	header.Set("X-Total-Pages", "1")
+	totalPages := int(math.Ceil(float64(total) / float64(params.PerPage)))
+	prevPage := max(0, params.Page+1)
+	nextPage := min(params.Page+1, totalPages)
+
+	header.Set("X-Page", strconv.Itoa(params.Page))
+	header.Set("X-Prev-Page", strconv.Itoa(prevPage))
+	header.Set("X-Next-Page", strconv.Itoa(nextPage))
+	header.Set("X-Total-Pages", strconv.Itoa(totalPages))
 	header.Set("X-Total", strconv.Itoa(total))
 }
 
@@ -782,19 +744,7 @@ func (h *Handler) parseEventsQueryParams(r *http.Request) (*EventsQueryParams, e
 		Sort: "desc", // default
 	}
 
-	// Parse page parameter
-	if pageStr := r.URL.Query().Get("page"); pageStr != "" {
-		if page, err := strconv.Atoi(pageStr); err == nil && page > 0 {
-			params.Page = page
-		}
-	}
-
-	// Parse per_page parameter
-	if perPageStr := r.URL.Query().Get("per_page"); perPageStr != "" {
-		if perPage, err := strconv.Atoi(perPageStr); err == nil && perPage > 0 {
-			params.PerPage = perPage
-		}
-	}
+	parsePageParams(r.URL.Query(), &params.PageQueryParams)
 
 	// Parse action parameter
 	params.Action = r.URL.Query().Get("action")
@@ -831,67 +781,36 @@ func (h *Handler) parseEventsQueryParams(r *http.Request) (*EventsQueryParams, e
 	return params, nil
 }
 
-// generateMockEvents generates mock events for testing purposes
-func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
-	// Generate mock events based on the API specification
+func parsePageParams(query url.Values, params *PageQueryParams) {
+	// Parse page parameter
+	//description: Current page number
+	if pageStr := query.Get("page"); pageStr != "" {
+		if page, err := strconv.Atoi(pageStr); err == nil && page > 0 {
+			params.Page = page
+		}
+	}
 
+	// Parse per_page parameter
+	// description: Number of items per page
+	if perPageStr := query.Get("per_page"); perPageStr != "" {
+		if perPage, err := strconv.Atoi(perPageStr); err == nil && perPage > 0 {
+			params.PerPage = perPage
+		}
+	}
+}
+
+// generateMockEvents generates mock events for testing purposes
+func (h *Handler) generateMockEvents(params *EventsQueryParams) ([]Event, error) {
+	// Generate mock events based on the API specification
 	events := []Event{}
 	for range 20 {
 		event := new(Event)
 		err := gofakeit.Struct(event)
 		if err != nil {
-			fmt.Printf("could not make struct: %+v\n", err)
+			return nil, withstack.Errorf("Unmarshal error:%w", err)
 		}
-		fmt.Println("---------------------")
-		spew.Dump(event)
 		events = append(events, *event)
 	}
-	/*
-		events := []Event{
-			{
-				ID:             1,
-				ProjectID:      intPtr(2),
-				ActionName:     "closed",
-				TargetID:       intPtr(160),
-				TargetIID:      intPtr(157),
-				TargetType:     stringPtr("Issue"),
-				AuthorID:       25,
-				TargetTitle:    stringPtr("Public project search field"),
-				CreatedAt:      time.Now().Add(-24 * time.Hour),
-				AuthorUsername: stringPtr("event_user"),
-				Imported:       false,
-				ImportedFrom:   "none",
-			},
-			{
-				ID:             2,
-				ProjectID:      intPtr(3),
-				ActionName:     "opened",
-				TargetID:       intPtr(161),
-				TargetIID:      intPtr(158),
-				TargetType:     stringPtr("MergeRequest"),
-				AuthorID:       25,
-				TargetTitle:    stringPtr("Add new feature"),
-				CreatedAt:      time.Now().Add(-12 * time.Hour),
-				AuthorUsername: stringPtr("event_user"),
-				Imported:       false,
-				ImportedFrom:   "none",
-			},
-			{
-				ID:             3,
-				ProjectID:      intPtr(1),
-				ActionName:     "pushed",
-				TargetID:       nil,
-				TargetIID:      nil,
-				TargetType:     stringPtr("Project"),
-				AuthorID:       25,
-				TargetTitle:    stringPtr("main"),
-				CreatedAt:      time.Now().Add(-6 * time.Hour),
-				AuthorUsername: stringPtr("event_user"),
-				Imported:       false,
-				ImportedFrom:   "none",
-			},
-		}
-	*/
 
 	// Apply filtering based on parameters
 	var filteredEvents []Event
@@ -924,14 +843,14 @@ func (h *Handler) generateMockEvents(params *EventsQueryParams) []Event {
 	end := start + params.PerPage
 
 	if start >= len(filteredEvents) {
-		return []Event{}
+		return []Event{}, nil
 	}
 
 	if end > len(filteredEvents) {
 		end = len(filteredEvents)
 	}
 
-	return filteredEvents[start:end]
+	return filteredEvents[start:end], nil
 }
 
 // Helper functions for pointer creation

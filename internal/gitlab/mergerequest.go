@@ -46,7 +46,7 @@ type MergeRequestModel struct {
 	MergeCommitSha              opt.String                 `json:"merge_commit_sha,omitempty"`
 	SquashCommitSha             opt.String                 `json:"squash_commit_sha,omitempty"`
 	UserNotesCount              int                        `json:"user_notes_count"`
-	DiscussionLocked            opt.String                 `json:"discussion_locked,omitempty"`
+	DiscussionLocked            opt.Bool                   `json:"discussion_locked,omitempty"`
 	ShouldRemoveSourceBranch    opt.Bool                   `json:"should_remove_source_branch,omitempty"`
 	ForceRemoveSourceBranch     bool                       `json:"force_remove_source_branch"`
 	AllowCollaboration          bool                       `json:"allow_collaboration"`
