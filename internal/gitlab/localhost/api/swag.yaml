@@ -1,0 +1,276 @@
+definitions: 
+  0: 
+    type: swag 
+    properties: 
+      state: 
+        type: string
+        example: opened
+      description: 
+        type: string
+        example: Ratione dolores corrupti mollitia soluta quia.
+      author: 
+        type: object
+        properties: 
+          state: 
+            type: string
+            example: active
+          id: 
+            type: integer
+            format: int32
+            example: 18
+          web_url: 
+            type: string
+            example: https://gitlab.example.com/eileen.lowe
+          name: 
+            type: string
+            example: Alexandra Bashirian
+          avatar_url: 
+            type: string
+            format: nullable
+          username: 
+            type: string
+            example: eileen.lowe
+      milestone: 
+        type: object
+        properties: 
+          project_id: 
+            type: integer
+            format: int32
+            example: 1
+          description: 
+            type: string
+            example: Ducimus nam enim ex consequatur cumque ratione.
+          state: 
+            type: string
+            example: closed
+          due_date: 
+            type: string
+            format: nullable
+          iid: 
+            type: integer
+            format: int32
+            example: 2
+          created_at: 
+            type: string
+            format: date-time
+            example: 2016-01-04T15:31:39.996Z
+          title: 
+            type: string
+            example: v4.0
+          id: 
+            type: integer
+            format: int32
+            example: 17
+          updated_at: 
+            type: string
+            format: date-time
+            example: 2016-01-04T15:31:39.996Z
+      project_id: 
+        type: integer
+        format: int32
+        example: 1
+      assignees: 
+        type: array
+        items: 
+          type: object
+          properties: 
+            state: 
+              type: string
+              example: active
+            id: 
+              type: integer
+              format: int32
+              example: 1
+            name: 
+              type: string
+              example: Administrator
+            web_url: 
+              type: string
+              example: https://gitlab.example.com/root
+            avatar_url: 
+              type: string
+              format: nullable
+            username: 
+              type: string
+              example: root
+        example: [
+            state: active
+            id: 1
+            name: Administrator
+            web_url: https://gitlab.example.com/root
+            avatar_url: null
+            username: root
+        ]
+      assignee: 
+        type: object
+        properties: 
+          state: 
+            type: string
+            example: active
+          id: 
+            type: integer
+            format: int32
+            example: 1
+          name: 
+            type: string
+            example: Administrator
+          web_url: 
+            type: string
+            example: https://gitlab.example.com/root
+          avatar_url: 
+            type: string
+            format: nullable
+          username: 
+            type: string
+            example: root
+      type: 
+        type: string
+        example: ISSUE
+      updated_at: 
+        type: string
+        format: date-time
+        example: 2016-01-04T15:31:51.081Z
+      closed_at: 
+        type: string
+        format: nullable
+      closed_by: 
+        type: string
+        format: nullable
+      id: 
+        type: integer
+        format: int32
+        example: 76
+      title: 
+        type: string
+        example: Consequatur vero maxime deserunt laboriosam est voluptas dolorem.
+      created_at: 
+        type: string
+        format: date-time
+        example: 2016-01-04T15:31:51.081Z
+      moved_to_id: 
+        type: string
+        format: nullable
+      iid: 
+        type: integer
+        format: int32
+        example: 6
+      labels: 
+        type: array
+        items: 
+          type: object
+          properties: 
+            0: 
+              type: string
+              example: f
+            1: 
+              type: string
+              example: o
+            2: 
+              type: string
+              example: o
+        example: [
+          foo
+        ]
+      upvotes: 
+        type: integer
+        format: int32
+        example: 4
+      downvotes: 
+        type: integer
+        format: int32
+        example: 0
+      merge_requests_count: 
+        type: integer
+        format: int32
+        example: 0
+      user_notes_count: 
+        type: integer
+        format: int32
+        example: 1
+      due_date: 
+        type: string
+        format: date
+        example: 2016-07-22
+      imported: 
+        type: boolean
+      imported_from: 
+        type: string
+        example: none
+      web_url: 
+        type: string
+        example: http://gitlab.example.com/my-group/my-project/issues/6
+      references: 
+        type: object
+        properties: 
+          short: 
+            type: string
+            example: #6
+          relative: 
+            type: string
+            example: my-group/my-project#6
+          full: 
+            type: string
+            example: my-group/my-project#6
+      time_stats: 
+        type: object
+        properties: 
+          time_estimate: 
+            type: integer
+            format: int32
+            example: 0
+          total_time_spent: 
+            type: integer
+            format: int32
+            example: 0
+          human_time_estimate: 
+            type: string
+            format: nullable
+          human_total_time_spent: 
+            type: string
+            format: nullable
+      has_tasks: 
+        type: boolean
+      task_status: 
+        type: string
+        example: 10 of 15 tasks completed
+      confidential: 
+        type: boolean
+      discussion_locked: 
+        type: boolean
+      issue_type: 
+        type: string
+        example: issue
+      severity: 
+        type: string
+        example: UNKNOWN
+      _links: 
+        type: object
+        properties: 
+          self: 
+            type: string
+            example: http://gitlab.example.com/api/v4/projects/1/issues/76
+          notes: 
+            type: string
+            example: http://gitlab.example.com/api/v4/projects/1/issues/76/notes
+          award_emoji: 
+            type: string
+            example: http://gitlab.example.com/api/v4/projects/1/issues/76/award_emoji
+          project: 
+            type: string
+            example: http://gitlab.example.com/api/v4/projects/1
+          closed_as_duplicate_of: 
+            type: string
+            example: http://gitlab.example.com/api/v4/projects/1/issues/75
+      task_completion_status: 
+        type: object
+        properties: 
+          count: 
+            type: integer
+            format: int32
+            example: 0
+          completed_count: 
+            type: integer
+            format: int32
+            example: 0
+
+

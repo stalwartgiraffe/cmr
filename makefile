@@ -14,6 +14,11 @@ build: build/cmr
 build/cmr: $(GO_FILES) | build/
 	go build -o build/cmr
 
+rm_easyjson:
+	rm internal/gitlab/eventmodel_easyjson.go
+	rm internal/gitlab/mergerequest_easyjson.go
+	rm internal/gitlab/requestmap_easyjson.go
+
 build/:
 	mkdir -p build
 

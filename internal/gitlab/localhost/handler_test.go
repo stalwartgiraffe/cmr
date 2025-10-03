@@ -128,7 +128,7 @@ func TestHandleMergeRequests(t *testing.T) {
 	}
 
 	// Parse response
-	var mergeRequests []MergeRequest
+	var mergeRequests []MergeRequestV0
 	if err := json.NewDecoder(resp.Body).Decode(&mergeRequests); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}
@@ -182,7 +182,7 @@ func TestHandleMergeRequestsWithQueryParams(t *testing.T) {
 		t.Errorf("Expected status %d, got %d", http.StatusOK, resp.StatusCode)
 	}
 
-	var mergeRequests []MergeRequest
+	var mergeRequests []MergeRequestV0
 	if err := json.NewDecoder(resp.Body).Decode(&mergeRequests); err != nil {
 		t.Fatalf("Failed to decode response: %v", err)
 	}

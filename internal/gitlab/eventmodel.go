@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/aarondl/opt/omitnull"
+
 	"github.com/stalwartgiraffe/cmr/internal/utils"
 )
 
@@ -23,12 +24,13 @@ type EventModel struct {
 
 	Data omitnull.Val[string] `json:"data,omitempty"`
 
-	Author *AuthorModel `json:"author,omitempty"`
-	Note   *Note        `json:"note,omitempty"`
+	Author *UserModel `json:"author,omitempty"`
+	Note   *Note      `json:"note,omitempty"`
 
 	Imported     omitnull.Val[bool]   `json:"imported,omitempty"`
 	ImportedFrom omitnull.Val[string] `json:"imported_from,omitempty"`
 
+	// ok
 	// this does not round trip, use raw pointer
 	//	panic: unsupported Scan, storing driver.Value
 	//PushData     omitnull.Val[PushDataModel] `json:"push_data,omitempty"`

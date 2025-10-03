@@ -20,8 +20,8 @@ type Event struct {
 	ImportedFrom   string    `json:"imported_from" fake:"{randomstring:[none,github,bitbucket,gitlab,gitea]}"`
 }
 
-// UserBasic represents a GitLab user as per API_Entities_UserBasic
-type UserBasic struct {
+// UserBasicV0 represents a GitLab user as per API_Entities_UserBasic
+type UserBasicV0 struct {
 	ID          int    `json:"id" fake:"{number:100,999}"`
 	Username    string `json:"username" fake:"{username}"`
 	PublicEmail string `json:"public_email,omitempty" fake:"{email}"`

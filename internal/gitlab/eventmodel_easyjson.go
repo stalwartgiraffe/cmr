@@ -248,7 +248,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab2(in *jlexer
 				out.Author = nil
 			} else {
 				if out.Author == nil {
-					out.Author = new(AuthorModel)
+					out.Author = new(UserModel)
 				}
 				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in, out.Author)
 			}
@@ -470,7 +470,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab4(in *jlexer
 				out.Author = nil
 			} else {
 				if out.Author == nil {
-					out.Author = new(AuthorModel)
+					out.Author = new(UserModel)
 				}
 				easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in, out.Author)
 			}
@@ -560,7 +560,7 @@ func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab4(out *jwrit
 	}
 	out.RawByte('}')
 }
-func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer.Lexer, out *AuthorModel) {
+func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer.Lexer, out *UserModel) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -613,7 +613,7 @@ func easyjson46735d53DecodeGithubComStalwartgiraffeCmrInternalGitlab3(in *jlexer
 		in.Consumed()
 	}
 }
-func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out *jwriter.Writer, in AuthorModel) {
+func easyjson46735d53EncodeGithubComStalwartgiraffeCmrInternalGitlab3(out *jwriter.Writer, in UserModel) {
 	out.RawByte('{')
 	first := true
 	_ = first

@@ -202,6 +202,7 @@ func unmarshalModels(app App, jsonBlob []byte) (
 		prettyTxt := prettySubStringJson(body, errTxt)
 		return nil, fmt.Errorf("Error:%s\n%s", errTxt, prettyTxt)
 	}
+
 	ss := []gitlab.MergeRequestModel(em)
 	return &ss, nil
 }

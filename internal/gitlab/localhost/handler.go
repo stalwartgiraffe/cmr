@@ -17,7 +17,7 @@ import (
 
 type Handler struct {
 	service  *Service
-	requests []MergeRequest
+	requests []MergeRequestV0
 }
 
 func NewHandler(service *Service) *Handler {
@@ -253,7 +253,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: true,
 			EmptyRepo:                false,
 			Archived:                 false,
-			Owner: &UserBasic{
+			Owner: &UserBasicV0{
 				ID:       1,
 				Username: "root",
 				Name:     "Administrator",
@@ -288,7 +288,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: false,
 			EmptyRepo:                false,
 			Archived:                 false,
-			Owner: &UserBasic{
+			Owner: &UserBasicV0{
 				ID:       2,
 				Username: "developer",
 				Name:     "Developer User",
@@ -321,7 +321,7 @@ func (h *Handler) generateMockProjects(params *ProjectsQueryParams) []Project {
 			ContainerRegistryEnabled: false,
 			EmptyRepo:                false,
 			Archived:                 true,
-			Owner: &UserBasic{
+			Owner: &UserBasicV0{
 				ID:       1,
 				Username: "root",
 				Name:     "Administrator",
@@ -425,8 +425,8 @@ func (h *Handler) GetGroupsMergeRequests(w http.ResponseWriter, r *http.Request)
 }
 
 // parseMergeRequestsQueryParams parses the query parameters for the merge requests endpoint
-func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequestsQueryParams, error) {
-	params := &MergeRequestsQueryParams{
+func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequestsQueryParamsV0, error) {
+	params := &MergeRequestsQueryParamsV0{
 		PageQueryParams: PageQueryParams{
 			Page:    1,  // default
 			PerPage: 20, // default
@@ -598,11 +598,11 @@ func (h *Handler) parseMergeRequestsQueryParams(r *http.Request) (*MergeRequests
 }
 
 // generateMockMergeRequests generates mock merge requests for testing purposes
-func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) ([]MergeRequest, error) {
+func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParamsV0) ([]MergeRequestV0, error) {
 	if h.requests == nil {
-		requests := []MergeRequest{}
+		requests := []MergeRequestV0{}
 		for range 75 {
-			request := new(MergeRequest)
+			request := new(MergeRequestV0)
 			err := gofakeit.Struct(request)
 			if err != nil {
 				return nil, withstack.Errorf("Unmarshal error:%w", err)
@@ -614,7 +614,7 @@ func (h *Handler) generateMockMergeRequests(params *MergeRequestsQueryParams) ([
 	}
 
 	// Apply filtering based on parameters
-	matches := make([]MergeRequest, 0, len(h.requests))
+	matches := make([]MergeRequestV0, 0, len(h.requests))
 	for _, mr := range h.requests {
 		// Filter by state
 		if params.State != "all" && mr.State != params.State {

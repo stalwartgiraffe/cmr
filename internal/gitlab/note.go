@@ -28,7 +28,7 @@ type Note struct {
 
 	// we wish we could use this but it does not work seemlessly with yaml
 	//Author null.Val[*AuthorModel] `json:"author,omitempty"`
-	Author *AuthorModel `json:"author,omitempty"`
+	Author *UserModel `json:"author,omitempty"`
 }
 
 func (a *Note) String() string {
@@ -54,7 +54,7 @@ func (a *Note) String() string {
 	)
 }
 
-type AuthorModel struct {
+type UserModel struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
@@ -66,7 +66,7 @@ type AuthorModel struct {
 	WebURL    omitnull.Val[string] `json:"web_url,omitempty"`
 }
 
-func (a *AuthorModel) String() string {
+func (a *UserModel) String() string {
 	if a == nil {
 		return ""
 	}

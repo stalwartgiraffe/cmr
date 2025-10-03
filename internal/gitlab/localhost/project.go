@@ -34,7 +34,7 @@ type Project struct {
 	PackagesEnabled                           bool          `json:"packages_enabled" fake:"{bool}"`
 	EmptyRepo                                 bool          `json:"empty_repo" fake:"{bool}"`
 	Archived                                  bool          `json:"archived" fake:"{bool}"`
-	Owner                                     *UserBasic    `json:"owner,omitempty"`
+	Owner                                     *UserBasicV0    `json:"owner,omitempty"`
 	ResolveOutdatedDiffDiscussions            bool          `json:"resolve_outdated_diff_discussions" fake:"{bool}"`
 	RepositoryObjectFormat                    string        `json:"repository_object_format,omitempty" fake:"{randomstring:[sha1,sha256]}"`
 	IssuesEnabled                             bool          `json:"issues_enabled" fake:"{bool}"`
