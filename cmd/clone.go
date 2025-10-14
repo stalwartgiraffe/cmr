@@ -3,13 +3,14 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"time"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
+
 	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/gitutil"
-	"gopkg.in/yaml.v3"
 )
 
 func NewCloneCommand(cfg *CmdConfig) *cobra.Command {
@@ -50,26 +51,21 @@ func NewCloneCommand(cfg *CmdConfig) *cobra.Command {
 				fmt.Println(err)
 				return
 			}
-			elapsed := []time.Duration{}
 			// Now you can use the groups variable
 			token, err := loadGitlabAuthToken()
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
+			known := wellKnownProjects()
 			for _, project := range projects {
-				begin := time.Now()
-				err := Clone(cfg, project, home, token)
-				end := time.Now()
+				if _, ok := known[project.PathWithNamespace]; !ok {
+					continue
+				}
 
-				elapsed = append(elapsed, end.Sub(begin))
-
-				if err != nil {
+				if err := Clone(cfg, project, home, token); err != nil {
 					fmt.Println("ERROR", err)
 				}
-			}
-			for i, project := range projects {
-				fmt.Println(project.NameWithNamespace, elapsed[i])
 			}
 		},
 	}
@@ -82,11 +78,87 @@ func Clone(cfg *CmdConfig, project gitlab.ProjectModel, home string, token strin
 		project,
 	)
 
-	fmt.Println(path)
-	err := os.MkdirAll(path, os.ModeDir|0755)
+	fmt.Println("cloning ", path)
+	dot := filepath.Join(path, ".git")
+	_, err := os.Stat(dot)
+	if err == nil {
+		fmt.Println(path, "exists. Skipping...")
+		return nil
+	}
+
+	err = os.MkdirAll(path, os.ModeDir|0755)
 	if err != nil {
 		return err
 	}
 
 	return gitutil.Clone(path, project.HTTPURLToRepo, token, os.Stdout)
+}
+
+func wellKnownProjects() map[string]struct{} {
+	return map[string]struct{}{
+		"ad-registration/schema":                                {},
+		"adserving/datagrid/profileservice":                     {},
+		"app/phoenix/tool/deals/routetest":                      {},
+		"continuous-integration/build-images":                   {},
+		"exchange-node/billing":                                 {},
+		"exchange-node/demand":                                  {},
+		"exchange-node/deployment/demand-deployment":            {},
+		"exchange-node/deployment/exchange-node-deployment":     {},
+		"exchange-node/deployment/exchange-pod-deployment":      {},
+		"exchange-node/deployment/gauntlet-deployment":          {},
+		"exchange-node/deployment/grafana-pyroscope-deployment": {},
+		"exchange-node/encoding":                                {},
+		"exchange-node/feature-toggles/features":                {},
+		"exchange-node/feature-toggles/features-api":            {},
+		"exchange-node/feature-toggles/features-deploy":         {},
+		"exchange-node/feature-toggles/featureslib":             {},
+		"exchange-node/gauntlet":                                {},
+		"exchange-node/gitlab-ci-modules":                       {},
+		"exchange-node/impression":                              {},
+		"exchange-node/ixlib":                                   {},
+		"exchange-node/kit/moneylib":                            {},
+		"exchange-node/machine-learning/rivr-go-library":        {},
+		"exchange-node/privacy-sandbox-reporting":               {},
+		"exchange-node/rules-api":                               {},
+		"exchange-node/rules-lib":                               {},
+		"exchange-node/rules-updater":                           {},
+		"exchange-node/rules/monorepo":                          {},
+		"exchange-node/schema":                                  {},
+		"exchange-node/signal-management-lib":                   {},
+		"exchange-node/supply":                                  {},
+		"exchange-node/system-tests":                            {},
+		"exchange-node/telemetry":                               {},
+		"exchange-node/third-party/protobuf-go":                 {},
+		"gauntlet/grafana-dashboards":                           {},
+		"gauntlet/local-gauntlet":                               {},
+		"ix/engineering/interviewing":                           {},
+		"kit/moneylib":                                          {},
+		"m8s/awd":                                               {},
+		"machine-learning-optimization/inference":               {},
+		"marvel-reference/bracelet":                             {},
+		"marvel-reference/bracelet-env":                         {},
+		"nomix/arc3":                                            {},
+		"nomix/engineering":                                     {},
+		"nomix/glossary":                                        {},
+		"observability/":                                        {},
+		"observability/grafana":                                 {},
+		"observability/grafana-automation":                      {},
+		"observability/grafana-automation/grafana-alerts":       {},
+		"observability/grafana-automation/grafana-dashboards":   {},
+		"observability/mimir-rules":                             {},
+		"operations/ansible":                                    {},
+		"operations/inventory":                                  {},
+		"pipelines/base-pipelines/all-deployment-repositories":  {},
+		"pipelines/base-pipelines/ci-module-repositories":       {},
+		"pipelines/base-pipelines/go/services":                  {},
+		"pipelines/gitlab-ci-modules/mkdocs-gpages":             {},
+		"platform-dev/AS":                                       {},
+		"platform-dev/operations/inventory":                     {},
+		"platform-test/AS":                                      {},
+		"platform-test/lib":                                     {},
+		"platform-tools/experiment-booker":                      {},
+		"regulations/privacy-lib":                               {},
+		"regulations/schema":                                    {},
+		"tools/linting":                                         {},
+	}
 }

@@ -126,7 +126,7 @@ func (mrc *MergeRequestClient) getMergeRequests(
 		unmarshalMergeRequestModel,
 	)
 
-	// see https://docs.gitlab.com/ee/api/events.html
+	// see https://docs.gitlab.com/api/merge_requests/
 	const startPage = 1
 	const per_page = 200
 	firstQueries <- gitlab.UrlQuery{
