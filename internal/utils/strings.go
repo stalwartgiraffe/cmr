@@ -6,6 +6,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"time"
 
 	"golang.org/x/exp/maps"
 	"gopkg.in/yaml.v2"
@@ -33,7 +34,7 @@ func WriteToYamlFile[T any](path string, t T) error {
 }
 
 func WriteStringToFile(filepath string, content string) error {
-    return os.WriteFile(filepath, []byte(content), 0644)
+	return os.WriteFile(filepath, []byte(content), 0644)
 }
 
 func PrettyJSON(data []byte) (string, error) {
@@ -71,4 +72,19 @@ func ToSortedSlice[T any](m map[int]T) []T {
 
 func Join(strs ...string) string {
 	return strings.Join(strs, " ")
+}
+
+// Ptr returns a pointer to the given value
+func Ptr[T any](v T) *T {
+	return &v
+}
+
+// Scantime Parses a string in format "2006-01-02 15:04" into time value.
+// parse errors triger a panic
+func Scantime(s string) time.Time {
+	t, err := time.Parse("2006-01-02 15:04", s)
+	if err != nil {
+		panic(err)
+	}
+	return t
 }
