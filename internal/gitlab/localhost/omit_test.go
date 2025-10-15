@@ -18,6 +18,7 @@ func TestOmit(t *testing.T) {
 		halfCount++
 		return halfCount%2 == 0
 	}
+	_ = halfEmpty
 
 	tests := []struct {
 		name    string
@@ -26,10 +27,10 @@ func TestOmit(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "test_case_name",
-			val:  setupPerson(),
-			//isEmpty: alwaysEmpty,
-			isEmpty: halfEmpty,
+			name:    "test_case_name",
+			val:     setupPerson(),
+			isEmpty: alwaysEmpty,
+			//isEmpty: halfEmpty,
 			wantErr: false,
 		},
 	}
@@ -39,7 +40,7 @@ func TestOmit(t *testing.T) {
 			t.Parallel()
 
 			o := newOmit()
-			o.isEmpty = tt.isEmpty
+			o.isSetEmpty = tt.isEmpty
 			err := structFunc(o, tt.val)
 			fmt.Println(o.sb.String())
 

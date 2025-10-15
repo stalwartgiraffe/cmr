@@ -14,7 +14,7 @@ var RecursiveDepth = 10
 type omit struct {
 	sb strings.Builder
 
-	isEmpty isEmptyFn
+	isSetEmpty isEmptyFn
 }
 type isEmptyFn func() bool
 
@@ -25,7 +25,7 @@ func newOmit() *omit {
 		return rand.Float64() <= emptyRate
 	}
 	return &omit{
-		isEmpty: flt,
+		isSetEmpty: flt,
 	}
 }
 
@@ -38,8 +38,17 @@ func structFunc(o *omit, v any) error {
 	return r(o, reflect.TypeOf(v), reflect.ValueOf(v), "", 0, 0)
 }
 
-// r handles well known native types
+// r handles well known types
 func r(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
+	typeStr := t.String()
+	// handle types that are not built into the reflect package
+	switch {
+	case typeStr == "time.Time", typeStr == "*time.Time":
+		return rTime(o, t, v, tag)
+	case strings.HasPrefix(typeStr, "omitnull.Val["):
+		return rOmitnull(o, t, v, tag)
+	}
+
 	switch t.Kind() {
 	case reflect.Ptr:
 		return rPointer(o, t, v, tag, size, depth)
@@ -92,7 +101,7 @@ func setOmitEmpty(o *omit, t reflect.Type, v reflect.Value, tag string) bool {
 		return false
 	}
 
-	if !o.isEmpty() {
+	if !o.isSetEmpty() {
 		return false
 	}
 	v.Set(reflect.Zero(t))
@@ -121,40 +130,9 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 		if !ok {
 			continue
 		}
-		parts := strings.Split(jsonTag, ",")
-		if !slices.Contains(parts, "omitempty") {
-			continue
-		}
 
 		// Check to make sure you can set it or that it's an embedded(anonymous) field
 		if !elementV.CanSet() && !elementT.Anonymous {
-			continue
-		}
-
-		// Check if reflect type is of values we can specifically set
-		elemStr := elementT.Type.String()
-		switch {
-		case strings.HasPrefix(elemStr, "omitnull.Val["):
-			if err := rOmitnull(o, elementT.Type, elementV, jsonTag); err != nil {
-				return err
-			}
-			continue
-		case elemStr == "time.Time", elemStr == "*time.Time":
-			// Check if element is a pointer
-			elemV := elementV
-			if elemStr == "*time.Time" {
-				elemV = reflect.New(elementT.Type.Elem()).Elem()
-			}
-
-			// Run rTime on the element
-			if err := rTime(o, elementT, elemV, jsonTag); err != nil {
-				return err
-			}
-
-			if elemStr == "*time.Time" {
-				elementV.Set(elemV.Addr())
-			}
-
 			continue
 		}
 
@@ -169,6 +147,11 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 	}
 
 	return nil
+}
+
+func isJsonOmitempty(jsonTag string) bool {
+	parts := strings.Split(jsonTag, ",")
+	return slices.Contains(parts, "omitempty")
 }
 
 func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
@@ -238,8 +221,18 @@ func rOmitnull(o *omit, t reflect.Type, v reflect.Value, tag string) error {
 }
 
 // rTime will set a time.Time field the best it can from either the default date tag or from the generate tag
-func rTime(o *omit, t reflect.StructField, v reflect.Value, tag string) error {
-	timeStruct := time.Time{}
-	v.Set(reflect.ValueOf(timeStruct))
+func rTime(o *omit, t reflect.Type, v reflect.Value, tag string) error {
+	if !isJsonOmitempty(tag) {
+		return nil
+	}
+	if !o.isSetEmpty() {
+		return nil
+	}
+
+	if t.Kind() == reflect.Ptr {
+		v.Set(reflect.Zero(t))
+	} else {
+		v.Set(reflect.ValueOf(time.Time{}))
+	}
 	return nil
 }
