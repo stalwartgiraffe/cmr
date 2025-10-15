@@ -13,19 +13,24 @@ import (
 )
 
 func TestOmit(t *testing.T) {
+	halfCount := 0
+	halfEmpty := func() bool {
+		halfCount++
+		return halfCount%2 == 0
+	}
+
 	tests := []struct {
-		name       string
-		val        any
-		pOmitEmpty float64
-		randFloat  randFloatFn
-		wantErr    bool
+		name    string
+		val     any
+		isEmpty isEmptyFn
+		wantErr bool
 	}{
 		{
-			name:       "test_case_name",
-			val:        setupPerson(),
-			pOmitEmpty: 1.0,
-			randFloat:  alwaysOne,
-			wantErr:    false,
+			name: "test_case_name",
+			val:  setupPerson(),
+			//isEmpty: alwaysEmpty,
+			isEmpty: halfEmpty,
+			wantErr: false,
 		},
 	}
 
@@ -34,8 +39,7 @@ func TestOmit(t *testing.T) {
 			t.Parallel()
 
 			o := newOmit()
-			o.pOmitEmpty = tt.pOmitEmpty
-			o.randFloat = tt.randFloat
+			o.isEmpty = tt.isEmpty
 			err := structFunc(o, tt.val)
 			fmt.Println(o.sb.String())
 
@@ -46,8 +50,8 @@ func TestOmit(t *testing.T) {
 	}
 }
 
-func alwaysOne() float64 {
-	return 1.0
+func alwaysEmpty() bool {
+	return true
 }
 
 func setupPerson() *Person {
@@ -102,6 +106,38 @@ func setupPerson() *Person {
 				Body:  "body",
 			},
 		},
+		AllAddress: []Address{
+			{
+				Street:  "0street",
+				City:    "0city",
+				ZipCode: "0zipcode",
+				Skip:    "0skp",
+				Comments: &Comments{
+					Title: "0title",
+					Body:  "0body",
+				},
+			},
+			{
+				Street:  "1street",
+				City:    "1city",
+				ZipCode: "1zipcode",
+				Skip:    "1skp",
+				Comments: &Comments{
+					Title: "1title",
+					Body:  "1body",
+				},
+			},
+			{
+				Street:  "2street",
+				City:    "2city",
+				ZipCode: "2zipcode",
+				Skip:    "2skp",
+				Comments: &Comments{
+					Title: "2title",
+					Body:  "2body",
+				},
+			},
+		},
 		Tags: []string{"apple", "banana", "cantalope"},
 		KeySet: map[string]int{
 			"umbrella": 1,
@@ -153,8 +189,9 @@ type Person struct {
 	Timeout    time.Duration  `json:"timeout,omitempty"`
 	PTimeout   *time.Duration `json:"ptimeout,omitempty"`
 
-	Address *Address `json:"address,omitempty"`
-	Tags    []string `json:"tags,omitempty"`
+	Address    *Address  `json:"address,omitempty"`
+	AllAddress []Address `json:"alladdress"`
+	Tags       []string  `json:"tags,omitempty"`
 
 	KeySet map[string]int `json:"keyset,omitempty"`
 }

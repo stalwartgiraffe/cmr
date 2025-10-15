@@ -1,7 +1,8 @@
 package localhost
 
 import (
-	"math/rand"
+	"fmt"
+	"math/rand/v2"
 	"reflect"
 	"slices"
 	"strings"
@@ -13,23 +14,20 @@ var RecursiveDepth = 10
 type omit struct {
 	sb strings.Builder
 
-	pOmitEmpty float64
-	randFloat  randFloatFn
+	isEmpty isEmptyFn
 }
+type isEmptyFn func() bool
+
+const emptyRate = 0.33
 
 func newOmit() *omit {
-	seed := time.Now().UnixNano()
-	source := rand.NewSource(seed)
-	rng := rand.New(source)
-	flt := func() float64 {
-		return rng.Float64()
+	flt := func() bool {
+		return rand.Float64() <= emptyRate
 	}
 	return &omit{
-		randFloat: flt,
+		isEmpty: flt,
 	}
 }
-
-type randFloatFn func() float64
 
 func Omit(v any) error {
 	o := newOmit()
@@ -94,7 +92,7 @@ func setOmitEmpty(o *omit, t reflect.Type, v reflect.Value, tag string) bool {
 		return false
 	}
 
-	if o.pOmitEmpty < o.randFloat() {
+	if !o.isEmpty() {
 		return false
 	}
 	v.Set(reflect.Zero(t))
@@ -110,7 +108,14 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 	// Loop through all the fields of the struct
 	n := t.NumField()
 	for i := range n {
+
 		elementT := t.Field(i)
+		fieldName := elementT.Name
+		if fieldName == "AllAddress" {
+			fmt.Println("found it")
+		}
+
+		fmt.Println(fieldName)
 		elementV := v.Field(i)
 		jsonTag, ok := elementT.Tag.Lookup("json")
 		if !ok {
@@ -167,7 +172,33 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 }
 
 func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
-	setOmitEmpty(o, t, v, tag)
+	elemStr := t.String()
+	typeName := t.Name()
+	fmt.Println(elemStr, typeName)
+	if setOmitEmpty(o, t, v, tag) {
+		return nil
+	}
+
+	// Get the element type
+
+	elemT := t.Elem()
+
+	// Loop through the elements length and set based upon the index
+	ogSize := size
+	for i := 0; i < size; i++ {
+		nv := v.Index(i)
+		err := r(o, elemT, nv.Elem(), tag, ogSize, depth+1)
+		if err != nil {
+			return err
+		}
+
+		// If values are already set fill them up, otherwise append
+		//if elemLen != 0 {
+		//	v.Index(i).Set(reflect.Indirect(nv))
+		//} else {
+		//	v.Set(reflect.Append(reflect.Indirect(v), reflect.Indirect(nv)))
+		//}
+	}
 	return nil
 }
 
