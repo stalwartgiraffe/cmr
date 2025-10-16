@@ -121,7 +121,7 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 			continue
 		}
 		fieldV := v.Field(i)
-		if !fieldV.CanSet() {
+		if !fieldV.CanSet() { // CLAUDE this fails TestOmitBody
 			continue
 		}
 		if err := r(o, fieldT.Type, fieldV, jsonTag, depth+1); err != nil {
@@ -151,14 +151,41 @@ func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) err
 }
 
 func rMap(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
-	setOmitEmpty(o, t, v, tag)
+	if setOmitEmpty(o, t, v, tag) {
+		return nil
+	}
+
+	if depth >= RecursiveDepth {
+		return nil
+	}
+
 	valueT := t.Elem()
 
-	// Iterate through map keys and print each key-value pair
+	// Iterate through map keys and values
 	iter := v.MapRange()
 	for iter.Next() {
-		if err := r(o, valueT, iter.Value(), "", depth+1); err != nil {
-			return err
+		key := iter.Key()
+		mapValue := iter.Value()
+
+		// Map values are not settable, so we need to make a copy
+		// that we can modify, then set it back to the map
+		if valueT.Kind() == reflect.Struct {
+			// Create a new settable value
+			newValue := reflect.New(valueT).Elem()
+			newValue.Set(mapValue)
+
+			// Process the new settable value
+			if err := r(o, valueT, newValue, "", depth+1); err != nil {
+				return err
+			}
+
+			// Set the modified value back to the map
+			v.SetMapIndex(key, newValue)
+		} else {
+			// For non-struct types, process directly
+			if err := r(o, valueT, mapValue, "", depth+1); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
