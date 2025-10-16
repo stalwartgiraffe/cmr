@@ -35,11 +35,11 @@ func Omit(v any) error {
 }
 
 func structFunc(o *omit, v any) error {
-	return r(o, reflect.TypeOf(v), reflect.ValueOf(v), "", 0, 0)
+	return r(o, reflect.TypeOf(v), reflect.ValueOf(v), "", 0)
 }
 
 // r handles well known types
-func r(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
+func r(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
 	typeStr := t.String()
 	// handle types that are not built into the reflect package
 	switch {
@@ -51,7 +51,7 @@ func r(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int
 
 	switch t.Kind() {
 	case reflect.Ptr:
-		return rPointer(o, t, v, tag, size, depth)
+		return rPointer(o, t, v, tag, depth)
 	case reflect.Struct:
 		return rStruct(o, t, v, tag, depth)
 	case reflect.String:
@@ -65,9 +65,9 @@ func r(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int
 	case reflect.Bool:
 		return rBool(o, t, v, tag)
 	case reflect.Array, reflect.Slice:
-		return rSlice(o, t, v, tag, size, depth)
+		return rSlice(o, t, v, tag, depth)
 	case reflect.Map:
-		return rMap(o, t, v, tag, size, depth)
+		return rMap(o, t, v, tag, depth)
 	}
 	return nil
 }
@@ -76,7 +76,7 @@ func isOmitempty(s string) bool {
 	return strings.Contains(s, "omitempty")
 }
 
-func rPointer(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
+func rPointer(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
 	elemT := t.Elem()
 	// Prevent recursing deeper than configured levels
 	if depth >= RecursiveDepth {
@@ -89,7 +89,7 @@ func rPointer(o *omit, t reflect.Type, v reflect.Value, tag string, size int, de
 	if setOmitEmpty(o, t, v, tag) {
 		return nil
 	}
-	return r(o, elemT, v.Elem(), tag, size, depth+1)
+	return r(o, elemT, v.Elem(), tag, depth+1)
 }
 
 // setOmitEmpty sets the value to zero
@@ -136,11 +136,8 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 			continue
 		}
 
-		// Check if fakesize is set
-		size := -1 // Set to -1 to indicate fakesize was not set
-
 		// Recursively call r() to fill in the struct
-		err := r(o, elementT.Type, elementV, jsonTag, size, depth+1)
+		err := r(o, elementT.Type, elementV, jsonTag, depth+1)
 		if err != nil {
 			return err
 		}
@@ -154,7 +151,7 @@ func isJsonOmitempty(jsonTag string) bool {
 	return slices.Contains(parts, "omitempty")
 }
 
-func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
+func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
 	elemStr := t.String()
 	typeName := t.Name()
 	fmt.Println(elemStr, typeName)
@@ -162,30 +159,16 @@ func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, size int, dept
 		return nil
 	}
 
-	// Get the element type
-
 	elemT := t.Elem()
-
-	// Loop through the elements length and set based upon the index
-	ogSize := size
-	for i := 0; i < size; i++ {
-		nv := v.Index(i)
-		err := r(o, elemT, nv.Elem(), tag, ogSize, depth+1)
-		if err != nil {
+	for i := range v.Len() {
+		if err := r(o, elemT, v.Index(i), tag, depth+1); err != nil {
 			return err
 		}
-
-		// If values are already set fill them up, otherwise append
-		//if elemLen != 0 {
-		//	v.Index(i).Set(reflect.Indirect(nv))
-		//} else {
-		//	v.Set(reflect.Append(reflect.Indirect(v), reflect.Indirect(nv)))
-		//}
 	}
 	return nil
 }
 
-func rMap(o *omit, t reflect.Type, v reflect.Value, tag string, size int, depth int) error {
+func rMap(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
 	setOmitEmpty(o, t, v, tag)
 	return nil
 }
