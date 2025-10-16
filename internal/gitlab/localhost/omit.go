@@ -111,7 +111,7 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 	if depth >= RecursiveDepth {
 		return nil
 	}
-	for i := range t.NumField() {
+	for i := range t.NumField() { // iterate public fields
 		fieldT := t.Field(i)
 		if fieldT.Anonymous {
 			continue
@@ -131,7 +131,7 @@ func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) er
 	return nil
 }
 
-func isJsonOmitempty(jsonTag string) bool {
+func isJSONOmitempty(jsonTag string) bool {
 	parts := strings.Split(jsonTag, ",")
 	return slices.Contains(parts, "omitempty")
 }
@@ -152,6 +152,15 @@ func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) err
 
 func rMap(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
 	setOmitEmpty(o, t, v, tag)
+	valueT := t.Elem()
+
+	// Iterate through map keys and print each key-value pair
+	iter := v.MapRange()
+	for iter.Next() {
+		if err := r(o, valueT, iter.Value(), "", depth+1); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -187,7 +196,7 @@ func rOmitnull(o *omit, t reflect.Type, v reflect.Value, tag string) error {
 
 // rTime will set a time.Time field the best it can from either the default date tag or from the generate tag
 func rTime(o *omit, t reflect.Type, v reflect.Value, tag string) error {
-	if !isJsonOmitempty(tag) {
+	if !isJSONOmitempty(tag) {
 		return nil
 	}
 	if !o.isSetEmpty() {

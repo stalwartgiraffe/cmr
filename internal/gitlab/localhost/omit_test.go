@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/aarondl/opt/omitnull"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/stretchr/testify/require"
 
 	"github.com/stalwartgiraffe/cmr/internal/utils"
@@ -44,7 +43,7 @@ func TestOmit(t *testing.T) {
 			err := structFunc(o, tt.val)
 			fmt.Println(o.sb.String())
 
-			spew.Dump(tt.val)
+			//spew.Dump(tt.val)
 
 			require.True(t, tt.wantErr == (err != nil))
 		})
@@ -102,9 +101,8 @@ func setupPerson() *Person {
 			City:    "city",
 			ZipCode: "zipcode",
 			Skip:    "skp",
-			Comments: &Comments{
-				Title: "title",
-				Body:  "body",
+			Comments: &Comment{
+				Body: "body",
 			},
 		},
 		AllAddress: []Address{
@@ -113,9 +111,8 @@ func setupPerson() *Person {
 				City:    "0city",
 				ZipCode: "0zipcode",
 				Skip:    "0skp",
-				Comments: &Comments{
-					Title: "0title",
-					Body:  "0body",
+				Comments: &Comment{
+					Body: "0body",
 				},
 			},
 			{
@@ -123,9 +120,8 @@ func setupPerson() *Person {
 				City:    "1city",
 				ZipCode: "1zipcode",
 				Skip:    "1skp",
-				Comments: &Comments{
-					Title: "1title",
-					Body:  "1body",
+				Comments: &Comment{
+					Body: "1body",
 				},
 			},
 			{
@@ -133,9 +129,8 @@ func setupPerson() *Person {
 				City:    "2city",
 				ZipCode: "2zipcode",
 				Skip:    "2skp",
-				Comments: &Comments{
-					Title: "2title",
-					Body:  "2body",
+				Comments: &Comment{
+					Body: "2body",
 				},
 			},
 		},
@@ -144,6 +139,14 @@ func setupPerson() *Person {
 			"umbrella": 1,
 			"clock":    2,
 			"tea":      3,
+		},
+		CommentSet: map[string]Comment{
+			"first": {
+				Body: "1body",
+			},
+			"second": {
+				Body: "2body",
+			},
 		},
 	}
 }
@@ -194,18 +197,38 @@ type Person struct {
 	AllAddress []Address `json:"alladdress"`
 	Tags       []string  `json:"tags,omitempty"`
 
-	KeySet map[string]int `json:"keyset,omitempty"`
+	KeySet     map[string]int     `json:"keyset,omitempty"`
+	CommentSet map[string]Comment `json:"commentset"`
 }
 
 type Address struct {
 	Skip     string
-	Comments *Comments `json:"comments"`
-	Street   string `json:"street,omitempty"`
-	City     string `json:"city"`
-	ZipCode  string `json:"zip_code,omitempty"`
+	Comments *Comment `json:"comments"`
+	Street   string   `json:"street,omitempty"`
+	City     string   `json:"city"`
+	ZipCode  string   `json:"zip_code,omitempty"`
 }
 
-type Comments struct {
-	Title string
-	Body  string `json:"body,omitempty"`
+type Comment struct {
+	Body string `json:"body,omitempty"`
+}
+
+type AllComments struct {
+	CommentSet map[string]Comment `json:"commentset"`
+}
+
+func TestOmitBody(t *testing.T) {
+	all := &AllComments{
+		CommentSet: map[string]Comment{
+			"first": {
+				Body: "body",
+			},
+		},
+	}
+	o := newOmit()
+	o.isSetEmpty = alwaysEmpty
+	err := structFunc(o, all)
+	require.NoError(t, err)
+	// spew.Dump(all)
+	require.True(t, all.CommentSet["first"].Body == "")
 }
