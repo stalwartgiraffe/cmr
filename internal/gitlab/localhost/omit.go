@@ -152,16 +152,13 @@ func isJsonOmitempty(jsonTag string) bool {
 }
 
 func rSlice(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
-	elemStr := t.String()
-	typeName := t.Name()
-	fmt.Println(elemStr, typeName)
 	if setOmitEmpty(o, t, v, tag) {
 		return nil
 	}
 
 	elemT := t.Elem()
 	for i := range v.Len() {
-		if err := r(o, elemT, v.Index(i), tag, depth+1); err != nil {
+		if err := r(o, elemT, v.Index(i), "", depth+1); err != nil {
 			return err
 		}
 	}
