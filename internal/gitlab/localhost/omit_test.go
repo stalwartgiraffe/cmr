@@ -199,7 +199,7 @@ type Person struct {
 
 type Address struct {
 	Skip     string
-	Comments *Comments
+	Comments *Comments `json:"comments"`
 	Street   string `json:"street,omitempty"`
 	City     string `json:"city"`
 	ZipCode  string `json:"zip_code,omitempty"`

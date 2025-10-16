@@ -1,7 +1,6 @@
 package localhost
 
 import (
-	"fmt"
 	"math/rand/v2"
 	"reflect"
 	"slices"
@@ -109,40 +108,26 @@ func setOmitEmpty(o *omit, t reflect.Type, v reflect.Value, tag string) bool {
 }
 
 func rStruct(o *omit, t reflect.Type, v reflect.Value, tag string, depth int) error {
-	// Prevent recursing deeper than configured levels
 	if depth >= RecursiveDepth {
 		return nil
 	}
-
-	// Loop through all the fields of the struct
-	n := t.NumField()
-	for i := range n {
-
-		elementT := t.Field(i)
-		fieldName := elementT.Name
-		if fieldName == "AllAddress" {
-			fmt.Println("found it")
-		}
-
-		fmt.Println(fieldName)
-		elementV := v.Field(i)
-		jsonTag, ok := elementT.Tag.Lookup("json")
-		if !ok {
+	for i := range t.NumField() {
+		fieldT := t.Field(i)
+		if fieldT.Anonymous {
 			continue
 		}
-
-		// Check to make sure you can set it or that it's an embedded(anonymous) field
-		if !elementV.CanSet() && !elementT.Anonymous {
+		jsonTag, ok := fieldT.Tag.Lookup("json")
+		if !ok { // the struct field is not tagged with json
 			continue
 		}
-
-		// Recursively call r() to fill in the struct
-		err := r(o, elementT.Type, elementV, jsonTag, depth+1)
-		if err != nil {
+		fieldV := v.Field(i)
+		if !fieldV.CanSet() {
+			continue
+		}
+		if err := r(o, fieldT.Type, fieldV, jsonTag, depth+1); err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
