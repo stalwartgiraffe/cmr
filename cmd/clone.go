@@ -94,15 +94,22 @@ func Clone(cfg *CmdConfig, project gitlab.ProjectModel, home string, token strin
 	return gitutil.Clone(path, project.HTTPURLToRepo, token, os.Stdout)
 }
 
+// to find dirs that contain git
+// fd -H --no-ignore -t d '.git'  | grep -F -v '.gitlab' | sort
 func wellKnownProjects() map[string]struct{} {
 	return map[string]struct{}{
 		"ad-registration/schema":                                {},
 		"adserving/datagrid/profileservice":                     {},
 		"app/phoenix/tool/deals/routetest":                      {},
+		"build-images":                                          {},
+		"build-images/debian-slim-git-curl-jq/":                 {},
 		"continuous-integration/build-images":                   {},
 		"exchange-node/billing":                                 {},
+		"exchange-node/buyer-traffic-optimizer-lib":             {},
+		"exchange-node/dash-hunter":                             {},
 		"exchange-node/demand":                                  {},
 		"exchange-node/deployment/demand-deployment":            {},
+		"exchange-node/deployment/exchange-node-argocd-apps":    {},
 		"exchange-node/deployment/exchange-node-deployment":     {},
 		"exchange-node/deployment/exchange-pod-deployment":      {},
 		"exchange-node/deployment/gauntlet-deployment":          {},
@@ -148,6 +155,11 @@ func wellKnownProjects() map[string]struct{} {
 		"observability/mimir-rules":                             {},
 		"operations/ansible":                                    {},
 		"operations/inventory":                                  {},
+		"operations/k8s/argocd-resources":                       {},
+		"operations/k8s/k8s-data-argocd-resources":              {},
+		"operations/k8s/namespaces":                             {},
+		"orchestration/charts":                                  {},
+		"orchestration/pandora":                                 {},
 		"pipelines/base-pipelines/all-deployment-repositories":  {},
 		"pipelines/base-pipelines/ci-module-repositories":       {},
 		"pipelines/base-pipelines/go/services":                  {},
