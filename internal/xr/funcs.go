@@ -1,6 +1,7 @@
 package xr
 
 import (
+	"context"
 	"io"
 	"os"
 	"os/exec"
@@ -30,27 +31,29 @@ type funcs struct {
 	lookPath func(file string) (string, error)
 
 	makeRunner func(
+		ctx context.Context,
 		dir string,
 		env []string,
-		sout io.Writer,
-		serr io.Writer,
+		stdOut io.Writer,
+		stdErr io.Writer,
 		name string,
 		arg ...string) Runner
 }
 
-func newCmdRunner(
+func newCmdCtxRunner(
+	ctx context.Context,
 	dir string,
 	env []string,
-	sout io.Writer,
-	serr io.Writer,
+	stdOut io.Writer,
+	stdErr io.Writer,
 	name string,
 	args ...string) Runner {
-	c := exec.Command(name, args...)
-	c.Dir = dir     // working directory
-	c.Env = env     // process environment to the child process
-	c.Stdout = sout // writer for standard out
-	c.Stderr = serr // writer for standard err
-	return c        // ful
+	c := exec.CommandContext(ctx, name, args...)
+	c.Dir = dir       // working directory
+	c.Env = env       // process environment to the child process
+	c.Stdout = stdOut // writer for standard out
+	c.Stderr = stdErr // writer for standard err
+	return c          // ful
 }
 
 // newFuncs returns default dependencies
@@ -60,7 +63,7 @@ func newFuncs() *funcs {
 		os.Getwd,
 
 		exec.LookPath,
-		newCmdRunner,
+		newCmdCtxRunner,
 	}
 }
 func (f *funcs) Environ() []string {
@@ -75,13 +78,14 @@ func (f *funcs) LookPath(file string) (string, error) {
 }
 
 func (f *funcs) MakeRunner(
+	ctx context.Context,
 	dir string,
 	env []string,
-	sout io.Writer,
-	serr io.Writer,
+	stdOut io.Writer,
+	stdErr io.Writer,
 	name string,
 	args ...string) Runner {
-	return f.makeRunner(dir, env, sout, serr, name, args...)
+	return f.makeRunner(ctx, dir, env, stdOut, stdErr, name, args...)
 }
 
 // could be mocked
@@ -92,10 +96,11 @@ type Funcs interface {
 	LookPath(file string) (string, error)
 
 	MakeRunner(
+		ctx context.Context,
 		dir string,
 		env []string,
-		sout io.Writer,
-		serr io.Writer,
+		stdOut io.Writer,
+		stdErr io.Writer,
 		name string,
 		args ...string) Runner
 }

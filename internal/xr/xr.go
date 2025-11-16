@@ -1,47 +1,42 @@
+// Package xr wraps the go exec package with helper functions.
 package xr
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"os/exec"
 )
 
-type Linter struct {
-	Name          string
-	AllowedStatus int
-	CmdArgs       []string
-}
-
-// CheckLints run each Lint. Stop on failure.
-func CheckEach(linters []Linter, fn Funcs) error {
-	for _, a := range linters {
-		out, err := Run(a.Name, a.AllowedStatus, fn, a.CmdArgs...)
-		if err != nil {
-			return err
-		}
-		if len(out) < 1 {
-			return fmt.Errorf(out)
-		}
-	}
-	return nil
-}
-
 // Run will run program name at cwd with args.
 // Will return the output written fully into a string or error.
-func Run(name string, allowedStatus int, fn Funcs, args ...string) (string, error) {
+func Run(
+	ctx context.Context,
+	name string,
+	allowedStatus int,
+	fn Funcs,
+	args ...string,
+) (string, error) {
 	if fn == nil {
 		fn = newFuncs()
 	}
 	if dir, err := fn.Getwd(); err != nil {
 		return "", err
 	} else {
-		return RunAt(dir, allowedStatus, name, fn, args...)
+		return RunAt(ctx, dir, allowedStatus, name, fn, args...)
 	}
 }
 
 // RunAt will run program name at dir with args.
 // Will return the output written fully into a string or error.
-func RunAt(dir string, allowedStatus int, name string, fn Funcs, args ...string) (string, error) {
+func RunAt(
+	ctx context.Context,
+	dir string,
+	allowedStatus int,
+	name string,
+	fn Funcs,
+	args ...string,
+) (string, error) {
 	if _, err := fn.LookPath(name); err != nil {
 		return "", err
 	}
@@ -49,10 +44,10 @@ func RunAt(dir string, allowedStatus int, name string, fn Funcs, args ...string)
 	env := fn.Environ()
 	args = expandArgs(env, args)
 
-	var out bytes.Buffer
-	var serr bytes.Buffer
+	var stdOut bytes.Buffer
+	var stdErr bytes.Buffer
 
-	runner := fn.MakeRunner(dir, env, &out, &serr, name, args...)
+	runner := fn.MakeRunner(ctx, dir, env, &stdOut, &stdErr, name, args...)
 
 	if err := runner.Run(); err != nil {
 		exiterr, ok := err.(*exec.ExitError)
@@ -61,14 +56,14 @@ func RunAt(dir string, allowedStatus int, name string, fn Funcs, args ...string)
 		}
 		code := exiterr.ExitCode()
 		if code != 0 && code != allowedStatus {
-			errMsg := serr.String()
+			errMsg := stdErr.String()
 			if len(errMsg) < 1 {
 				errMsg = exiterr.Error()
 			}
-			errMsg += "\nout\n" + out.String() + "\nerr\n" + serr.String()
+			errMsg += "\nout\n" + stdOut.String() + "\nerr\n" + stdErr.String()
 			return "", fmt.Errorf("%s had status %s", name, errMsg)
 		}
 	}
 
-	return out.String(), nil
+	return stdOut.String(), nil
 }

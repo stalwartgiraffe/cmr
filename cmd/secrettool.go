@@ -29,9 +29,10 @@ FIXME: include examples.
 		},
 
 		Run: func(cmd *cobra.Command, args []string) {
+			ctx := cmd.Context()
 			fmt.Println(">secret-tool:")
 			stargs := []string{"lookup", "pat", "gitlab"}
-			out, err := xr.Run(secretTool, expectedStatus, nil, stargs...)
+			out, err := xr.Run(ctx, secretTool, expectedStatus, nil, stargs...)
 			if err != nil {
 				fmt.Println("error:", err)
 			}

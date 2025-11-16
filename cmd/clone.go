@@ -8,7 +8,6 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/stalwartgiraffe/cmr/internal/elog"
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/gitutil"
 )
@@ -27,10 +26,7 @@ func NewCloneCommand(cfg *CmdConfig) *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			logger := elog.New()
-
-			logger.Println("so cloney")
-
+			ctx := cmd.Context()
 			file, err := os.Open("ignore/projects.yaml")
 			if err != nil {
 				fmt.Println(err)
@@ -52,7 +48,7 @@ func NewCloneCommand(cfg *CmdConfig) *cobra.Command {
 				return
 			}
 			// Now you can use the groups variable
-			token, err := loadGitlabAuthToken()
+			token, err := loadGitlabAuthToken(ctx)
 			if err != nil {
 				fmt.Println(err)
 				return

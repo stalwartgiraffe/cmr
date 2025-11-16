@@ -25,7 +25,8 @@ FIXME: include examples.
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
-			if err := lint.RunEach(cfg.Config); err != nil {
+			ctx := cmd.Context()
+			if err := lint.RunEach(ctx, cfg.Config); err != nil {
 				fmt.Println(err)
 			}
 		},

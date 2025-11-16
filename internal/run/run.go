@@ -75,7 +75,7 @@ func beginInterrupt(ctxCancel context.CancelFunc) {
 
 type runCmdFn func(ctx context.Context, ctxCancel context.CancelFunc, app *app.App) error
 
-// runCmd crates and runs the cmd
+// runCmd creates and runs the cmd
 func runCmd(ctx context.Context, ctxCancel context.CancelFunc, app *app.App) error {
 	rootCmd := cmd.AddRootCommand(app, ctxCancel)
 	return rootCmd.ExecuteContext(ctx)

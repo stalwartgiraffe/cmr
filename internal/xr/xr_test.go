@@ -1,6 +1,7 @@
 package xr
 
 import (
+	"context"
 	"fmt"
 	"io"
 
@@ -29,10 +30,11 @@ func mockFuncs(runnerErr error) *funcs {
 			return "/user/bin/noopcmd", nil
 		},
 		makeRunner: func(
+			ctx context.Context,
 			dir string,
 			env []string,
-			sout io.Writer,
-			serr io.Writer,
+			stdOut io.Writer,
+			stdErr io.Writer,
 			name string,
 			arg ...string) Runner {
 			return &errRunner{
@@ -45,7 +47,8 @@ func mockFuncs(runnerErr error) *funcs {
 var _ = Describe("RunAt", func() {
 	DescribeTable("command lines ",
 		func(want string, isErr bool, dir string, allowedStatus int, name string, fn Funcs, args ...string) {
-			have, err := RunAt(dir, allowedStatus, name, fn, args...)
+			ctx := context.Background()
+			have, err := RunAt(ctx, dir, allowedStatus, name, fn, args...)
 			Expect(have).To(Equal(want))
 			Expect(err != nil).To(Equal(isErr))
 		},

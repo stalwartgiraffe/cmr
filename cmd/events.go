@@ -49,7 +49,7 @@ func runEventsCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) {
 
 	filepath := "ignore/my_recent_events.yaml"
 	route := "events/"
-	authToken, err := loadGitlabAuthToken()
+	authToken, err := loadGitlabAuthToken(ctx)
 	if err != nil {
 		utils.Redln(err)
 		return

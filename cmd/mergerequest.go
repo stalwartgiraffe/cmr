@@ -39,7 +39,7 @@ func runMergeRequestCmd(app App, cancel context.CancelFunc, cmd *cobra.Command) 
 	filepath := "ignore/my_recent_merge_request.yaml"
 	route := "merge_requests/"
 	var err error
-	authToken, err := loadGitlabAuthToken()
+	authToken, err := loadGitlabAuthToken(ctx)
 
 	app.Println("we got authToken")
 

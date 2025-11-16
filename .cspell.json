@@ -1,0 +1,45 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "useGitignore": true,
+  "cache": {
+    "useCache": true,
+    "cacheLocation": ".cspellcache"
+  },
+  "maxNumberOfProblems": 100,
+  "allowCompoundWords": true,
+  "words": [
+    "Equalf",
+    "Fastrandn",
+    "GOGC",
+    "GOMAXPROCS",
+    "GOMEMLIMIT",
+    "GOSUMDB",
+    "GPID",
+    "Meissner",
+    "Panicsf",
+    "actioneer",
+    "bcat",
+    "niller"
+  ],
+  "fileSettings": [
+    {
+      "filename": "go.sum",
+      "binary": true
+    },
+    {
+      "filename": "go.mod",
+      "binary": true
+    }
+  ],
+  "ignorePaths": [
+    "**/*.{png,jpg,pdf,exe,bin,so,a}",
+    "go.mod",
+    "cmd/demand/internal/encryption/encryption_test.go",
+    "DEMAND_TRAFFIC.md",
+    "sonar-project.properties",
+    "go.sum",
+    "**/vendor/**",
+    "**/node_modules/**"
+  ]
+}

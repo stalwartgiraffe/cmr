@@ -41,7 +41,7 @@ func NewPrjEventsCommand(app App, cfg *CmdConfig, cancel context.CancelFunc) *co
 
 			cmdCtx := cmd.Context()
 
-			authToken, err := loadGitlabAuthToken()
+			authToken, err := loadGitlabAuthToken(cmdCtx)
 			if err != nil {
 				utils.Redln(err)
 				return

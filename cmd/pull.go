@@ -26,6 +26,7 @@ func NewPullCommand(cfg *CmdConfig) *cobra.Command {
 			}
 		},
 		Run: func(cmd *cobra.Command, args []string) {
+			ctx := cmd.Context()
 			logger := elog.New()
 
 			logger.Println("so pully")
@@ -51,7 +52,7 @@ func NewPullCommand(cfg *CmdConfig) *cobra.Command {
 			}
 			elapsed := []time.Duration{}
 			// Now you can use the groups variable
-			token, err := loadGitlabAuthToken()
+			token, err := loadGitlabAuthToken(ctx)
 			if err != nil {
 				fmt.Println(err)
 				return

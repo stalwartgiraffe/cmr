@@ -40,7 +40,7 @@ func runLabCmd(app App, cmd *cobra.Command) {
 	defer span.End()
 
 	var err error
-	authToken, err := loadGitlabAuthToken()
+	authToken, err := loadGitlabAuthToken(ctx)
 	if err != nil {
 		utils.Redln(err)
 		return
@@ -129,7 +129,7 @@ func (pc *ProjectsClient) getProjects(
 	return projectsMap, errs
 }
 
-func loadGitlabAuthToken() (string, error) {
+func loadGitlabAuthToken(ctx context.Context) (string, error) {
 	token := os.Getenv("GIT_LAB_ACCESS_TOKEN")
 	if token != "" {
 		return token, nil
@@ -138,7 +138,7 @@ func loadGitlabAuthToken() (string, error) {
 	stArgs := []string{"lookup", "pat", "gitlab"}
 	const secretTool = "secret-tool"
 	const expectedStatus int = 3
-	token, err := xr.Run(secretTool, expectedStatus, nil, stArgs...)
+	token, err := xr.Run(ctx, secretTool, expectedStatus, nil, stArgs...)
 	fmt.Println("pat gitlab", token)
 	if err != nil {
 		return "", err
@@ -148,7 +148,7 @@ func loadGitlabAuthToken() (string, error) {
 	}
 
 	stArgs = []string{"lookup", "pat", "publicus"}
-	token, err = xr.Run(secretTool, expectedStatus, nil, stArgs...)
+	token, err = xr.Run(ctx, secretTool, expectedStatus, nil, stArgs...)
 	fmt.Println("pat publicus", token)
 	if err != nil {
 		return "", err
