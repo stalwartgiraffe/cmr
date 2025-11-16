@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/stalwartgiraffe/cmr/internal/config"
-	"github.com/stalwartgiraffe/cmr/internal/xr"
+	"github.com/stalwartgiraffe/cmr/xr"
 )
 
 func RunEach(ctx context.Context, cfg *config.Config) error {

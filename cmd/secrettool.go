@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/stalwartgiraffe/cmr/internal/xr"
+	"github.com/stalwartgiraffe/cmr/xr"
 
 	"github.com/spf13/cobra"
 )

@@ -11,8 +11,8 @@ import (
 
 	"github.com/stalwartgiraffe/cmr/internal/gitlab"
 	"github.com/stalwartgiraffe/cmr/internal/utils"
-	"github.com/stalwartgiraffe/cmr/internal/xr"
 	rc "github.com/stalwartgiraffe/cmr/restclient"
+	"github.com/stalwartgiraffe/cmr/xr"
 )
 
 // NewLabCommand initializes the command.
